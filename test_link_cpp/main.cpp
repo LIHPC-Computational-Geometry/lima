@@ -2,10 +2,7 @@
 #include <Lima/malipp2.h>
 
 int main(){
-    double lenght_unit = 1.;
-    Lima::MaliPPWriter2* writer=new Lima::MaliPPWriter2("toto", 1);
-    writer->unite_longueur(lenght_unit);
-    writer->dimension(Lima::D2);
-    writer->close();
+    Lima::Noeud n;
+    Lima::
     return 0;
 }
