@@ -3,6 +3,5 @@
 
 int main(){
     Lima::Noeud n;
-    Lima::
     return 0;
 }
