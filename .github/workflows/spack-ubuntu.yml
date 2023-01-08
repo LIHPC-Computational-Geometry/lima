@@ -41,7 +41,7 @@ jobs:
         run: |
           source /spack/share/spack/setup-env.sh 
           spack load cmake
-          spack install lima@main
+          spack install lima@main+scripting
 
       - name: Test c++ lib install
         shell: bash
