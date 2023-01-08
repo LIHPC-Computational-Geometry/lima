@@ -1,0 +1,878 @@
+<HTML>
+<HEAD>
+<TITLE>ICEM CFD Boundary Condition Library</TITLE>
+</HEAD>
+<BODY>
+<img src = "../icemcfd.gif" alt = "icemcfd">
+
+<H1>ICEM CFD Boundary Condition Library</h1>
+
+<a href="../base.html">Back to ICEM CFD Main Menu</a>
+
+<P><HR><P>
+
+Last revised on June 5 1998.
+
+<P><B><FONT FACE="Arial,Helvetica"><FONT SIZE=+1>Contents:</FONT></FONT></B>
+<BR>&nbsp;
+<UL>
+<LI>
+<U><FONT COLOR="#3333FF"><A HREF="#Introduction">Introduction</A></FONT></U></LI>
+
+<LI>
+<U><FONT COLOR="#3333FF"><A HREF="#Open">Open, Read and Close</A></FONT></U></LI>
+
+<LI>
+<U><FONT COLOR="#3333FF"><A HREF="#def">Definitions</A></FONT></U></LI>
+
+<LI>
+<U><FONT COLOR="#3333FF"><A HREF="#inq">Inquiry Subroutines</A></FONT></U></LI>
+</UL>
+<A NAME="Introduction"></A><B><FONT FACE="Arial,Helvetica"><FONT SIZE=+2>Introduction</FONT></FONT></B>
+
+<P><FONT FACE="Arial,Helvetica">The boundary conditions are written in
+a file named</FONT><FONT FACE="Times,Times New Roman"> </FONT><FONT FACE="Courier">boco<B>.
+</B></FONT><FONT FACE="Arial,Helvetica">This file contains a list of boundary
+conditions for each of the topological entities (domains, subfaces, edge
+entities, vertices, patches, patch families, families). Each boundary condition
+entry consists of two strings of five characters and ten real values:</FONT>
+
+<P><TT>flag1, flag2</TT>
+
+<P><TT>value1, value2, ... value10</TT>
+
+<P><FONT FACE="Arial,Helvetica">The boundary condition library, </FONT><FONT FACE="Courier">bocolib.a</FONT><FONT FACE="Times,Times New Roman">,
+</FONT><FONT FACE="Arial,Helvetica">contains routines to access the information
+present in the boundary condition file. To use these routines, application
+codes must be linked to the boundary condition library located in the directory
+</FONT><FONT FACE="Courier">/$ICEM_ACN/icemcfd/output-interfaces/lib</FONT>
+
+<P><FONT FACE="Arial,Helvetica">This document describes the functions of
+the boundary condition library. Unless otherwise specified, the return
+code </FONT><TT>ier</TT><FONT FACE="Arial,Helvetica"> is equal to zero
+when the function is executed successfully. All functions are available
+for FORTRAN and C programming interface.</FONT>
+
+<P>&nbsp;
+
+<P><A NAME="Open"></A><B><U><FONT FACE="Times,Times New Roman"><FONT SIZE=+2>Open,
+Read and Close</FONT></FONT></U></B>
+<BR>&nbsp;
+<BR>&nbsp;
+<TABLE WIDTH="60%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><TT><FONT COLOR="#FF0000">ier</FONT> = bc_open(<FONT COLOR="#3333FF">filename</FONT>)
+;&nbsp;</TT></TD>
+</TR>
+
+<TR>
+<TD><B>FORTRAN</B></TD>
+
+<TD><TT>call bcopen(<FONT COLOR="#3333FF">filename</FONT>, <FONT COLOR="#3333FF">len</FONT>,
+<FONT COLOR="#3333FF">iunit</FONT>, <FONT COLOR="#FF0000">ier</FONT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="60%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">filename</FONT></TT></TD>
+
+<TD>char*(*)</TD>
+
+<TD>filename of the boundary condition</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">len</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>length of filename</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">iunit</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>FORTRAN unit number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">The function</FONT><FONT FACE="Times,Times New Roman">
+</FONT><FONT FACE="Courier">bc_open()</FONT><FONT FACE="Times,Times New Roman">
+</FONT><FONT FACE="Arial,Helvetica">opens the boundary condition file for
+reading. It must be called before any other function of the boundary condition
+library.</FONT>
+<hr>
+&nbsp;
+<BR>&nbsp;
+<TABLE WIDTH="60%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier">void bc_close();</FONT></TD>
+</TR>
+
+<TR>
+<TD><B>FORTRAN</B></TD>
+
+<TD><FONT FACE="Courier">call bclose(<FONT COLOR="#3333FF">iunit</FONT>)</FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="60%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">iunit</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>FORTRAN unit number</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">The function</FONT><FONT FACE="Times,Times New Roman">
+</FONT><FONT FACE="Courier">bc_close</FONT><FONT FACE="Times,Times New Roman">
+</FONT><FONT FACE="Arial,Helvetica">closes the boundary condition file.
+It should be the last function called from the boundary condition library.</FONT>
+<hr>
+&nbsp;
+<BR>&nbsp;
+<TABLE WIDTH="60%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = bc_read();</FONT></TD>
+</TR>
+
+<TR>
+<TD><B>FORTRAN</B></TD>
+
+<TD><FONT FACE="Courier">call bocoread(<FONT COLOR="#3333FF">iunit</FONT>,
+<FONT COLOR="#FF0000">ier</FONT>)</FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<BR>&nbsp;
+<TABLE BORDER WIDTH="60%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">iunit</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>FORTRAN unit number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">The function</FONT><FONT FACE="Courier"> bc_read
+</FONT><FONT FACE="Arial,Helvetica">reads the boundary condition file and
+stores the information in memory. This routine must be called once, immediately
+after opening the boundary condition file.</FONT>
+<hr>
+&nbsp;
+<BR>&nbsp;
+<TABLE WIDTH="60%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = bc_init(<FONT COLOR="#3333FF">filename</FONT>);</FONT></TD>
+</TR>
+
+<TR>
+<TD><B>FORTRAN</B></TD>
+
+<TD><FONT FACE="Courier">call bocinit(<FONT COLOR="#3333FF">filename</FONT>,
+<FONT COLOR="#3333FF">len</FONT>, <FONT COLOR="#FF0000">ier</FONT>)&nbsp;</FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<BR>&nbsp;
+<TABLE BORDER WIDTH="60%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">filename</FONT></TT></TD>
+
+<TD>char*(*)</TD>
+
+<TD>filename of topology file</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">len</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>length of string <TT><FONT COLOR="#3333FF">filename</FONT></TT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">The function</FONT><FONT FACE="Times,Times New Roman">
+</FONT><FONT FACE="Courier">bc_init</FONT><FONT FACE="Times,Times New Roman">
+</FONT><FONT FACE="Arial,Helvetica">opens, reads and closes a boundary
+condition file. It can be used instead of the sequence</FONT><FONT FACE="Times,Times New Roman">
+</FONT><FONT FACE="Courier">bc_open(), bc_read()</FONT><FONT FACE="Times,Times New Roman">
+</FONT><FONT FACE="Arial,Helvetica">and </FONT><FONT FACE="Courier">bc_close()</FONT><FONT FACE="Times,Times New Roman">.</FONT>
+
+<P>
+<HR>
+
+<P><A NAME="def"></A><B><U><FONT FACE="Times,Times New Roman"><FONT SIZE=+2>Definitions</FONT></FONT></U></B>
+
+<P><FONT FACE="Arial,Helvetica">The boundary conditions are stored as a
+function of the type of topological entity, and the entity number. The
+variable </FONT><TT>mode </TT><FONT FACE="Arial,Helvetica">is used to define
+the type of topological entity. The convention is as follows:</FONT>
+<BR>&nbsp;
+<CENTER><TABLE BORDER CELLPADDING=9 WIDTH="345" >
+<TR>
+<TD VALIGN=TOP WIDTH="59%" HEIGHT="26">
+<CENTER><B><FONT FACE="Times,Times New Roman">Topological type</FONT></B></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="41%" HEIGHT="26">
+<CENTER><B><FONT FACE="Times,Times New Roman">Mode number</FONT></B></CENTER>
+</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="59%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">Domain</FONT></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="41%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">1</FONT></CENTER>
+</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="59%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">Subface</FONT></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="41%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">2</FONT></CENTER>
+</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="59%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">Edge</FONT></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="41%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">3</FONT></CENTER>
+</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="59%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">Vertice</FONT></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="41%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">4</FONT></CENTER>
+</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="59%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">Patch</FONT></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="41%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">5</FONT></CENTER>
+</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="59%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">Patch family</FONT></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="41%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">6</FONT></CENTER>
+</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="59%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">Unstructured family</FONT></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="41%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">[1,7]</FONT></CENTER>
+</TD>
+</TR>
+</TABLE></CENTER>
+&nbsp;
+<BR>&nbsp;
+<HR>
+
+<P><A NAME="inq"></A><B><U><FONT FACE="Times,Times New Roman"><FONT SIZE=+2>Inquiry
+subroutines</FONT></FONT></U></B>
+<BR>&nbsp;
+<TABLE WIDTH="60%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = bc_num(<FONT COLOR="#3333FF">mode,
+</FONT><FONT COLOR="#FF0000">nentity</FONT><FONT COLOR="#330033">,</FONT><FONT COLOR="#FF0000">
+nbc</FONT>);</FONT></TD>
+</TR>
+
+<TR>
+<TD><B>FORTRAN</B></TD>
+
+<TD><FONT FACE="Courier">call bocum(<FONT COLOR="#3333FF">mode, </FONT><FONT COLOR="#FF0000">nentity</FONT><FONT COLOR="#000000">,</FONT><FONT COLOR="#FF0000">
+nbc</FONT><FONT COLOR="#000000">,</FONT><FONT COLOR="#FF0000">ier</FONT>)&nbsp;</FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="60%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">mode</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>topological type</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">nentity</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>number of entities of this type</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">nbc</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>number of boundary conditions for this topo type</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+&nbsp;
+
+<P>This function returns the number of entities and boundary conditions
+for a topological type, <TT>nentity</TT><I> </I>and<TT> nbc</TT><I>.</I>
+<hr>
+&nbsp;
+<TABLE WIDTH="60%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = bc_info(<FONT COLOR="#3333FF">mode,
+nentity</FONT><FONT COLOR="#330033">,</FONT><FONT COLOR="#FF0000"> nposib,
+nsiboca</FONT>);</FONT></TD>
+</TR>
+
+<TR>
+<TD><B>FORTRAN</B></TD>
+
+<TD><FONT FACE="Courier">call bocinfo(<FONT COLOR="#3333FF">mode, nentity</FONT><FONT COLOR="#000000">,</FONT><FONT COLOR="#FF0000">
+nposib, nsiboca</FONT><FONT COLOR="#000000">,</FONT><FONT COLOR="#FF0000">ier</FONT>)&nbsp;</FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<BR>&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">mode</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>topological type</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">nentity</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>number of entities of this type</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">nposib(nentity+1)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>pointers to the first b.c. of each entity</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">nsiboca(nentity)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>number of b.c. for each entity</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+The function <TT>bc_info</TT> returns 2 arrays, <TT>nposib</TT> and <TT>nsiboca</TT>:
+The first array, <TT>nposib</TT>, contains an array of pointers to the
+first boundary condition of each entity. The second array, <TT>nsiboca</TT>,
+contains the number of boundary conditions for each entity.
+<hr>
+&nbsp;
+<BR>&nbsp;
+<TABLE WIDTH="60%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = bc_get_flags(<FONT COLOR="#3333FF">iboco,</FONT><FONT COLOR="#FF0000">
+bcflag1[6], bcflag2[6]</FONT>);</FONT></TD>
+</TR>
+
+<TR>
+<TD><B>FORTRAN</B></TD>
+
+<TD><FONT FACE="Courier">call gtflag(<FONT COLOR="#3333FF">iboco</FONT><FONT COLOR="#000000">,</FONT><FONT COLOR="#FF0000">
+bcflag1, bcflag2</FONT><FONT COLOR="#000000">, </FONT><FONT COLOR="#FF0000">ier</FONT>)&nbsp;</FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<BR>&nbsp;
+<TABLE BORDER WIDTH="85%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">iboco</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>pointer to the boundary condition table; nposib(n)&lt;=iboco&lt;nposib(n)+nsiboca(n)</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">bcflag1</FONT></TT></TD>
+
+<TD>char*5</TD>
+
+<TD>first character variable for this boundary condition</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">bcflag2</FONT></TT></TD>
+
+<TD>char*5</TD>
+
+<TD>second character variable for this boundary condition</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">This function returns boundary condition flags
+</FONT><TT>bcflag1</TT><FONT FACE="Arial,Helvetica"> and </FONT><TT>bcflag2.</TT>
+<hr>
+&nbsp;
+<BR>&nbsp;
+<TABLE WIDTH="60%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = bc_get_values(<FONT COLOR="#3333FF">iboco,</FONT><FONT COLOR="#FF0000">
+bcvalue[10]</FONT>);</FONT></TD>
+</TR>
+
+<TR>
+<TD><B>FORTRAN</B></TD>
+
+<TD><FONT FACE="Courier">call gtval10(<FONT COLOR="#3333FF">iboco</FONT><FONT COLOR="#000000">,</FONT><FONT COLOR="#FF0000">
+bcvalue</FONT><FONT COLOR="#000000">, </FONT><FONT COLOR="#FF0000">ier</FONT>)&nbsp;</FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="85%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">iboco</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>pointer to the boundary condition table; nposib(n)&lt;=iboco&lt;nposib(n)+nsiboca(n)</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">bcvalue(10)</FONT></TT></TD>
+
+<TD>real</TD>
+
+<TD>ten numerical values for this boundary condition</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">This function returns boundary condition values,
+</FONT><TT>bcvalue</TT><I><FONT FACE="Arial,Helvetica">.</FONT></I>
+<BR>&nbsp;
+<hr>
+
+<CENTER>&nbsp;</CENTER>
+
+<CENTER>&nbsp;</CENTER>
+
+<TABLE WIDTH="60%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">nboco</FONT> = bc_nboco(<FONT COLOR="#3333FF">mode,
+entity, </FONT><FONT COLOR="#FF0000">ier</FONT>);</FONT></TD>
+</TR>
+
+<TR>
+<TD><B>FORTRAN</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">nboco</FONT> = nboco(<FONT COLOR="#3333FF">mode,
+entity, </FONT><FONT COLOR="#FF0000">ier</FONT>)</FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="85%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">mode</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>topological type</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">entity</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>entity number of this topological type</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">nboco</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>number of boundary conditions for this entity</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">This function returns the number of boundary
+condition(s) for a given entity,</FONT><FONT FACE="Times,Times New Roman">
+</FONT><TT>nboco</TT><FONT FACE="Times,Times New Roman">.</FONT>
+<hr>
+&nbsp;
+<TABLE WIDTH="60%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = bc_flag(<FONT COLOR="#3333FF">mode,
+entity, boco, </FONT><FONT COLOR="#FF0000">bcflag1[6], bcflag2[6]</FONT>);</FONT></TD>
+</TR>
+
+<TR>
+<TD><B>FORTRAN</B></TD>
+
+<TD><FONT FACE="Courier">call bcflag(<FONT COLOR="#3333FF">mode, entity,
+boco, </FONT><FONT COLOR="#FF0000">bcflag1, bcflag2, ier</FONT>)</FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="85%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">mode</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>topological type</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">entity</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>entity number of this topological type</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">boco</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>boundary condition number (index);&nbsp; 1&lt;=boco&lt;=nboco</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">bcflag1</FONT></TT></TD>
+
+<TD>char*5</TD>
+
+<TD>first character variable for this b.c.</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">bcflag2</FONT></TT></TD>
+
+<TD>char*5</TD>
+
+<TD>second character variable for this b.c.</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">This function returns the boundary condition
+flags, </FONT><TT>bcflag1</TT><FONT FACE="Arial,Helvetica"> and </FONT><TT>bcflag2</TT><FONT FACE="Arial,Helvetica"><I>.</I>
+It differs from </FONT><TT>bc_get_flags</TT><FONT FACE="Arial,Helvetica">
+only in the way that it references the boundary condition. In </FONT><TT>bc_get_flags</TT><FONT FACE="Arial,Helvetica">
+the pointer to the boundary condition in the global boundary condition
+table must be given. Here, the pointer is found internally using the combination
+</FONT><TT>mode, entity</TT><FONT FACE="Arial,Helvetica"> and </FONT><TT>boco</TT><FONT FACE="Arial,Helvetica">.</FONT>
+<hr>
+&nbsp;
+<TABLE WIDTH="60%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = bc_value(<FONT COLOR="#3333FF">mode,
+entity, boco, </FONT><FONT COLOR="#FF0000">bcvalue[10]</FONT>);</FONT></TD>
+</TR>
+
+<TR>
+<TD><B>FORTRAN</B></TD>
+
+<TD><FONT FACE="Courier">call bcval10(<FONT COLOR="#3333FF">mode, entity,
+boco, </FONT><FONT COLOR="#FF0000">bcvalue, ier</FONT>)</FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">mode</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>topological type</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">entity</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>entity number of this topological type</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">boco</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>boundary condition number (index); 1&lt;=boco&lt;=nboco</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">bcvalue(10)</FONT></TT></TD>
+
+<TD>real</TD>
+
+<TD>ten numerical values for this b.c.</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">This function returns boundary condition values
+</FONT><TT>bcvalue. </TT><FONT FACE="Arial,Helvetica">It differs from </FONT><FONT FACE="Courier">bc_get_values
+</FONT><FONT FACE="Arial,Helvetica">only in the way it references the boundary
+condition. In</FONT><FONT FACE="Times,Times New Roman"> </FONT><FONT FACE="Courier">bc_get_values
+</FONT><FONT FACE="Times,Times New Roman">t</FONT><FONT FACE="Arial,Helvetica">he
+pointer to the boundary condition in the global boundary condition table
+must be given. Here, the pointer is found internally using the combination
+</FONT><TT>mode, entity </TT><FONT FACE="Arial,Helvetica">and</FONT><TT>
+boco</TT><FONT FACE="Times,Times New Roman">.</FONT>
+<hr>
+&nbsp;
+<TABLE WIDTH="60%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier">nandat = bc_n_analysis_datas();</FONT></TD>
+</TR>
+
+<TR>
+<TD><B>FORTRAN</B></TD>
+
+<TD><FONT FACE="Courier">n=nandat()</FONT></TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">Number of analysis data, </FONT><TT>nandat</TT><FONT FACE="Arial,Helvetica">
+This feature is available only for MULCAD Version 3.1.2 or above.</FONT>
+<BR><FONT FACE="Arial,Helvetica">&nbsp;</FONT>
+<hr>
+&nbsp;
+<TABLE WIDTH="60%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = bc_flags_analysis_data(<FONT COLOR="#3333FF">iandat,
+</FONT><FONT COLOR="#FF0000">anflag1, anflag2</FONT>);</FONT></TD>
+</TR>
+
+<TR>
+<TD><B>FORTRAN</B></TD>
+
+<TD><FONT FACE="Courier">call flandat(<FONT COLOR="#3333FF">mode, </FONT><FONT COLOR="#FF0000">anflag1,
+anflag2, ier</FONT>)</FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="85%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">iandat</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>analysis data number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">anflag1</FONT></TT></TD>
+
+<TD>char*5</TD>
+
+<TD>first character variable for this data set</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">anflag2</FONT></TT></TD>
+
+<TD>char*5</TD>
+
+<TD>second character variable for this data set</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">This function returns analysis data flags,
+</FONT><TT>anflag1</TT><FONT FACE="Arial,Helvetica"> and </FONT><TT>anflag2.</TT>
+<hr>
+&nbsp;
+<TABLE WIDTH="60%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = bc_values_analysis_data(<FONT COLOR="#3333FF">iandat,
+</FONT><FONT COLOR="#FF0000">advalue[10]</FONT>);</FONT></TD>
+</TR>
+
+<TR>
+<TD><B>FORTRAN</B></TD>
+
+<TD><FONT FACE="Courier">call adval(<FONT COLOR="#3333FF">iandat, </FONT><FONT COLOR="#FF0000">advalue,
+ier</FONT>)</FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="85%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">iandat</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>analysis data number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">advalue(10)</FONT></TT></TD>
+
+<TD>real</TD>
+
+<TD>ten numerical values for this data set</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">This function returns the analysis data values,
+</FONT><TT>advalues.</TT>
+
+<P><HR><P>
+<A HREF="../base.html">Back to ICEM CFD Main Menu</A>
+</BODY>
+</HTML>

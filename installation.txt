@@ -1,0 +1,81 @@
+#
+# INSTALLATION DE LA BIBLIOTHEQUE Lima++
+#
+
+Elle requiert une version supérieure ou égale à la version 3.14.0 de cmake.
+
+
+CONFIGURATION DE BASE : lecteurs mali [mli][mli2] ideas gibi castem modulef [icemcfd] dyna2d dyna3d abaqus
+=======================
+
+
+Exemples de compilation/installation : 
+
+A la ligne de commande : depuis le répertoire racine contenant les sources de Lima.
+-------------------------
+
+cmake -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_COMPILER=/usr/bin/g++ -DCMAKE_Fortran_COMPILER=/usr/bin/gfortran -DCMAKE_CXX_FLAGS="-std=c++11" -DCMAKE_Fortran_FLAGS="-fdefault-integer-8 -fdefault-real-8 -fdefault-double-8" \
+      -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_VERBOSE_MAKEFILE=ON -DBUILD_XLMLIMA=ON -DBUILD_TESTS:BOOL=ON -DBUILD_SCRIPTING:BOOL=ON -DBUILD_SHARED_LIBS:BOOL=ON -DINT_8:BOOL=ON -DREAL_8:BOOL=ON \
+      -DSWIG_EXECUTABLE=/opt/swig/3.0.12/bin/swig -DPython2_ROOT_DIR=/usr/lib/python2.7 -DHDF5_ROOT=/opt/HDF5/1.12.0 -DHDF145_INCLUDE_DIR=/opt/hdf145/1.3.0/include -DHDF145CPP_LIBRARY=/opt/hdf145/1.3.0/lib/libhdf145_cpp.so -DHDF145_LIBRARY=/opt/hdf145/1.3.0/lib/libhdf145.so \
+      -B /tmp/lima_build_dir -DCMAKE_INSTALL_PREFIX=/opt/Lima/7.7.8
+cmake --build /tmp/lima_build_dir
+cmake --install /tmp/lima_build_dir
+
+
+Avec les fichiers "configurations" :
+-------------------------------------
+
+cmake -S . -B /tmp/build_lima -DCMAKE_INSTALL_PREFIX=/tmp/install_lima -DCMAKE_TOOLCHAIN_FILE=configurations/Ubuntu_GNU7.cmake -DCMAKE_VERBOSE_MAKEFILE=ON -DBUILD_XLMLIMA=ON
+CMAKE_BUILD_PARALLEL_LEVEL=16 cmake --build /tmp/build_lima
+cmake --install /tmp/build_lima
+
+
+REMARQUES :
+============
+
+L'option -DBUILD_XLMLIMA=ON permet la compilation de l'utilitaire xlmlima (informations, changement de formats, préparations, comparaison).
+
+Le format mli2, qui repose sur une version supérieure ou égale à 1.10.0 de HDF5, est automatiquement réalisée si cmake trouve HDF5 avec entêtes et bibliothèques C++.
+
+Possibilité de lecture du format mli (HDF 1.4.5) : requiert que la bibliothèque HDF145 interne au CEA soit installée. La variable cmake HDF145_INCLUDE_DIR est alors attendue pour renseigner où trouver le fichier HDF145/hdf5.h. A titre d'exemple :
+
+cmake -S . -B /tmp/build_lima -DCMAKE_INSTALL_PREFIX=/tmp/install_lima -DCMAKE_TOOLCHAIN_FILE=configurations/Ubuntu_GNU7.cmake -C configurations/Ubuntu_GNU7_external_meshlibs.cmake -DCMAKE_VERBOSE_MAKEFILE=ON -DBUILD_XLMLIMA=ON -DHDF145_INCLUDE_DIR=/opt/hdf145/1.3.0/include
+cmake --build /tmp/build_lima
+cmake --install /tmp/build_lima
+
+NB : Les bibliothèques libhdf145_cpp.so et libhdf145.so sont recherchées dans le répertoire ${HDF145_INCLUDE_DIR}/../lib et ${HDF145_INCLUDE_DIR}/../lib64.
+
+ATTENTION : la lib Z peut être requise pour HDF 1.4.5, HDF5, et le logiciel à compiler. Pour éviter tout conflit il est recommandé de
+charger la lib Z via find_package (ZLIB REQUIRED) avec la variable cmake ZLIB_ROOT positionnée (par exemple sur la Z lib installée
+par HDF5).
+
+Taille des entiers pour le langage fortran : il convient de transmettre aux compilateurs C/C++ l'option -DINTEGER_32 si ils sont codés sur 32 bits ou -DINTEGER_64 si ils sont codés sur 64 bits, ce codage étant souvent côté
+fortran une instruction transmise au compilateur type -i8.
+On peut préciser à cmake la taille d'encodage des entiers et réels via les options booléennes INT_8 et REAL_8. Ex pour I4.R8 : -DINT_8:BOOL=OFF -DREAL_8:BOOL=ON
+
+Le script build.sh et les fichiers du répertoire configurations - à adapter - permettent d'installer lima à moindre coût.
+
+
+BINDINGS PYTHON 2/3 :
+=====================
+
+Pour avoir un binding python il faut en plus utiliser la directive cmake -DBUILD_SCRIPTING=ON et affecter la variable SWIG_EXECUTABLE.
+
+A noter que si cmake croise sur son chemin une version 3 de python celle-ci sera retenue, même si python 2 est demandé et renseigné. C'est
+pour cette raison que la directive find_package (Python VERSION) n'est pas utilisée dans les fichiers cmake.
+
+
+Binding python 2 :
+------------------ 
+
+Affecter Python2_ROOT_DIR (testé avec swig v 3.0.12/Python 2.7.*)
+
+Binding python 3 :
+-------------------
+
+Affecter Python3_ROOT_DIR (testé avec swig v 3.0.12/Python 3.7.3) et transmettre à cmake l'option -DUSE_PYTHON_3:BOOL=ON.
+
+
+
+EXPURGE_BEGINNING_TAG INTERNAL_TAG
+EXPURGE_COMPLETION_TAG

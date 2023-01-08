@@ -1,0 +1,32 @@
+include(CMakeFindDependencyMacro)
+set (HDF145_REQUESTED @MLI_SUPPORTED@)
+if (HDF145_REQUESTED)
+	include (${CMAKE_CURRENT_LIST_DIR}/FindHdf145.cmake)
+endif (HDF145_REQUESTED)
+set (HDF5_REQUESTED @MLI2_SUPPORTED@)
+if (HDF5_REQUESTED)
+	find_dependency (HDF5)
+endif (HDF5_REQUESTED)
+find_dependency (Threads)
+
+# EXPURGE_BEGINNING_TAG LOCAL_DEPENDENCIES
+# EXPURGE_COMPLETION_TAG
+
+@PACKAGE_INIT@
+# On force Lima_INCLUDE_DIR et Lima_LIB_DIR avant que des variables cmake ne soient modifiées par les macros cmake à suivre.
+set_and_check (Lima_INCLUDE_DIR   "@PACKAGE_INCLUDE_INSTALL_DIR@")
+set_and_check (Lima_LIB_DIR   "@PACKAGE_LIB_INSTALL_DIR@")
+
+
+# Ugly code :
+set (Lima_VERSION @LIMA_VERSION@)
+check_required_components (Lima)
+
+# Les formats optionnels supportés (ON) ou non (OFF) :
+set (MLI_SUPPORT @MLI_SUPPORTED@)
+set (MLI2_SUPPORT @MLI2_SUPPORTED@)
+set (ICEM_SUPPORT @ICEM_SUPPORTED@)
+
+# Fournir l'accès aux services des cibles (fichier non inclus automatiquement) :
+include(${CMAKE_CURRENT_LIST_DIR}/LimaTargets.cmake)
+

@@ -1,0 +1,273 @@
+#if defined(__INTERNE_MALIPP) || defined(__INTERNE_MALIPP2)
+/*****************************************************************************\
+ *    L I M A + + : Bibliotheque de lecture / ecriture de maillages 2D ou 3D *
+\*****************************************************************************/
+
+
+/******************************************************************************
+ Fichier : malipp_common.cpp
+ Cree le : 06/06/2019
+ Derniere modification le :
+ Auteur  : C. Pignerol
+******************************************************************************/
+
+/*!
+  \file		malipp_common.cpp
+  \brief	Propriétés communes aux fichiers MALI++ (.mli/.mli2).
+  \warning	Ne doit pas contenir de code HDF5
+*/
+
+#include <Lima/enum.h>
+#include "LimaP/malipp_common.h"
+
+#include <pwd.h>
+#include <stdio.h>		// cuserid pour compilateurs intel ...
+#include <unistd.h>
+#include <sys/types.h>
+
+using namespace std;
+
+
+BEGIN_NAMESPACE_LIMA
+
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Retourne le nom de l'utilisateur si celui-ci a pu être déterminé.
+string getUserName ( )
+{
+	char*	userName	= cuserid (NULL);
+	if (NULL != userName)
+		return string (userName);
+
+	userName	= getlogin ( );
+	if (NULL != userName)
+		return string (userName);
+
+	passwd*	pwd	= getpwuid (geteuid ( ));
+	if (NULL != pwd)
+		return string (pwd->pw_name);
+
+	return string ("");
+}	// getUserName
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du groupe "header" du fichier.
+const string	FILE_HEADER_GROUP_NAME ("header");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du champ "title".
+const string	TITLE_FIELD_NAME ("title");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! La version du format de fichier.
+const string	FILE_VERSION ("1.1.0");
+const string	MLI2_FILE_VERSION ("1.0.0");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom de l'attribut "file_version".
+const string	FILE_VERSION_FIELD_NAME ("file_version");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! La taille maximale de l'attribut "file_version".
+const int		FILE_VERSION_MAX_LENGTH	= 8;
+
+//////////////////////////////////////////////////////////////////////////////
+// ! La version de lima++.
+const string	LIMA_VERSION (lima_version ( ));
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom de l'attribut "lima_version".
+const string	LIMA_VERSION_FIELD_NAME ("lima_version");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! La taille maximale de l'attribut "lima_version".
+const int		LIMA_VERSION_MAX_LENGTH	= 15;
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du champ "author".
+const string	AUTHOR_FIELD_NAME ("author");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du champ "comment".
+const string	COMMENT_FIELD_NAME ("comment");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du champ "nb_mesh".
+const string	NB_MESHES_FIELD_NAME ("nb_mesh");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le prefix d'un groupe racine de maillage.
+const string	MESH_GROUP_PREFIX ("mesh");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du groupe "header" du maillage.
+const string	MESH_HEADER_GROUP_NAME ("header");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du groupe "data_mesh".
+const string	DATA_MESH_GROUP_NAME ("data_mesh");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du groupe "node".
+const string	NODE_GROUP_NAME ("node");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du groupe "data_node".
+const string	DATA_NODE_GROUP_NAME ("data_node");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du groupe "edge".
+const string	EDGE_GROUP_NAME ("edge");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du groupe "data_edge".
+const string	DATA_EDGE_GROUP_NAME ("data_edge");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du groupe "cell2D".
+const string	CELL_2D_GROUP_NAME ("cell2D");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du groupe "data_cell2D".
+const string	DATA_CELL_2D_GROUP_NAME ("data_cell2D");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du groupe "cell3D".
+const string	CELL_3D_GROUP_NAME ("cell3D");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du groupe "data_cell3D".
+const string	DATA_CELL_3D_GROUP_NAME ("data_cell3D");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du groupe "nodeset".
+const string	NODESET_GROUP_NAME ("nodeset");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du groupe "data_nodeset".
+const string	DATA_NODESET_GROUP_NAME ("data_nodeset");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du groupe "line".
+const string	LINE_GROUP_NAME ("line");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du groupe "data_line".
+const string	DATA_LINE_GROUP_NAME ("data_line");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du groupe "surface".
+const string	SURFACE_GROUP_NAME ("surface");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du groupe "data_surface".
+const string	DATA_SURFACE_GROUP_NAME ("data_surface");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du groupe "volume".
+const string	VOLUME_GROUP_NAME ("volume");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du groupe "data_volume".
+const string	DATA_VOLUME_GROUP_NAME ("data_volume");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le prefix des sous-groupe.
+const string	SUBGROUP_PREFIX ("grp");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom de l'attribut "title" du maillage.
+const string	MESH_TITLE_FIELD_NAME ("title");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom de l'attribut "date" du maillage.
+const string	MESH_DATE_FIELD_NAME ("date");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom de l'attribut "dimension" du maillage.
+const string	MESH_DIMENSION_FIELD_NAME ("dimension");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom de l'attribut "geometry" du maillage.
+const string	MESH_GEOMETRY_FIELD_NAME ("geometry");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom de l'attribut "coordinate_system" du maillage.
+const string	MESH_COORD_SYSTEM_FIELD_NAME ("coordinate_system");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom de l'attribut "angle_unit" du maillage.
+const string	MESH_ANGLE_UNIT_FIELD_NAME ("angle_unit");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom de l'attribut "lenght_unit" du maillage.
+const string	MESH_LENGTH_UNIT_FIELD_NAME ("lenght_unit");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nombre d'éléments d'un ensemble (dataset, groupe ou autre).
+const string	SIZE_ATTR_NAME ("size");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom d'un élément (nuage, ligne, surface, ...).
+const string	NAME_ATTR_NAME ("name");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du dataset "coordinate_x" d'un maillage.
+const string	DATASET_COORD_X_NAME ("coordinate_x");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du dataset "coordinate_y" d'un maillage.
+const string	DATASET_COORD_Y_NAME ("coordinate_y");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom du dataset "coordinate_z" d'un maillage.
+const string	DATASET_COORD_Z_NAME ("coordinate_z");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom des datasets contenant les identifiants d'un groupe :
+const string	DATASET_IDS_NAME ("id");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom des datasets contenant une liste d'identifiants :
+const string	DATASET_IDS_LIST_NAME ("list");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le caractère contigue des identifiants d'un groupe :
+const string	CONTIGUOUS_IDS_ATTR_NAME ("contiguous");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom des datasets contenant les types d'objets d'un groupe :
+const string	DATASET_TYPES_NAME ("type");
+
+//////////////////////////////////////////////////////////////////////////////
+// ! Le nom des datasets contenant la liste des attributs (Lima) d'un groupe :
+const string	DATASET_ATTR_LIST_NAME ("list");
+
+//////////////////////////////////////////////////////////////////////////////
+//! La composition en noeuds d'un groupe.
+const string	NODE_COMPOSITION_DATASET_NAME ("node_composition");
+
+//////////////////////////////////////////////////////////////////////////////
+//! La composition en bras d'un groupe.
+const string	EDGE_COMPOSITION_DATASET_NAME ("edge_composition");
+
+//////////////////////////////////////////////////////////////////////////////
+//! La composition en polygones d'un groupe.
+const string	CELL2D_COMPOSITION_DATASET_NAME ("cell2d_composition");
+
+//////////////////////////////////////////////////////////////////////////////
+//! La composition en polyèdres d'un groupe.
+const string	CELL3D_COMPOSITION_DATASET_NAME ("cell3d_composition");
+
+//////////////////////////////////////////////////////////////////////////////
+//! L'attribut indiquant si la composition est renseignée ou non.
+const string	DETAILED_ATTR_NAME ("detailed");
+
+//////////////////////////////////////////////////////////////////////////////
+//! L'attribut contenant le détail de la composition d'un groupe de données.
+const string	COMPOSITION_ATTR_NAME ("composition");
+
+
+END_NAMESPACE_LIMA
+
+#endif	// #if defined(__INTERNE_MALIPP) || defined(__INTERNE_MALIPP2)

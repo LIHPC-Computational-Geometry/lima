@@ -1,0 +1,18 @@
+include(CMakeFindDependencyMacro)
+find_dependency (Lima)
+find_dependency (Python@PYTHON_MAJOR_VERSION@ REQUIRED COMPONENTS Interpreter Development)
+
+@PACKAGE_INIT@
+# On force LimaScripting_INCLUDE_DIR, LimaScripting_LIB_DIR et LimaScripting_RUNTIME_DIR avant que des variables cmake ne soient modifiées par les macros cmake à suivre.
+set_and_check (LimaScripting_INCLUDE_DIR   "@PACKAGE_INCLUDE_INSTALL_DIR@")
+set_and_check (LimaScripting_LIB_DIR   "@PACKAGE_LIB_INSTALL_DIR@")
+set_and_check (LimaScripting_RUNTIME_DIR   "@PACKAGE_RUNTIME_INSTALL_DIR@")
+
+# Ugly code :
+include("${CMAKE_CURRENT_LIST_DIR}/../../Lima/cmake/LimaTargets.cmake")
+set (LimaScripting_VERSION @LIMA_VERSION@)
+check_required_components (LimaScripting)
+
+# Fournir l'accès aux services des cibles (fichier non inclus automatiquement) :
+include(${CMAKE_CURRENT_LIST_DIR}/LimaScriptingTargets.cmake)
+

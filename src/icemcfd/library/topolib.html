@@ -1,0 +1,3825 @@
+<HTML>
+<HEAD>
+<TITLE>ICEM CFD Topology Library</TITLE>
+</HEAD>
+<BODY>
+<img src = "../icemcfd.gif" alt = "icemcfd">
+
+<H1>ICEM CFD Topology Library</h1>
+
+<a href="../base.html">Back to ICEM CFD Main Menu</a>
+
+<P><HR><P>
+
+Last revised on June 9 1998.
+
+<P>
+
+<P><B><FONT SIZE=+2>Contents:</FONT></B>
+<UL>
+<LI>
+<A HREF="#Introduction">Introduction</A></LI>
+
+<LI>
+<A HREF="#Open, Read and Close">Open, Read, Close</A></LI>
+
+<LI>
+<A HREF="#Number of entities of each topological type">Number of entities
+of each topological type</A></LI>
+
+<LI>
+<A HREF="#Domain Information">Domain Information</A></LI>
+
+<LI>
+<A HREF="#face info">Face Information</A></LI>
+
+<LI>
+<A HREF="#Subface Information">Subface Information</A></LI>
+
+<LI>
+<A HREF="#Edge Entity Information">Edge Entity Information</A></LI>
+
+<LI>
+<A HREF="#Vertice Information">Vertice Information</A></LI>
+
+<LI>
+<A HREF="#Node Information">Node Information</A></LI>
+
+<LI>
+<A HREF="#Free Subface Information">Free Subface Information</A></LI>
+
+<LI>
+<A HREF="#Grid Connectivity Information">Grid Connectivity Information</A></LI>
+
+<LI>
+<A HREF="#Superdomain Information">Superdomain Information</A></LI>
+
+<LI>
+<A HREF="#Linear Domain Information">Linear Domain Information</A></LI>
+
+<LI>
+<A HREF="#Quadratic Mesh">Quadratic Mesh</A></LI>
+
+<LI>
+<A HREF="#Error Handling">Error Handling</A></LI>
+
+<LI>
+<A HREF="#Non-Matching Grids">Non-Matching Grids</A></LI>
+</UL>
+&nbsp;
+
+<P><A NAME="Introduction"></A><B><U><FONT FACE="Times,Times New Roman"><FONT SIZE=+2>Introduction</FONT></FONT></U></B>
+
+<P><FONT FACE="Arial,Helvetica">The topological information characterizing
+structured meshes of one or more blocks is written in a file named </FONT><FONT FACE="Courier">topo_mulcad_out</FONT>
+<FONT FACE="Times,Times New Roman">. </FONT><FONT FACE="Arial,Helvetica">This
+file contains information such as the number of blocks in the model, the
+block size, the block-to-block connectivity, etc.</FONT>
+
+<P><FONT FACE="Arial,Helvetica">The topology library </FONT><FONT FACE="Courier">topolib.a
+</FONT><FONT FACE="Arial,Helvetica">contains routines to access the information
+present in the topology file. To use these routines, application codes
+must be linked to the topology library located in the directory </FONT><FONT FACE="Courier">/$ICEM_ACN/icemcfd/output-interfaces/lib.</FONT><FONT FACE="Times,Times New Roman">.</FONT>
+
+<P><FONT FACE="Arial,Helvetica">This chapter describes the functions of
+the topology library. Unless otherwise specified, the return code </FONT><TT>ier</TT><FONT FACE="Arial,Helvetica">
+is equal to zero when the function is executed successfully. Most functions
+are available for both the FORTRAN and C programming interface.</FONT>
+
+<P>&nbsp;
+
+<P><A NAME="Open, Read and Close"></A><B><U><FONT FACE="Times,Times New Roman"><FONT SIZE=+2>Open,
+Read and Close</FONT></FONT></U></B>
+<BR>&nbsp;
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_open(<FONT COLOR="#3333FF">filename</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call topopen(<FONT COLOR="#3333FF">filename, len,
+iunit</FONT>, <FONT COLOR="#FF0000">ier</FONT>)</FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<BR>&nbsp;
+<TABLE BORDER WIDTH="80%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#FF0000">&nbsp;</FONT><FONT COLOR="#3333FF">filename</FONT></TT></TD>
+
+<TD>char</TD>
+
+<TD>filename of topology file</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;len</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>length of string <TT><FONT COLOR="#3333FF">filename</FONT></TT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;iunit</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>FORTRAN unit number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;</FONT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">The function</FONT><FONT FACE="Times,Times New Roman">
+</FONT><FONT FACE="Courier">tp_open</FONT><FONT FACE="Times,Times New Roman">
+</FONT><FONT FACE="Arial,Helvetica">opens the topology file for reading.
+It must be called before any other function of the topology library.</FONT>
+<hr>
+&nbsp;
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier">tp_close();</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call topclse(<FONT COLOR="#3333FF">iunit</FONT>)</FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="80%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;iunit</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>FORTRAN unit number</TD>
+</TR>
+</TABLE>
+
+<CENTER><FONT FACE="Arial,Helvetica">The function</FONT><FONT FACE="Times,Times New Roman">
+</FONT><FONT FACE="Courier">tp_close</FONT><FONT FACE="Times,Times New Roman">
+</FONT><FONT FACE="Arial,Helvetica">closes the topology file. It should
+be the last function called from the topology library.</FONT></CENTER>
+
+<hr>
+&nbsp;
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_read();</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call topreas(<FONT COLOR="#3333FF">iunit</FONT>,
+<FONT COLOR="#FF0000">ier</FONT>)</FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="80%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;iunit</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>FORTRAN unit number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;</FONT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">The function </FONT><FONT FACE="Courier">tp_read
+</FONT><FONT FACE="Arial,Helvetica">reads the topology file and stores
+the information in memory. This routine must be called once, immediately
+after opening the topology file.</FONT>
+<hr>
+&nbsp;
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_init(<FONT COLOR="#3333FF">filename</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call topinit(<FONT COLOR="#3333FF">filename, len</FONT>,
+<FONT COLOR="#FF0000">ier</FONT>)</FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="80%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#FF0000">&nbsp;</FONT><FONT COLOR="#3333FF">filename</FONT></TT></TD>
+
+<TD>char</TD>
+
+<TD>filename of topology file</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;len</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>length of string<TT><FONT COLOR="#3333FF"> filename</FONT></TT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;</FONT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">The function </FONT><FONT FACE="Courier">tp_init</FONT><FONT FACE="Times,Times New Roman">
+</FONT><FONT FACE="Arial,Helvetica">opens, reads and closes a topology
+file. It can be used instead of the sequence </FONT><FONT FACE="Courier">tp_open(),
+tp_read()</FONT><FONT FACE="Times,Times New Roman"> </FONT><FONT FACE="Arial,Helvetica">and
+</FONT><FONT FACE="Courier">tp_close()</FONT><FONT FACE="Times,Times New Roman">.</FONT>
+<BR>&nbsp;
+
+<P>
+<HR size="5">
+<BR>&nbsp;
+<BR>&nbsp;
+<BR><A NAME="Number of entities of each topological type"></A><B><U><FONT FACE="Times,Times New Roman"><FONT SIZE=+2>Number
+of entities of each topological type</FONT></FONT></U></B>
+
+<P><FONT FACE="Arial,Helvetica">Use the functions listed in the following
+table to request the number of entities of each topological type.</FONT>
+<BR><FONT FACE="Arial,Helvetica">&nbsp;</FONT>
+<TABLE BORDER CELLPADDING=9 WIDTH="656" >
+<TR>
+<TD VALIGN=TOP WIDTH="34%">
+<CENTER><FONT FACE="Arial,Helvetica">Information sought</FONT></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="33%">
+<CENTER><FONT FACE="Arial,Helvetica">C functions</FONT></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="33%">
+<CENTER><FONT FACE="Arial,Helvetica">FORTRAN functions</FONT></CENTER>
+</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="34%" HEIGHT="26"><FONT FACE="Arial,Helvetica">Number
+of domains, <I>ndom</I></FONT></TD>
+
+<TD VALIGN=TOP WIDTH="33%" HEIGHT="26"><TT><FONT COLOR="#FF0000">ndom</FONT>
+= tp_ndom();</TT></TD>
+
+<TD VALIGN=TOP WIDTH="33%" HEIGHT="26"><TT><FONT COLOR="#FF0000">ndom</FONT>
+= gtndom()</TT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="34%" HEIGHT="26"><FONT FACE="Arial,Helvetica">Number
+of faces, <I>nfac</I></FONT></TD>
+
+<TD VALIGN=TOP WIDTH="33%" HEIGHT="26"><FONT FACE="Courier"><FONT COLOR="#FF0000">nfac</FONT>
+= tp_nfac();</FONT></TD>
+
+<TD VALIGN=TOP WIDTH="33%" HEIGHT="26"><FONT FACE="Courier"><FONT COLOR="#FF0000">nfac</FONT>
+= gtnfac()</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="34%" HEIGHT="26"><FONT FACE="Arial,Helvetica">Number
+of subfaces</FONT><FONT FACE="Times,Times New Roman">,</FONT><FONT FACE="Arial,Helvetica">
+<I>nsfac</I></FONT></TD>
+
+<TD VALIGN=TOP WIDTH="33%" HEIGHT="26"><FONT FACE="Courier"><FONT COLOR="#FF0000">nsfac</FONT>
+= tp_nsfac();</FONT></TD>
+
+<TD VALIGN=TOP WIDTH="33%" HEIGHT="26"><FONT FACE="Courier"><FONT COLOR="#FF0000">nsfac</FONT>
+= gtnsfac()</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="34%" HEIGHT="26"><FONT FACE="Arial,Helvetica">Number
+of edge entities, <I>nar</I></FONT></TD>
+
+<TD VALIGN=TOP WIDTH="33%" HEIGHT="26"><FONT FACE="Courier"><FONT COLOR="#FF0000">nar</FONT>
+= tp_nar();</FONT></TD>
+
+<TD VALIGN=TOP WIDTH="33%" HEIGHT="26"><FONT FACE="Courier"><FONT COLOR="#FF0000">nar
+</FONT>= gtnar()</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="34%" HEIGHT="26"><FONT FACE="Arial,Helvetica">Number
+of vertices, <I>nvert</I></FONT></TD>
+
+<TD VALIGN=TOP WIDTH="33%" HEIGHT="26"><FONT FACE="Courier"><FONT COLOR="#FF0000">nvert</FONT>
+= tp_nvert();</FONT></TD>
+
+<TD VALIGN=TOP WIDTH="33%" HEIGHT="26"><FONT FACE="Courier"><FONT COLOR="#FF0000">nvert</FONT>
+= gtvtx()</FONT></TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="34%" HEIGHT="26"><FONT FACE="Arial,Helvetica">Number
+of free subfaces, <I>nfsf</I></FONT></TD>
+
+<TD VALIGN=TOP WIDTH="33%" HEIGHT="26"><FONT FACE="Courier"><FONT COLOR="#FF0000">nfsf</FONT>
+= tp_nfsf();</FONT></TD>
+
+<TD VALIGN=TOP WIDTH="33%" HEIGHT="26"><FONT FACE="Courier"><FONT COLOR="#FF0000">nfsf</FONT>
+= gtnfsf()</FONT></TD>
+</TR>
+</TABLE>
+
+<HR size="5">
+
+<P><A NAME="Domain Information"></A><B><U><FONT FACE="Times,Times New Roman"><FONT SIZE=+2>Domain
+Information</FONT></FONT></U></B>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">type_deg</FONT> = tp_domain_type(<FONT COLOR="#3333FF">domain</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">type_deg</FONT> = nytpdeg
+(<FONT COLOR="#3333FF">domain</FONT>)</FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="80%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;</FONT><FONT COLOR="#FF0000">type_deg</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>type of domain degeneration</TD>
+</TR>
+</TABLE>
+&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">This function returns the type of degenerated
+domain, </FONT><TT>type_deg.</TT>
+
+<P><FONT FACE="Arial,Helvetica">The types of domain degeneration are:</FONT>
+<UL>
+<LI>
+<FONT FACE="Arial,Helvetica">0: not degenerated</FONT></LI>
+
+<LI>
+<FONT FACE="Arial,Helvetica">1: wedge with three quadrangular faces and
+two triangular faces</FONT></LI>
+
+<LI>
+<FONT FACE="Arial,Helvetica">2: wedge with one quadrangular face and four
+triangular faces</FONT></LI>
+
+<LI>
+<FONT FACE="Arial,Helvetica">3: pyramid with one quadrangular face and
+four triangular faces</FONT></LI>
+
+<LI>
+<FONT FACE="Arial,Helvetica">4: wedge with two quadrangular faces and two
+triangular faces</FONT></LI>
+
+<LI>
+<FONT FACE="Arial,Helvetica">5: pyramid with four triangular faces</FONT></LI>
+
+<LI>
+<FONT FACE="Arial,Helvetica">6: two-dimensional domain</FONT></LI>
+</UL>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">Range of a structured domain, </FONT><TT>imin(3),
+imax(3)</TT><FONT FACE="Arial,Helvetica">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_domain_range(<FONT COLOR="#3333FF">domain,
+imin, imax</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call dmrange(<FONT COLOR="#3333FF">domain,</FONT><FONT COLOR="#FF0000">imin,
+imax, ier</FONT>)</FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="80%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#FF0000">&nbsp;</FONT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;</FONT><FONT COLOR="#FF0000">imin(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>minimum i, j, k indices</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;</FONT><FONT COLOR="#FF0000">imax(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>maximum i, j, k indices</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;</FONT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">Edge entities of a structured domain, </FONT><TT>edgees</TT><FONT FACE="Arial,Helvetica">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">nedgee</FONT> = tp_edges_of_domain(<FONT COLOR="#3333FF">domain,
+</FONT><FONT COLOR="#FF0000">edgees</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call edgofdm(<FONT COLOR="#3333FF">domain,</FONT><FONT COLOR="#FF0000">nedgee,
+edgees, ier</FONT>)</FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="80%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#FF0000">&nbsp;</FONT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;</FONT><FONT COLOR="#FF0000">edgee</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>number of edge entities in domain</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;</FONT><FONT COLOR="#FF0000">edgees</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>list of edge entities</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;</FONT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">If an error occurs while executing the C function,
+the returned value for </FONT><TT>nedgee</TT><FONT FACE="Arial,Helvetica">
+is -1.</FONT>
+<hr>
+&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">Vertices of a structured domain,</FONT><TT>
+vertices</TT><FONT FACE="Arial,Helvetica">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_vertex_of_domain(<FONT COLOR="#3333FF">domain,
+</FONT><FONT COLOR="#FF0000">vertices</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call vtofdm(<FONT COLOR="#3333FF">domain, </FONT><FONT COLOR="#FF0000">vertices,
+ier</FONT>)</FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="80%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#FF0000">&nbsp;</FONT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;</FONT><FONT COLOR="#FF0000">vertices</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>list of vertice numbers</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;</FONT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">This function returns the 8 corner vertices
+of a domain size </FONT><TT>NI*NJ*NK</TT><FONT FACE="Arial,Helvetica">
+in the following order:</FONT>
+<PRE><FONT FACE="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </FONT><TT>(1, 1,&nbsp; 1), (NI, 1,&nbsp; 1), (1, NJ,&nbsp; 1), (NI, NJ,&nbsp; 1),
+&nbsp;&nbsp;&nbsp;&nbsp; (1, 1, NK), (NI, 1, NK), (1, NJ, NK), (NI, NJ, NK)</TT></PRE>
+
+<HR size="5">
+
+<P><A NAME="face info"></A><B><U><FONT FACE="Times,Times New Roman"><FONT SIZE=+2>Face
+Information</FONT></FONT></U></B>
+
+<P><FONT FACE="Arial,Helvetica">Global face number </FONT><TT>face_no</TT><FONT FACE="Arial,Helvetica">
+of a domain face:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">face_no</FONT> = tp_dom(<FONT COLOR="#3333FF">domain,
+face</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">face_no</FONT> = gtdom(<FONT COLOR="#3333FF">domain,
+face</FONT>)</FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="80%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#FF0000">&nbsp;</FONT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;face</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>face index, 1 &lt;= <TT>face</TT> &lt;= 6</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;</FONT><FONT COLOR="#FF0000">face_no</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>1&lt;= f<TT>ace_no</TT> &lt;=ndom*6</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">Coordinate type for a face of a domain,<I>
+</I></FONT><TT>tcor</TT><FONT FACE="Courier">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_face_side(<FONT COLOR="#3333FF">domain,
+face, </FONT><FONT COLOR="#FF0000">tcor</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call gtfside(<FONT COLOR="#3333FF">domain, face,
+</FONT><FONT COLOR="#FF0000">tcor, ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="80%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#FF0000">&nbsp;</FONT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;face</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>face index, 1&lt;=face&lt;=6</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;</FONT><FONT COLOR="#FF0000">tcor</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>-1=IMIN, -2=JMIN, -3=KMIN,&nbsp; +1=IMAX, +2=JMAX, +3KMAX</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;</FONT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+<CENTER>&nbsp;</CENTER>
+<FONT FACE="Arial,Helvetica">Coordinate type for a face of a domain,<I>
+</I></FONT><TT>tcor</TT><FONT FACE="Arial,Helvetica">. This function is
+similar to </FONT><TT>tp_face_side</TT><FONT FACE="Arial,Helvetica"> except
+that it does not return the error code.</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">tcor</FONT> = tp_tcor(<FONT COLOR="#3333FF">face,
+domain</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">tcor</FONT> = ntcor(<FONT COLOR="#3333FF">face,
+domain</FONT>)</FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="80%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#FF0000">&nbsp;</FONT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;face</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>face index, 1 &lt;= <TT>face</TT> &lt;= 6</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;</FONT><FONT COLOR="#FF0000">face_no</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>-1=IMIN, -2=JMIN, -3=KMIN,&nbsp; +1=IMAX, +2=JMAX, +3=KMAX</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">Range of a face of a structured domain,</FONT><FONT FACE="Courier">
+</FONT><TT>imin(3), imax(3)</TT><FONT FACE="Courier">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_f_domain_face_range(<FONT COLOR="#3333FF">domain,
+face_type, </FONT><FONT COLOR="#FF0000">imin, imax</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call gtfside(<FONT COLOR="#3333FF">domain, face_type,
+</FONT><FONT COLOR="#FF0000">imin, imax, ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<BR>&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">face_type</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>1&lt;= face_type&lt;=6 for IMIN to IMAX</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">imin(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>minimum i, j, k indices</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">imax(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>maximum i, j, k indices</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">List of subfaces composing the face of
+coordinate type </FONT><TT>face_type,</TT><FONT FACE="Arial,Helvetica">
+within a domain:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">nsub</FONT> = tp_subface_of_face(<FONT COLOR="#3333FF">domain,
+face_type, </FONT><FONT COLOR="#FF0000">subfaces</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call sfoface(<FONT COLOR="#3333FF">domain, face_type,
+</FONT><FONT COLOR="#FF0000">nsub, subfaces, ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">face_type</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>1&lt;= face_type&lt;=6 for IMIN to IMAX</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">nsub</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>number of subfaces on face</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">subfaces(*)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>array of subfaces</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+&nbsp;
+<PRE><FONT FACE="Courier">input:&nbsp; integer <I>domain</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; domain number
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; integer <I>face_type</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&lt;=<I>face_type</I>&lt;=6, for face IMIN to KMAX&nbsp;
+output: integer <I>nsub</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; number of subfaces on face
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; integer <I>subfaces(*)</I>&nbsp;&nbsp;&nbsp;&nbsp; array of subfaces
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; integer <I>ier</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return code</FONT></PRE>
+
+<HR size="5">
+
+<P><A NAME="Subface Information"></A><B><U><FONT FACE="Times,Times New Roman"><FONT SIZE=+2>Subface
+Information</FONT></FONT></U></B>
+
+<P><FONT FACE="Arial,Helvetica">Dimension of a subface, </FONT><TT>dimension(2)</TT><FONT FACE="Arial,Helvetica">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_subface_dimension(<FONT COLOR="#3333FF">subface,
+</FONT><FONT COLOR="#FF0000">dimension</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call gtsfacd(<FONT COLOR="#3333FF">subface, </FONT><FONT COLOR="#FF0000">dimension,
+ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="80%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#FF0000">&nbsp;</FONT><FONT COLOR="#3333FF">subface</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>subface number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;</FONT><FONT COLOR="#FF0000">dimension(2)</FONT></TT></TD>
+
+<TD>int&nbsp;</TD>
+
+<TD>dimension of a subface&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">&nbsp;</FONT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">Range of a subface within a structured
+domain,</FONT><TT> imin(3), imax(3):</TT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_subface_range(<FONT COLOR="#3333FF">domain,
+subface, </FONT><FONT COLOR="#FF0000">imin, imax</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call gtsreg(<FONT COLOR="#3333FF">domain, subface,
+</FONT><FONT COLOR="#FF0000">imin, imax, ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">subface</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>subface number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">imin(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>minimum i, j, k indices</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">imax(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>maximum i, j, k indices</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">Region of a subface within a structured
+domain, </FONT><TT>first(3), last(3)</TT><FONT FACE="Arial,Helvetica">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_subface_points(<FONT COLOR="#3333FF">domain,
+subface, </FONT><FONT COLOR="#FF0000">first, last</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call sregion(<FONT COLOR="#3333FF">domain, subface,
+</FONT><FONT COLOR="#FF0000">first, last, ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">subface</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>subface number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">first(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>i, j, k coordinates of first point</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">last(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>&nbsp;i, j, k coordinates of last point</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<PRE><FONT FACE="Arial,Helvetica">According to the orientation definition, it is not necessary that </FONT><FONT FACE="Courier">ifirst(n)&lt;=ilast(n).</FONT></PRE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">Three points of a subface within a structured
+domain, </FONT><TT>p1(3), p2(3), p3(3)</TT><FONT FACE="Arial,Helvetica">:</FONT>
+
+<P><FONT FACE="Arial,Helvetica">The three points are transformed from the
+local subface coordinates (1,1), (<I>m</I>,1), (1,<I>n</I>), where <I>m*n</I>
+is the dimension of the subface.</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_subface_3_points(<FONT COLOR="#3333FF">domain,
+subface, </FONT><FONT COLOR="#FF0000">p1, p2, p3</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call sfspann(<FONT COLOR="#3333FF">domain, subface,
+</FONT><FONT COLOR="#FF0000">p1, p2, p3, ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<BR>&nbsp;
+<TABLE BORDER WIDTH="80%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">subface</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>subface number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">p1(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>i, j, k coordinates of first point</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">p2(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>i, j, k coordinates of second point</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">p3(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>i, j, k coordinates of third point</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">The three points are transformed from the
+local subface coordinates (1,1), (<I>m</I>,1), (1,<I>n</I>), where <I>m*n</I>
+is the dimension of the subface. The first and last points of the subface
+may be found from these 3 points:</FONT>
+<PRE><FONT FACE="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; first =</FONT><FONT FACE="Courier"> p1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </FONT><FONT FACE="Arial,Helvetica">last&nbsp;</FONT><FONT FACE="Courier"> = p1 + (p2-p1) + (p3-p1)</FONT></PRE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">Node dimension vector </FONT><TT>ndim</TT><FONT FACE="Arial,Helvetica">
+of a subface within a domain:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_gsfdims(<FONT COLOR="#3333FF">domain,
+subface, </FONT><FONT COLOR="#FF0000">ndim[3][3]</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call gsfdims(<FONT COLOR="#3333FF">domain, subface,
+</FONT><FONT COLOR="#FF0000">ndim, ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<BR>&nbsp;
+<TABLE BORDER WIDTH="85%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">subface</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>subface number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">ndim(3,3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD><TT>ndim (dir, 1)&nbsp;</TT> index of 1st node in direction <TT>dir</TT>:&nbsp;
+1&lt;=dir&lt;=3&nbsp;
+<BR><TT>ndim (dir, 2)&nbsp;</TT> number of points in direction <TT>dir:</TT>&nbsp;
+1&lt;=dir&lt;=3&nbsp;
+<BR><TT>ndim(dir, 3) </TT>coordinates type for direction <TT>dir</TT>:&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp; -1, 1 means direction -i, i&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp; -2, 2 means direction -j, j&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp; -3, 3 means direction -k, k</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">In C, the indices must be reversed, so the
+coordinate types are in </FONT><TT>ndim[2][dir],</TT><FONT FACE="Arial,Helvetica">
+the indices of the 1<SUP>st</SUP> node in </FONT><TT>ndim[0][dir] </TT><FONT FACE="Arial,Helvetica">and
+the number of points in </FONT><TT>ndim[1][dir]. </TT><FONT FACE="Arial,Helvetica">Note
+that the third direction is not used, since subfaces are two-dimensional
+entities.</FONT>
+<hr>
+&nbsp;
+<BR>&nbsp;
+<BR><FONT FACE="Arial,Helvetica">Cell dimension vector </FONT><TT>cdim
+</TT><FONT FACE="Arial,Helvetica">of a subface within a domain:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_gcldims(<FONT COLOR="#3333FF">domain,
+subface, </FONT><FONT COLOR="#FF0000">cdim[3][3]</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call gcldims(<FONT COLOR="#3333FF">domain, subface,
+</FONT><FONT COLOR="#FF0000">cdim, ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="85%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">subface</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>subface number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">cdim(3,3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD><TT>cdim (dir, 1)&nbsp;</TT> index of 1st cell in direction <TT>dir</TT>:&nbsp;
+1&lt;=dir&lt;=3&nbsp;
+<BR><TT>cdim (dir, 2)&nbsp;</TT> number of cells in direction <TT>dir:</TT>&nbsp;
+1&lt;=dir&lt;=3&nbsp;
+<BR><TT>cdim(dir, 3) </TT>coordinate type for direction <TT>dir</TT>:&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp; -1, 1 means direction -i, i&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp; -2, 2 means direction -j, j&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp; -3, 3 means direction -k, k</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">In C, the indices must be reversed. The coordinate
+types are in </FONT><TT>cdim[2][dir],</TT><FONT FACE="Arial,Helvetica">
+the indices of the 1<SUP>st</SUP> cell in </FONT><TT>cdim[0][dir]</TT><FONT FACE="Arial,Helvetica">
+and the number of points in </FONT><TT>cdim[1][dir].</TT><FONT FACE="Arial,Helvetica">
+Note that the third direction is not used, since subfaces are two-dimensional
+entities.</FONT>
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">List of edge entities composing an edge
+of a subface:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_edge_of_subface(<FONT COLOR="#3333FF">subface,
+edge, </FONT><FONT COLOR="#FF0000">nedgee, edgees</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call edgofsf(<FONT COLOR="#3333FF">subface, edge,
+</FONT><FONT COLOR="#FF0000">nedgee, edgees, ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">subface</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>subface number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">edge</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>edge of subface (1&lt;=edge&lt;=4)</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">nedgee</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>number of edge entities</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">edgees</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>array of edge entities</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">The sign of the edge entity numbers in
+the list determine the flow direction of the edge entities within the edges.
+The convention for edge numbering and directions are shown below.</FONT>
+
+<P><FONT FACE="Courier">(... Figure missing... )</FONT>
+<hr>
+&nbsp;
+<BR>&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">Coordinate type of a subface within a domain:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_subface_side(<FONT COLOR="#3333FF">domain,
+subface, </FONT><FONT COLOR="#FF0000">tcor</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call gtside(<FONT COLOR="#3333FF">domain, subface,
+</FONT><FONT COLOR="#FF0000">tcor, ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">subface</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>subface number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">tcor</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>coordinates type&nbsp;
+<BR>-1=IMIN, -2=JMIN, -3=KMIN&nbsp;
+<BR>+1=IMAX, +2=JMAX, +3=KMAX</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+&nbsp;
+<hr>
+&nbsp;
+<BR>&nbsp;
+<BR><FONT FACE="Arial,Helvetica">Coordinate type name for a subface of
+a domain:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_face_name(<FONT COLOR="#3333FF">domain,
+subface, </FONT><FONT COLOR="#FF0000">coorname</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call gtside(<FONT COLOR="#3333FF">domain, subface,
+</FONT><FONT COLOR="#FF0000">coorname, ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">subface</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>subface number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">coorname</FONT></TT></TD>
+
+<TD>char*4</TD>
+
+<TD>coordinate type name:&nbsp;
+<BR>IMIN, IMAX, JMIN, JMAX, KMIN, KMAX</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+&nbsp;
+<BR><FONT FACE="Arial,Helvetica">List of domain(s) sharing a subface:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_domains_of_subface(<FONT COLOR="#3333FF">subface,
+</FONT><FONT COLOR="#FF0000">ndom, domains</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call gtdomnr(<FONT COLOR="#3333FF">subface, </FONT><FONT COLOR="#FF0000">ndom,
+domains, ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">subface</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>subface number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ndom</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>number of domains sharing the subface&nbsp;
+<BR>(1 means wall, 2 means block interface)</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">domains(2)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>list of domain numbers</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+&nbsp;
+<BR>&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">Boundary condition code of a subface, </FONT><TT>bc_code</TT><FONT FACE="Arial,Helvetica">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_subface_bc_code(<FONT COLOR="#3333FF">subface,
+</FONT><FONT COLOR="#FF0000">bc_code</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call gtsfcode(<FONT COLOR="#3333FF">subface, </FONT><FONT COLOR="#FF0000">bc_code,
+ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">subface</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">bc_code</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>boundary condition code</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+&nbsp;
+
+<P>
+<HR size="5">
+<BR>&nbsp;
+<BR>&nbsp;
+<BR><A NAME="Edge Entity Information"></A><B><U><FONT FACE="Times,Times New Roman"><FONT SIZE=+2>Edge
+Entity Information</FONT></FONT></U></B>
+<BR>&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">Name of an edge entity, </FONT><TT>entname:</TT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_entity_name(<FONT COLOR="#3333FF">edgee,
+</FONT><FONT COLOR="#FF0000">entname</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call entname(<FONT COLOR="#3333FF">edgee, </FONT><FONT COLOR="#FF0000">entname,
+ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">edgee</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>edge entity number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">entname</FONT></TT></TD>
+
+<TD>char*</TD>
+
+<TD>edge entity name</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+&nbsp;
+<hr>
+&nbsp;
+<BR>&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">Number of an edge entity, </FONT><TT>edgee:</TT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">edgee</FONT> = tp_entity_number(<FONT COLOR="#3333FF">edgee,
+</FONT><FONT COLOR="#FF0000">entname</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call entnumber(<FONT COLOR="#3333FF">entname,
+</FONT><FONT COLOR="#FF0000">edgee</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">entname</FONT></TT></TD>
+
+<TD>char*</TD>
+
+<TD>edge entity name</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">edgee</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>edge entity number</TD>
+</TR>
+</TABLE>
+&nbsp;
+<hr>
+&nbsp;
+<BR>&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">Range of an edge entity within a structured
+domain, </FONT><TT>imin(3), imax(3):</TT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_edge_entity_range(<FONT COLOR="#3333FF">domain,
+edgee, </FONT><FONT COLOR="#FF0000">imin, imax</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call edgrnge(<FONT COLOR="#3333FF">domain, edgee,
+</FONT><FONT COLOR="#FF0000">imin, imax, ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">edgee</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>edge entity number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">imin(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>minimum i, j, k indices</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">imax(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>maximum i, j, k indices</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+&nbsp;
+<BR>&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">Region of an edge entity within a structured
+domain, </FONT><TT>ifirst(3), ilast(3):</TT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_edge_points(<FONT COLOR="#3333FF">domain,
+edgee, </FONT><FONT COLOR="#FF0000">first, last</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call edgpnts(<FONT COLOR="#3333FF">domain, edgee,
+</FONT><FONT COLOR="#FF0000">first, last, ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">edgee</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>edge entity number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">first(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>i, j, k coordinates of first point</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">last(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>i, j, k coordinates of last point</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">According to the orientation definition, it
+is not necessary that</FONT><FONT FACE="Courier"> ifirst(n)&lt;=ilast(n).</FONT>
+<hr>
+&nbsp;
+<BR>&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">Dimension vector </FONT><TT>ndim</TT><FONT FACE="Arial,Helvetica">
+of an edge entity within a domain:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_edgdims(<FONT COLOR="#3333FF">domain,
+subface, edgee, </FONT><FONT COLOR="#FF0000">ndim[3][3]</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call edgdims(<FONT COLOR="#3333FF">domain, subface,
+edgee, </FONT><FONT COLOR="#FF0000">ndim, ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number wherein lies the subface</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">subface</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>subface number wherein lies the edge entity</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">edgee</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>edge entity number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ndim(3)(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD><TT>ndim (dir, 1):</TT> index of first node in direction <TT>dir,</TT>
+1&lt;=<TT>dir</TT>&lt;=3&nbsp;
+<BR><TT>ndim </TT>(<TT>dir</TT>, 2):&nbsp; number of points in direction
+<TT>dir</TT>, 1&lt;= dir&lt;=3&nbsp;
+<BR><TT>ndim (dir,</TT> 3): coordinate type for direction <TT>dir:</TT>&nbsp;
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</TT><FONT FACE="Arial,Helvetica">-1,1 means direction -i, i</FONT>&nbsp;
+<BR><FONT FACE="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+-2, 2 means direction -j, j</FONT>&nbsp;
+<BR><FONT FACE="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+-3, 3 means direction -k, k</FONT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">In C, the indices must be reversed, so
+the coordinate types are in </FONT><TT>ndim[2][dir]</TT><FONT FACE="Arial,Helvetica">,
+the indices of the 1<SUP>st</SUP> node in </FONT><TT>ndim[0][dir] </TT><FONT FACE="Arial,Helvetica">and
+the number of points in </FONT><TT>ndim[1][dir]. </TT><FONT FACE="Arial,Helvetica">Note
+that only the first direction is meaningful here since edge entities are
+one-dimensional.</FONT>
+<hr>
+&nbsp;
+<BR>&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">Dimension vector </FONT><TT>ndim</TT><FONT FACE="Arial,Helvetica">
+of an edge entity within a subface:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_edge_in_subface(<FONT COLOR="#3333FF">subface,
+edgee, </FONT><FONT COLOR="#FF0000">ndim[3][2]</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call edginsf(<FONT COLOR="#3333FF">subface, edgee,
+</FONT><FONT COLOR="#FF0000">ndim, ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">subface</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>subface number wherein lies the edge entity</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">edgee</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>edge entity number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ndim(2)(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD><TT>ndim (dir, 1):</TT> index of first node in direction <TT>dir,</TT>
+1&lt;=<TT>dir</TT>&lt;=2&nbsp;
+<BR><TT>ndim </TT>(<TT>dir</TT>, 2):&nbsp;&nbsp;&nbsp; number of points
+in direction <TT>dir</TT>, 1&lt;= dir&lt;=2&nbsp;
+<BR><TT>ndim (dir,</TT> 3):&nbsp;&nbsp; coordinate type for direction <TT>dir:</TT>&nbsp;
+<BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</TT><FONT FACE="Arial,Helvetica">-1,1 means direction -u, u</FONT>&nbsp;
+<BR><FONT FACE="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+-2, 2 means direction -v, v</FONT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">In C, the indices must be reversed, so the
+coordinate types are in </FONT><TT>ndim[2][dir],</TT><FONT FACE="Arial,Helvetica">
+the indices of the 1st node in </FONT><TT>ndim[0][dir] </TT><FONT FACE="Arial,Helvetica">and
+the number of points in </FONT><TT>ndim[1][dir].</TT>
+
+<P><FONT FACE="Courier">( figure missing ... )</FONT>
+<hr>
+&nbsp;
+<BR>&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">Vertices of an edge entity, </FONT><TT>vertex:</TT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_vertex(<FONT COLOR="#3333FF">edgee,
+</FONT><FONT COLOR="#FF0000">vertex[2]</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call vertex(<FONT COLOR="#3333FF">edgee, </FONT><FONT COLOR="#FF0000">vertex,
+ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">edgee</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>edge entity number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">vertex(2)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>vertices of an edge entity</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+&nbsp;
+<BR>&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">Start or end vertex of an edge entity,
+</FONT><TT>vertex:</TT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">vertex</FONT> = tp_get_vertex(<FONT COLOR="#3333FF">index,
+edgee</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">vertex</FONT> = gtvertx(<FONT COLOR="#3333FF">index,
+edgee</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">index</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>1 for start, 2 for end</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">edgee</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>edge entity number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">vertex</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>start or end vertex</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+&nbsp;
+<BR>&nbsp;
+<BR><FONT FACE="Arial,Helvetica">List of subfaces sharing an edge entity,
+</FONT><TT>subfaces</TT><FONT FACE="Arial,Helvetica">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">nsub</FONT> = tp_subface_of_edge(<FONT COLOR="#3333FF">edgee,
+</FONT><FONT COLOR="#FF0000">subfaces</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier">call sfofed(<FONT COLOR="#3333FF">edgee, </FONT><FONT COLOR="#FF0000">nsub,
+subfaces, ier</FONT><FONT COLOR="#000000">)</FONT></FONT>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">edgee</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>edge entity number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">nsub</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>number of subfaces</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">subfaces</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>array of subfaces sharing <TT>edgee</TT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">If an error occurs while executing this function,
+the returned value for </FONT><TT>nsub</TT><FONT FACE="Arial,Helvetica">
+is -1.</FONT>
+<hr>
+&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">List of domains sharing an edge entity,
+</FONT><TT>domains</TT><FONT FACE="Arial,Helvetica">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ndom</FONT> = tp_domains_of_edge(<FONT COLOR="#3333FF">edgee,
+</FONT><FONT COLOR="#FF0000">domains</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><TT>not available</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">edgee</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>edge entity number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">domains</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>array of domains&nbsp; sharing <TT>edgee</TT></TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">If an error occurs while executing this function,
+the returned value for </FONT><TT>ndom </TT><FONT FACE="Arial,Helvetica">is
+-1.</FONT>
+<BR>&nbsp;
+
+<P>
+<HR size="5">
+<BR>&nbsp;
+<BR>&nbsp;
+<BR><A NAME="Vertice Information"></A>
+<BR><B><U><FONT FACE="Times,Times New Roman"><FONT SIZE=+2>Vertice Information</FONT></FONT></U></B>
+
+<P><FONT FACE="Arial,Helvetica">Coordinates i,j,k, of a vertex in a domain,</FONT><TT>
+<I>ijk(3)</I></TT><FONT FACE="Arial,Helvetica">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_vertex_pnt(<FONT COLOR="#3333FF">domain,
+vertex, </FONT><FONT COLOR="#CC0000">ijk</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><TT>call vtxpnt(<FONT COLOR="#3333FF">domain, vertex,</FONT> <FONT COLOR="#CC0000">ijk,
+ier</FONT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">vertex</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>vertex number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ijk(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>coordinates i, j, k of vertex no.<TT> vertex</TT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code:&nbsp;
+<BR>-1:&nbsp; error code&nbsp;
+<BR>-2:&nbsp; not a vertex of the domain</TD>
+</TR>
+</TABLE>
+
+<hr>
+&nbsp;
+<BR>&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">Description of a vertex within and edge
+entity, </FONT><I><TT>ndim(2):</TT></I>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_vertex_in_edge(<FONT COLOR="#3333FF">domain,
+vertex, </FONT><FONT COLOR="#FF0000">ndim</FONT>);</FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><TT>call vtxined(<FONT COLOR="#3333FF">domain, vertex,</FONT> <FONT COLOR="#FF0000">ndim,
+</FONT><FONT COLOR="#CC0000">ier</FONT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">vertex</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>vertex number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ndim(2)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>ndim(0):&nbsp; index of first node&nbsp;
+<BR>ndim(1):&nbsp; coordinate type:&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+-1,1 means direction -s, s</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<HR size="5">
+<BR>&nbsp;
+<BR><A NAME="Node Information"></A>
+<BR><B><U><FONT FACE="Times,Times New Roman"><FONT SIZE=+2>Node Information</FONT></FONT></U></B>
+
+<P><FONT FACE="Arial,Helvetica">Global (not merged) node number of a node
+in a certain domain, </FONT><I><TT>nod_posit</TT></I><FONT FACE="Arial,Helvetica">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">nod_posit</FONT> = tp_node_position(<FONT COLOR="#3333FF">domain,i,j,k</FONT><FONT COLOR="#000000">);</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">nod_posit </FONT><FONT COLOR="#000000">=
+ndposit</FONT></FONT><TT>(<FONT COLOR="#3333FF">domain,i,j,k</FONT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">i, j, k</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>indices of the node</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">nod_posit</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>1&lt;=<TT>nod_posit</TT>&lt;=<TT>nnodes in_model</TT></TD>
+</TR>
+</TABLE>
+
+<HR size="5">
+<BR>&nbsp;
+<BR>&nbsp;
+
+<P><A NAME="Free Subface Information"></A><B><U><FONT FACE="Times,Times New Roman"><FONT SIZE=+2>Free
+Subface Information</FONT></FONT></U></B>
+
+<P><FONT FACE="Arial,Helvetica">Number of loops, </FONT><TT>nloop</TT><FONT FACE="Arial,Helvetica">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">nloop</FONT> = tp_nloop(<FONT COLOR="#000000">);</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">nloop </FONT><FONT COLOR="#000000">=
+gtnloop</FONT></FONT><TT>()</TT></TD>
+</TR>
+</TABLE>
+
+<hr>
+&nbsp;
+<BR>&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">Number of prescribed curves,</FONT><TT>
+ncurve</TT><FONT FACE="Arial,Helvetica">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ncurve</FONT> = tp_npc(<FONT COLOR="#000000">);</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ncurve </FONT><FONT COLOR="#000000">=
+gtnpc</FONT></FONT><TT>()</TT></TD>
+</TR>
+</TABLE>
+
+<hr>
+&nbsp;
+<BR>&nbsp;
+<BR><FONT FACE="Arial,Helvetica">Number of prescribed points, </FONT><TT>npoint</TT><FONT FACE="Arial,Helvetica">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">npoint</FONT> = tp_npp(<FONT COLOR="#000000">);</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">npoint </FONT><FONT COLOR="#000000">=
+gtnpp</FONT></FONT><TT>()</TT></TD>
+</TR>
+</TABLE>
+
+<hr>
+&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">Number of edge entities for the outer loop
+of a free subface, </FONT><TT>nedgee:</TT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">nedgee</FONT> = tp_fsf_edge_numbers(<FONT COLOR="#3333FF">free_subface</FONT><FONT COLOR="#000000">);</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">nedgee </FONT><FONT COLOR="#000000">=
+gtneds</FONT></FONT><TT>(</TT><FONT FACE="Courier"><FONT COLOR="#3333FF">free_subface</FONT></FONT><TT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><FONT FACE="Courier"><FONT COLOR="#3333FF">free_subface</FONT></FONT></TD>
+
+<TD>int&nbsp;</TD>
+
+<TD>free subface number&nbsp;</TD>
+</TR>
+</TABLE>
+
+<hr>
+&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">Edge entity number for an edge of the outer
+loop of a free subface, </FONT><TT>edgee</TT><FONT FACE="Arial,Helvetica">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">edgee</FONT> = tp_fsf_entl(<FONT COLOR="#3333FF">free_subface,
+edge_index</FONT><FONT COLOR="#000000">);</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">edgee </FONT><FONT COLOR="#000000">=
+gtentl</FONT></FONT><TT>(</TT><FONT FACE="Courier"><FONT COLOR="#3333FF">free_subface,
+edge_index</FONT></FONT><TT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">free_subface</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>free subface number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">edge_index</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>rank in list of edges</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">Array of loop numbers for a free subface,
+</FONT><TT>loops</TT><FONT FACE="Arial,Helvetica">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_fsf_loop_numbes(<FONT COLOR="#3333FF">free_subface,
+</FONT><FONT COLOR="#FF0000">loops</FONT><FONT COLOR="#000000">);</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#000000">call gtfsflo</FONT></FONT><TT>(</TT><FONT FACE="Courier"><FONT COLOR="#3333FF">free_subface,
+</FONT><FONT COLOR="#FF0000">loops, ier</FONT></FONT><TT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">free_subface</FONT></TT></TD>
+
+<TD>int&nbsp;</TD>
+
+<TD>free subface number&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">loops(*)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>array of loop numbers</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">Free subfaces data:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_fsf_data(<FONT COLOR="#3333FF">free_subface,info_no,
+</FONT><FONT COLOR="#FF0000">data</FONT><FONT COLOR="#000000">);</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#000000">call gtfsfda</FONT></FONT><TT>(</TT><FONT FACE="Courier"><FONT COLOR="#3333FF">free_subface,
+info_no,</FONT><FONT COLOR="#FF0000">data, ier</FONT></FONT><TT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">free_subface</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>free subface number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">info_no</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>1&lt;=<TT>info_no</TT>&lt;=3</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">data</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>information requested</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">The data returned is function of the </FONT><I><FONT FACE="Courier">info_no
+</FONT></I><FONT FACE="Arial,Helvetica">given as input:</FONT>
+<PRE><FONT FACE="Courier"><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; info_no&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; data&nbsp;
+</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</FONT><FONT FACE="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; number of loops in the free subface&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; number of prescribed curves in the free subface
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; number of prescribed points in the free subface</FONT></PRE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">Array of loop status for a free subface,
+</FONT><TT>status:</TT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT> = tp_fsf_loop_status(<FONT COLOR="#3333FF">free_subface,</FONT><FONT COLOR="#FF0000">status</FONT><FONT COLOR="#000000">);</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#000000">call gtfsfls</FONT></FONT><TT>(</TT><FONT FACE="Courier"><FONT COLOR="#3333FF">free_subface,
+</FONT><FONT COLOR="#FF0000">status, ier</FONT></FONT><TT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<BR>&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">free_subface</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>subface number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">status(*)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>status of all loops on the free subface</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">Array of prescribed curve numbers for a
+free subface, </FONT><TT>curve</TT><FONT FACE="Arial,Helvetica">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT>= tp_fsf_curve_numbers(<FONT COLOR="#3333FF">free_subface,</FONT><FONT COLOR="#FF0000">curve</FONT><FONT COLOR="#000000">);</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#000000">call gtfsfpc</FONT></FONT><TT>(</TT><FONT FACE="Courier"><FONT COLOR="#3333FF">free_subface,
+</FONT><FONT COLOR="#FF0000">curve, ier</FONT></FONT><TT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">free_subface</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>free subface number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">curve(*)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>array of prescribed curve numbers</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">Array of prescribed point coordinates for
+a free subface, </FONT><TT>coord:</TT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT>= tp_fsf_point_data(<FONT COLOR="#3333FF">free_subface,</FONT><FONT COLOR="#FF0000">coord</FONT><FONT COLOR="#000000">);</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#000000">call gtfsfpp</FONT></FONT><TT>(</TT><FONT FACE="Courier"><FONT COLOR="#3333FF">free_subface,
+</FONT><FONT COLOR="#FF0000">coord, ier</FONT></FONT><TT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">free_subface</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>free subface number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">coord(*)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>prescribed point's 3D coordinates</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<HR size="5">
+<BR><A NAME="Grid Connectivity Information"></A>
+<BR><B><U><FONT FACE="Times,Times New Roman"><FONT SIZE=+2>Grid Connectivity
+Information</FONT></FONT></U></B>
+
+<P><FONT FACE="Arial,Helvetica">Number of shared subfaces (block interfaces)
+in the entire mesh:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">nshared </FONT><FONT COLOR="#000000">=
+tp_n_shared_sf</FONT>(<FONT COLOR="#000000">);</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT COLOR="#000000"><FONT FACE="Arial,Helvetica">&nbsp;</FONT><TT>not
+available</TT></FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#FF0000">nshared</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>number of shared subfaces&nbsp;</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">List of shared subfaces (block interfaces)
+in the entire mesh:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT>= tp_shared_sf(<FONT COLOR="#FF0000">subfaces</FONT><FONT COLOR="#000000">);</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#000000">call blintsf</FONT></FONT><TT>(</TT><FONT FACE="Courier"><FONT COLOR="#FF0000">nshared,
+subfaces, ier</FONT></FONT><TT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#FF0000">nshared</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>number of shared subfaces</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">subfaces(*)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>array of shared subfaces</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">Number of subface(s) of a domain shared
+with other domain(s), </FONT><TT>nadsub</TT><FONT FACE="Arial,Helvetica">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">nadsub</FONT>= tp_ndomad(<FONT COLOR="#3333FF">domain,</FONT><FONT COLOR="#FF0000">ier</FONT><FONT COLOR="#000000">);</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">nadsub</FONT><FONT COLOR="#000000">
+= gndomad</FONT></FONT><TT>(<FONT COLOR="#3333FF">domain</FONT>,</TT><FONT FACE="Courier"><FONT COLOR="#FF0000">
+ier</FONT></FONT><TT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">Number of edge entity(ies) of a domain
+shared with other domain(s), </FONT><TT>nedge</TT><FONT FACE="Arial,Helvetica">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">nedgee</FONT>= tp_nsubad(<FONT COLOR="#3333FF">domain,</FONT><FONT COLOR="#FF0000">ier</FONT><FONT COLOR="#000000">);</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">nedgee</FONT><FONT COLOR="#000000">
+= gnsubad</FONT></FONT><TT>(<FONT COLOR="#3333FF">domain</FONT>,</TT><FONT FACE="Courier"><FONT COLOR="#FF0000">
+ier</FONT></FONT><TT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">Sum of subface(s) and edge entity(ies)
+of a domain shared with other domain(s), </FONT><TT>ndomad:</TT>
+<BR>&nbsp;
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ndomad</FONT>= tp_ndom_nsub_ad(<FONT COLOR="#3333FF">domain</FONT><FONT COLOR="#000000">);</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ndomad</FONT><FONT COLOR="#000000">
+= ndomad</FONT></FONT><TT>(<FONT COLOR="#3333FF">domain</FONT>,</TT><FONT FACE="Courier"><FONT COLOR="#FF0000">
+ier</FONT></FONT><TT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">Face and subface numbers of block interfaces
+of a given domain, </FONT><TT>domface, subface</TT><FONT FACE="Arial,Helvetica">:
+The arrays are allocated to </FONT><TT>nadsub</TT><FONT FACE="Arial,Helvetica">,
+the number of interfaces for this domain. The value of </FONT><TT>nadsub</TT><FONT FACE="Arial,Helvetica">
+is found using the function</FONT><FONT FACE="Times,Times New Roman"> </FONT><FONT FACE="Courier">tp_ndomad.</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier </FONT>= tp_gsdomad(<FONT COLOR="#3333FF">domain,
+</FONT><FONT COLOR="#FF0000">face, subface</FONT><FONT COLOR="#000000">);</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#000000">call gsdomad</FONT></FONT><TT>(<FONT COLOR="#3333FF">domain</FONT>,<FONT COLOR="#3333FF">nadsub,</FONT></TT><FONT FACE="Courier"><FONT COLOR="#FF0000">face,subface,ier</FONT></FONT><TT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">nadsub</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>number of shared subfaces</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">face(nadsub)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>array of face index [1,6] in <TT>domain</TT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">subface(nadsub)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD><FONT FACE="Arial,Helvetica">array of subface numbers</FONT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">One-to-one face connectivity of a domain:
+All arrays are allocated to </FONT><TT>nadsub,</TT><FONT FACE="Arial,Helvetica">
+the number of interfaces for this domain. The value of</FONT><TT> nadsub
+</TT><FONT FACE="Arial,Helvetica">is found using function </FONT><FONT FACE="Courier">tp_ndomad.</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier </FONT>= tp_domad(<FONT COLOR="#3333FF">domain,
+dimension, </FONT><FONT COLOR="#FF0000">face, adj_domain, adj_face, subface</FONT><FONT COLOR="#000000">);</FONT></FONT>&nbsp;
+<BR>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#000000">call gdomad</FONT></FONT><TT>(<FONT COLOR="#3333FF">domain</FONT>,
+<FONT COLOR="#3333FF">nadsub, </FONT></TT><FONT FACE="Courier"><FONT COLOR="#FF0000">face,
+subface, adj_domain, adj_face, ier</FONT></FONT><TT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<BR>&nbsp;
+<TABLE BORDER WIDTH="85%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">int&nbsp;</FONT></FONT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">domain number</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">dummy</FONT></TT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">int</FONT></FONT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">unused parameter</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">dimension</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>dimension of connecting objects (=3)</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">face(nadsub)</FONT></TT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">int</FONT></FONT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">face of domain wherein
+lies subface</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">subface(nadsub)</FONT></TT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">int</FONT></FONT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">list of shared subfaces</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">adj_domain(nadsub)</FONT></TT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">int</FONT></FONT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">adjacent domains</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">adj_face(nadsub)</FONT></TT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">int</FONT></FONT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">face of adj_domain
+wherein lies subface</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">int</FONT></FONT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">return code</FONT></FONT></TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">This routine is similar to </FONT><FONT FACE="Courier">tp_gsdomad()</FONT><FONT FACE="Times,Times New Roman">
+</FONT><FONT FACE="Arial,Helvetica">with more functionality.</FONT>
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">Connectivity information, </FONT><TT>domad_record(5)</TT><FONT FACE="Arial,Helvetica">:
+For each domain the connectivity information is stored in the array </FONT><TT>domad(5,ndomad),</TT><FONT FACE="Arial,Helvetica">
+where </FONT><TT>ndomad</TT><FONT FACE="Arial,Helvetica"> is the return
+value of the function </FONT><FONT FACE="Courier">tp_ndom_nsub_ad(domain)</FONT><FONT FACE="Times,Times New Roman">.
+T</FONT><FONT FACE="Arial,Helvetica">he following function returns the
+connectivity information for one interface of a domain:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT>=tp_domad_record(<FONT COLOR="#3333FF">domain,irec,</FONT><FONT COLOR="#FF0000">domad_record</FONT><FONT COLOR="#000000">);</FONT></FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#000000">call domadv</FONT></FONT><TT>(<FONT COLOR="#3333FF">domain</FONT>,
+<FONT COLOR="#3333FF">irec, </FONT></TT><FONT FACE="Courier"><FONT COLOR="#FF0000">domad_record,
+ier</FONT></FONT><TT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">irec</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>record index, 1&lt;=<TT>irec</TT>&lt;=<TT>ndomad</TT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">domad_record(5)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>connectivity information</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+&nbsp;
+<BR><FONT FACE="Arial,Helvetica">The meaning of </FONT><TT>domad_record(5)</TT><FONT FACE="Arial,Helvetica">
+is different for face connectivity and edge connectivity:</FONT>
+<BR><FONT FACE="Arial,Helvetica">&nbsp;</FONT>
+<TABLE BORDER CELLPADDING=9 WIDTH="600" >
+<TR>
+<TD VALIGN=TOP WIDTH="23%">
+<CENTER><FONT FACE="Times,Times New Roman">Field</FONT></CENTER>
+</TD>
+
+<TD VALIGN=TOP COLSPAN="2" WIDTH="77%">
+<CENTER><FONT FACE="Times,Times New Roman">Connectivity by</FONT></CENTER>
+
+<CENTER><FONT FACE="Times,Times New Roman">Face Edge</FONT></CENTER>
+</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="23%" HEIGHT="26">
+<CENTER><I><FONT FACE="Times,Times New Roman">domad_record(1)</FONT></I></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="39%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">face index, [1,6]</FONT></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="39%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">subface of <I>domain</I> * -1</FONT></CENTER>
+</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="23%" HEIGHT="26">
+<CENTER><I><FONT FACE="Times,Times New Roman">domad_record(2)</FONT></I></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="39%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">adjacent domain</FONT></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="39%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">adjacent domain number</FONT></CENTER>
+</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="23%" HEIGHT="26">
+<CENTER><I><FONT FACE="Times,Times New Roman">domad_record(3)</FONT></I></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="39%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">adjacent face index, [1,6]</FONT></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="39%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">subface of adjacent domain *-1</FONT></CENTER>
+</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="23%" HEIGHT="26">
+<CENTER><I><FONT FACE="Times,Times New Roman">domad_record(4)</FONT></I></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="39%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">shared subface number</FONT></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="39%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">shared edge entity number</FONT></CENTER>
+</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="23%" HEIGHT="26">
+<CENTER><I><FONT FACE="Times,Times New Roman">domad_record(5)</FONT></I></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="39%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">not used yet</FONT></CENTER>
+</TD>
+
+<TD VALIGN=TOP WIDTH="39%" HEIGHT="26">
+<CENTER><FONT FACE="Times,Times New Roman">not used yet</FONT></CENTER>
+</TD>
+</TR>
+</TABLE>
+
+<hr>
+&nbsp;
+
+<P><FONT FACE="Arial,Helvetica">One-to-one edge entity connectivity of
+a domain: All arrays are allocated to </FONT><TT>nedgee</TT><FONT FACE="Arial,Helvetica">,
+the number of shared edge entities for this domain. The value of </FONT><TT>nedgee</TT><FONT FACE="Arial,Helvetica">
+is found using function</FONT><FONT FACE="Times,Times New Roman"> </FONT><FONT FACE="Courier">tp_nsubad.</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT>=tp_domad(<FONT COLOR="#3333FF">domain,dimension,</FONT><FONT COLOR="#FF0000">subface,adj_domain,adj_subface,edgee</FONT><FONT COLOR="#000000">);</FONT></FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#000000">call gsubfad</FONT></FONT><TT>(<FONT COLOR="#3333FF">domain,
+dummy, </FONT></TT><FONT FACE="Courier"><FONT COLOR="#FF0000">subface,
+adj_domain, adj_subface, edgee, ier</FONT></FONT><TT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="85%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">int&nbsp;</FONT></FONT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">domain number</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">dummy</FONT></TT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">int</FONT></FONT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">unused parameter</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">dimension</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>dimension of connecting objects (=2)</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">subface(nadsub)</FONT></TT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">int</FONT></FONT></TD>
+
+<TD><FONT COLOR="#000000"><FONT FACE="Arial,Helvetica">subfaces of </FONT><TT>domain</TT><FONT FACE="Arial,Helvetica">
+wherein lies </FONT><TT>edgee</TT></FONT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">adj_domain(nadsub)</FONT></TT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">int</FONT></FONT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">adjacent domains</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">adj_subface(nadsub)</FONT></TT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">int</FONT></FONT></TD>
+
+<TD><FONT COLOR="#000000"><FONT FACE="Arial,Helvetica">subface of </FONT><TT>adj_domain</TT><FONT FACE="Arial,Helvetica">
+wherein lies subface</FONT></FONT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">edgee(nedgee)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>shared edge entities</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">int</FONT></FONT></TD>
+
+<TD><FONT FACE="Arial,Helvetica"><FONT COLOR="#000000">return code</FONT></FONT></TD>
+</TR>
+</TABLE>
+
+<HR size="5">
+
+<P><A NAME="Superdomain Information"></A><B><U><FONT FACE="Times,Times New Roman"><FONT SIZE=+2>Superdomain
+Information</FONT></FONT></U></B>
+
+<P><FONT FACE="Arial,Helvetica">Global coordinates of a 3D domain within
+a 3D superdomain:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT>=tp_global_coord(<FONT COLOR="#3333FF">domain,</FONT><FONT COLOR="#FF0000">global_coord</FONT><FONT COLOR="#3333FF">,dimension</FONT><FONT COLOR="#000000">);</FONT></FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#000000">call gloco</FONT></FONT><TT>(<FONT COLOR="#3333FF">domain,
+</FONT><FONT COLOR="#FF0000">global_coord,</FONT></TT><FONT FACE="Courier"><FONT COLOR="#FF0000">
+ier</FONT></FONT><TT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">dimension</FONT></TT></TD>
+
+<TD>int&nbsp;</TD>
+
+<TD><FONT FACE="Arial,Helvetica">domain dimension (=3)</FONT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">global_coord(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>i, j, k coordinates of first domain point&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">Global coordinates of a 2D domain within
+a 2D superdomain:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT>=tp_global_coord(<FONT COLOR="#3333FF">domain,</FONT><FONT COLOR="#FF0000">global_coord</FONT><FONT COLOR="#3333FF">,dimension</FONT><FONT COLOR="#000000">);</FONT></FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#000000">call gloco2d</FONT></FONT><TT>(<FONT COLOR="#3333FF">domain,
+</FONT><FONT COLOR="#FF0000">global_coord,</FONT></TT><FONT FACE="Courier"><FONT COLOR="#FF0000">
+ier</FONT></FONT><TT>)</TT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">dimension</FONT></TT></TD>
+
+<TD>int&nbsp;</TD>
+
+<TD><FONT FACE="Arial,Helvetica">domain dimension (=2)</FONT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">global_coord(3)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>i, j, k coordinates of first domain point&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+&nbsp;
+
+<P>
+<HR size="5">
+<BR><A NAME="Linear Domain Information"></A>
+<BR><B><U><FONT FACE="Times,Times New Roman"><FONT SIZE=+2>Linear Domain
+Information</FONT></FONT></U></B>
+
+<P><FONT FACE="Arial,Helvetica">Number of edge entities in the linear domain,</FONT><TT>
+nedgee:</TT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">nedgee</FONT>=tp_nedge_of_lin_domain(<FONT COLOR="#3333FF">domain</FONT><FONT COLOR="#000000">);</FONT></FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#000000">not available</FONT></FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+</TABLE>
+<FONT FACE="Arial,Helvetica">If an error occurs while executing this function,
+the returned value for </FONT><TT>nedgee</TT><FONT FACE="Arial,Helvetica">
+is -1.</FONT>
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">List of edge entities in the linear domain,
+</FONT><TT>edgees:</TT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">nedgee</FONT>=tp_nedge_of_lin_domain(<FONT COLOR="#3333FF">domain,
+</FONT><FONT COLOR="#FF0000">edgees</FONT><FONT COLOR="#000000">);</FONT></FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#000000">call edofldm(</FONT><FONT COLOR="#3333FF">domain,</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#FF0000">nedgee, edgees, ier</FONT><FONT COLOR="#000000">)</FONT></FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">edgee</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>number of edge entities</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">edgees(*)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>list of edge entities</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">List of edge entities in the linear domain,
+</FONT><TT>vertices:</TT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT>=tp_vtx_of_lin_domain(<FONT COLOR="#3333FF">domain,
+</FONT><FONT COLOR="#FF0000">vertices</FONT><FONT COLOR="#000000">);</FONT></FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#000000">call edofldm(</FONT><FONT COLOR="#3333FF">domain,
+</FONT><FONT COLOR="#FF0000">vertices, ier</FONT><FONT COLOR="#000000">)</FONT></FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<BR>&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">domain</FONT></TT></TD>
+
+<TD>int&nbsp;</TD>
+
+<TD>domain number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">vertices(*)</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>list of vertices&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<HR size="5">
+<BR><A NAME="Quadratic Mesh"></A>
+<BR><B><U><FONT FACE="Times,Times New Roman"><FONT SIZE=+2>Quadratic Mesh</FONT></FONT></U></B>
+
+<P><FONT FACE="Arial,Helvetica">Update the topology information (in memory)
+to be consistent with a quadratic mesh:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier">(<FONT COLOR="#3333FF">void</FONT>) tp_quad_elements(<FONT COLOR="#000000">);</FONT></FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#000000">call topquad()</FONT></FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+
+<P><B><FONT FACE="Times,Times New Roman">C: </FONT></B><FONT FACE="Courier">(void)tp_quad_elements();</FONT>
+
+<P><B><FONT FACE="Times,Times New Roman">FORTRAN: </FONT></B><FONT FACE="Courier">call
+topquad()</FONT>
+
+<P><FONT FACE="Arial,Helvetica">The topology file is always written for
+a linear mesh even if the mesh is saved with the option "quadratic". For
+a linear structured mesh of NI*NJ*NK nodes, the corresponding quadratic
+mesh has (2*NI -1) * (2*NJ -1) * (2*NK -1) nodes. However, the distinction
+between linear and quadratic is not included in the topology file. As a
+result, functions such as </FONT><FONT FACE="Courier">tp_domain_range</FONT><FONT FACE="Times,Times New Roman">
+</FONT><FONT FACE="Arial,Helvetica">return the size of the linear grid,
+even if the mesh is quadratic.</FONT>
+
+<P><FONT FACE="Arial,Helvetica">This problem is easily corrected by calling</FONT><FONT FACE="Times,Times New Roman">
+</FONT><FONT FACE="Courier">tp_quad_elements</FONT><FONT FACE="Times,Times New Roman">,
+</FONT><FONT FACE="Arial,Helvetica">immediately after reading the topology
+file</FONT><FONT FACE="Times,Times New Roman"> (</FONT><FONT FACE="Courier">
+tp_read</FONT><FONT FACE="Times,Times New Roman">). </FONT><FONT FACE="Arial,Helvetica">The
+function </FONT><FONT FACE="Courier">tp_quad_elements</FONT><FONT FACE="Times,Times New Roman">
+</FONT><FONT FACE="Arial,Helvetica">updates the topology information (the
+in-memory copy) to reflect the higher order elements. If the function </FONT><FONT FACE="Courier">tp_domain_range</FONT><FONT FACE="Arial,Helvetica">
+is called after updating the topology, the correct range of (2*NI-1), (2*NJ-1),
+(2*NK-1) will be found.</FONT>
+<BR>&nbsp;
+
+<P>
+<HR size="5">
+<BR><A NAME="Error Handling"></A>
+<BR><B><U><FONT FACE="Times,Times New Roman"><FONT SIZE=+2>Error Handling</FONT></FONT></U></B>
+
+<P><FONT FACE="Arial,Helvetica">When the topology library detects an error,
+it records the error message and returns an error code in the form of an
+integer smaller than zero. Only the last detected error message is recorded.
+To obtain the error message, the C function </FONT><FONT FACE="Courier">tp_error_print()</FONT><FONT FACE="Times,Times New Roman">
+</FONT><FONT FACE="Arial,Helvetica">may be called. It prints the error
+message to the standard output (stdout). Similarly, the function</FONT><FONT FACE="Times,Times New Roman">
+</FONT><FONT FACE="Courier">tp_error_exit()</FONT><FONT FACE="Arial,Helvetica">
+prints the error message to the standard output and exit the program.</FONT>
+
+<P><FONT FACE="Arial,Helvetica">The error handling in the fortran interface
+is a bit different than for the C interface. In the Fortran interface the
+topology library returns and error code integer smaller than zero, and
+automatically prints the error message to the standard output.</FONT>
+<BR>&nbsp;
+
+<P>
+<HR size="5">
+
+<P><A NAME="Non-Matching Grids"></A><B><U><FONT FACE="Times,Times New Roman"><FONT SIZE=+2>Non-Matching
+Grids</FONT></FONT></U></B>
+
+<P><FONT FACE="Arial,Helvetica">Group number of a topological entity, </FONT><TT>group_number</TT><FONT FACE="Arial,Helvetica">:</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT>=tp_entity_group(<FONT COLOR="#3333FF">entity_type,entity_number,</FONT><FONT COLOR="#FF0000">group_number</FONT><FONT COLOR="#000000">);</FONT></FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#000000">call gtentgr(</FONT><FONT COLOR="#3333FF">entity_type,
+entity_number, </FONT><FONT COLOR="#FF0000">group_number, ier</FONT><FONT COLOR="#000000">)</FONT></FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<BR>&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">entity_type</FONT></TT></TD>
+
+<TD>int&nbsp;</TD>
+
+<TD>domain=1, subface=2, edge ent.=3</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF">entity_number</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>domain subface or edge ent. number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">group_number</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>group number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">List of twin edge entities of an edge,</FONT><FONT FACE="Courier">
+<I>edge_twins</I>: </FONT><FONT FACE="Arial,Helvetica">The twin edge entities
+are defined as edge entities having the same entity name and the same geometry,
+but different edge entity number and possibly different number of&nbsp;
+nodes. Twin edges belong to different entity groups.</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT>=tp_twin_edges(<FONT COLOR="#3333FF">edgee,
+</FONT><FONT COLOR="#FF0000">ntwin, edge_twins</FONT><FONT COLOR="#000000">);</FONT></FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#000000">call gttwedg(</FONT><FONT COLOR="#3333FF">edgee,
+</FONT><FONT COLOR="#FF0000">ntwin, edge_twins, ier</FONT><FONT COLOR="#000000">)</FONT></FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">edgee</FONT></TT></TD>
+
+<TD>int&nbsp;</TD>
+
+<TD>edge entity number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ntwin</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>number of twin edges of <TT>edgee</TT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">edge_twins</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>list of twin edges of <TT>edgee</TT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<hr>
+
+
+<P><FONT FACE="Arial,Helvetica">List of twin subfaces of a subface, </FONT><TT>sf_twins</TT><FONT FACE="Arial,Helvetica">:
+The twin subfaces are defined as subfaces with the same geometrical edges
+but belonging to different entity groups. Twin subfaces have the same intrinsic
+orientation.</FONT>
+<BR>&nbsp;
+<TABLE WIDTH="70%" NOSAVE >
+<TR>
+<TD><B>C</B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#FF0000">ier</FONT>=tp_twin _subfaces(<FONT COLOR="#3333FF">subface,</FONT><FONT COLOR="#FF0000">ntwin,sf_twins</FONT><FONT COLOR="#000000">);</FONT></FONT>&nbsp;</TD>
+</TR>
+
+<TR>
+<TD><B><FONT FACE="Arial,Helvetica">FORTRAN</FONT></B></TD>
+
+<TD><FONT FACE="Courier"><FONT COLOR="#000000">call gtttwsf(</FONT><FONT COLOR="#3333FF">subface,
+</FONT><FONT COLOR="#FF0000">ntwin, sf_twins, ier</FONT><FONT COLOR="#000000">)</FONT></FONT></TD>
+</TR>
+</TABLE>
+&nbsp;
+<BR>&nbsp;
+<TABLE BORDER WIDTH="70%" NOSAVE >
+<TR>
+<TD><TT><FONT COLOR="#3333FF">subface</FONT></TT></TD>
+
+<TD>int&nbsp;</TD>
+
+<TD>subface number</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ntwin</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>number of twin subfaces of <TT>subface</TT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">sf_twins</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>list of twin subfaces of <TT>subface</TT></TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#FF0000">ier</FONT></TT></TD>
+
+<TD>int</TD>
+
+<TD>return code</TD>
+</TR>
+</TABLE>
+
+<P><HR><P>
+<A HREF="../base.html">Back to ICEM CFD Main Menu</A>
+</BODY>
+</HTML>
