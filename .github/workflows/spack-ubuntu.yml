@@ -49,6 +49,7 @@ jobs:
           source spack_env_file.sh
           cmake -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_COMPILER=/usr/bin/g++ -DCMAKE_Fortran_COMPILER=/usr/bin/gfortran-9 -DCMAKE_CXX_FLAGS="-std=c++11" -DCMAKE_Fortran_FLAGS="-fdefault-integer-8 -fdefault-real-8 -fdefault-double-8" \
           -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_VERBOSE_MAKEFILE=ON -DBUILD_XLMLIMA=ON -DBUILD_TESTS:BOOL=ON -DBUILD_SCRIPTING:BOOL=ON -DBUILD_SHARED_LIBS:BOOL=ON -DINT_8:BOOL=ON -DREAL_8:BOOL=ON \
+          -DPython3_ROOT_DIR=/usr/lib/python3 \
           -DCMAKE_INSTALL_PREFIX=${{env.INSTALL_DIR}} .
           make -j
           #make test
