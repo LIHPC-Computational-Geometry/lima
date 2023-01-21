@@ -2,7 +2,7 @@ set (GNU_ROOT /usr)
 set(CMAKE_C_COMPILER gcc-7)
 set(CMAKE_CXX_COMPILER g++-7)
 set(CMAKE_CXX_FLAGS -std=c++11)
-set(CMAKE_Fortran_COMPILER "${GNU_ROOT}/bin/gfortran-9")
+set(CMAKE_Fortran_COMPILER "${GNU_ROOT}/bin/gfortran")
 
 #set (CMAKE_Fortran_FLAGS "-fdefault-real-8")	# I4/R8 insuffisant si des double precision sont déclarés car alors promus en R16
 set (CMAKE_Fortran_FLAGS)
