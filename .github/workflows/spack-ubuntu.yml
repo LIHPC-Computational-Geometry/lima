@@ -13,20 +13,4 @@ jobs:
     uses: LIHPC-Computational-Geometry/lihpccg-ci/.github/workflows/spack-ubuntu.yml@main
     with:
       run-tests: false
-      cmake-options: "-DCMAKE_C_COMPILER=/usr/bin/gcc 
-        -DCMAKE_CXX_COMPILER=/usr/bin/g++ 
-        -DCMAKE_Fortran_COMPILER=/usr/bin/gfortran 
-        -DCMAKE_CXX_FLAGS="-std=c++11" 
-        -DCMAKE_Fortran_FLAGS="-fdefault-integer-8 
-        -fdefault-real-8 
-        -fdefault-double-8"
-        -DCMAKE_BUILD_TYPE:STRING=Release 
-        -DCMAKE_VERBOSE_MAKEFILE=ON 
-        -DBUILD_XLMLIMA=ON 
-        -DBUILD_TESTS:BOOL=ON 
-        -DBUILD_SCRIPTING:BOOL=ON 
-        -DBUILD_SHARED_LIBS:BOOL=ON 
-        -DINT_8:BOOL=ON 
-        -DREAL_8:BOOL=ON
-        -DUSE_PYTHON_3:BOOL=ON 
-        -DPython3_ROOT_DIR=/usr/lib/python3"
+      cmake-options: "-DUSE_PYTHON_3:BOOL=ON"
