@@ -37,7 +37,7 @@ using namespace Lima;
   } 
 }
 
-%typemap(python, in) const string& {
+%typemap(in) const string& {
   if(!PyString_Check($1)) {
     PyErr_SetString(PyExc_TypeError, "not a string");
     return NULL;
@@ -45,16 +45,15 @@ using namespace Lima;
   $1 = new IN_STD string(PyString_AsString($1));
 }
 
-%typemap(python, freearg) const IN_STD string& {
+%typemap(freearg) const IN_STD string& {
   delete $1;
 }
 
-//%typemap(python, out) const string& {
 %typemap(out) const IN_STD string& {
   $result = PyString_FromString($1->c_str());
 }
 
-%typemap(python, out) IN_STD string {
+%typemap(out) IN_STD string {
   $result = PyString_FromString($1.c_str());
 }
 
