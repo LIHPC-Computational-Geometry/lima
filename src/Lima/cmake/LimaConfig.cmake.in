@@ -9,8 +9,10 @@ if (HDF5_REQUESTED)
 endif (HDF5_REQUESTED)
 find_dependency (Threads)
 
-# EXPURGE_BEGINNING_TAG LOCAL_DEPENDENCIES
-# EXPURGE_COMPLETION_TAG
+set (MachineTypes_FOUND @MachineTypes_ENABLED@)
+if (MachineTypes_FOUND)
+	find_dependency (MachineTypes)
+endif (MachineTypes_FOUND)
 
 @PACKAGE_INIT@
 # On force Lima_INCLUDE_DIR et Lima_LIB_DIR avant que des variables cmake ne soient modifiées par les macros cmake à suivre.

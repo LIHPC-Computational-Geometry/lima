@@ -69,8 +69,13 @@ if (REAL_8)
 else (REAL_8)
 	list (APPEND LIMA_CFLAGS -DREAL_32)
 endif (REAL_8)
-# EXPURGE_BEGINNING_TAG USE_LOCAL_DEPENDENCY_2
-# EXPURGE_COMPLETION_TAG
+
+set (MachineTypes_ENABLED OFF)
+if (${MachineTypes_FOUND})
+	message (STATUS "======================> Utilisation de l'API MachineTypes")
+	set (MachineTypes_ENABLED ON)
+	target_link_libraries (Lima PUBLIC MachineTypes::include)
+endif (${MachineTypes_FOUND})
 
 set (LIMA_KERNEL_PUBLIC_FLAGS "${LIMA_CFLAGS}" LIMA_MT LIMA_USES_ATOMIC_API)
 #set (LIMA_KERNEL_PRIVATE_FLAGS "${CMAKE_CXX_FLAGS}")
