@@ -1,8 +1,10 @@
 #include <string.h>
 #include <vector>
 #include <stdio.h>
-// EXPURGE_BEGINNING_TAG INCLUDE_LOCAL_DEPENDENCIES
-// EXPURGE_COMPLETION_TAG
+
+#ifdef __INTERNE_MACHINE_TYPES
+#include <machine_types.h>
+#endif	/* __INTERNE_MACHINE_TYPES */
 
 #include <Lima/lima.h>
 #include <Lima/enum.h>
@@ -42,8 +44,11 @@
 
 extern "C" {  
 
-// EXPURGE_BEGINNING_TAG LOCAL_DEPENDENCIES_1
-// EXPURGE_COMPLETION_TAG
+#ifdef __INTERNE_LMSUMESH
+  void sumesh(int_type *qn, double *x, double *y, int_type *qmq, 
+	      int_type *mqn, int_type *ia, int_type *ni, double *om, 
+	      int_type *lf, int_type *lx);
+#endif	// __INTERNE_LMSUMESH
 
   void lminnm_(char* _ficmai, int_type* refmai, char* _datmod, 
 	       double* unlosi, int_type* typcoo, int_type* dimens, 
@@ -1131,8 +1136,25 @@ void lmmess_(int *)
 {
 }
 
-// EXPURGE_BEGINNING_TAG USE_LOCAL_DEPENDENCIES
-// EXPURGE_COMPLETION_TAG
+#ifdef __INTERNE_LMSUMESH 
+void lmsume_(int_type *qn, double *x, double *y, int_type *qmq, 
+	     int_type *mqn, int_type *ia, int_type *ni, double *om, 
+	     int_type *lf, int_type *lx, int_type *ier)
+{
+  try{
+    *ier = 0; 
+    sumesh(qn, x, y, qmq, mqn, ia, ni, om, lf, lx);
+  }
+  catch(erreur& err){
+    fputs(err.what(), stderr);
+    *ier = -1;
+  }
+  catch(...){
+    fputs("Erreur inattendue\n", stderr);    
+    *ier = -1;
+  }  
+}
+#endif	// __INTERNE_LMSUMESH
 
 /* CReation d'un Maillage */
 void lmcrmi_(int_type* refmai, char* _titre, char* _datmod, 
@@ -3141,8 +3163,14 @@ extern "C" {
     lmmess_(iumes);
   }
 
-// EXPURGE_BEGINNING_TAG USE_LOCAL_DEPENDENCIES_2
-// EXPURGE_COMPLETION_TAG
+#ifdef __INTERNE_LMSUMESH 
+  void LMSUME(int_type *qn, double *x, double *y, int_type *qmq, 
+	      int_type *mqn, int_type *ia, int_type *ni, double *om, 
+	      int_type *lf, int_type *lx, int_type *ier)
+  {
+    lmsume_(qn, x, y, qmq, mqn, ia, ni, om, lf, lx, ier);
+  }
+#endif	// __INTERNE_LMSUMESH
   
   void LMCRMI(int_type *refmai, _fcd titre, _fcd _datmod, double *unlosi,
 	      int_type *typcoo, int_type *dimens, int_type *geomet,

@@ -13,6 +13,7 @@ option (BUILD_SHARED_LIBS "Creation de bibliotheques dynamiques (defaut : ON)" O
 
 # Divers dépendances optionnelles :
 option (MACHINE_TYPES "Définition des types numériques simples." ON)
+option (SUMESH "Utilisation de la bibliothèque de sumesh." ON)
 
 # Les formats de fichiers optionnellement supportés :
 option (FORMAT_MLI "Format obsolète déconseillé en externe. Requiert HDF145." ON)
@@ -20,4 +21,3 @@ option (FORMAT_MLI2 "Format remplaçant le format MLI recommandé partout. Requi
 
 add_subdirectory (src)
 enable_testing ( )
-

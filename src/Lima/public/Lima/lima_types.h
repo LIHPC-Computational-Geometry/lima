@@ -1,10 +1,11 @@
 #ifndef _LIMA_TYPES_H
 #define _LIMA_TYPES_H
 
-/* EXPURGE_BEGINNING_TAG LOCAL_DEPENDENCIES */
-/* EXPURGE_COMPLETION_TAG */
+#ifdef __INTERNE_MACHINE_TYPES
 
-#ifndef _MACHINE_TYPES_H
+#include <machine_types.h>
+
+#else	/* __INTERNE_MACHINE_TYPES */
 
 #ifndef LIMA_INT_TYPE
 #define LIMA_INT_TYPE
@@ -18,6 +19,6 @@ typedef int64_t int_type;
 
 #endif	/* LIMA_INT_TYPE */
 
-#endif	/* _MACHINE_TYPES_H */
+#endif	/* __INTERNE_MACHINE_TYPES */
 
 #endif	/* _LIMA_TYPES_H */

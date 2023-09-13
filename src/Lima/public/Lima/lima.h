@@ -118,8 +118,7 @@ extern "C" {
 
 
 #ifdef __INTERNE_MACHINE_TYPES
-// EXPURGE_BEGINNING_TAG MACHINE_TYPES
-// EXPURGE_COMPLETION_TAG
+#include <machine_types.h>
 #else
   typedef unsigned long long int LM_TYPEMASQUE ;
   typedef unsigned long long int LM_V_TYPEMASQUE ;
@@ -312,8 +311,6 @@ extern "C" {
     /** @name entite 
      *	Nombre d'entites et de connexions.
      */
-// EXPURGE_BEGINNING_TAG DOC_CONNECTIVITES
-// EXPURGE_COMPLETION_TAG
     union {
       /** @name n
        * Acces par le nom de chaque champ */

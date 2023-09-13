@@ -314,8 +314,6 @@ void XlmLimaFactory::syntax ( )
 	message	+= string ("Remarque : certains formats ne sont accessibles que ");
 	message	+= string ("sur stations Sun, Compaq ou stations SGI.");
 	message	+= string ("\n\n");
-// EXPURGE_BEGINNING_TAG SUPPORT_TAG
-// EXPURGE_COMPLETION_TAG
 	message	+= string ("Exemple : xlmlima -cp es6.unv es6.unf");
 	message	+= string ("\n\n");
 

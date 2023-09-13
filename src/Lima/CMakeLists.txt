@@ -13,10 +13,10 @@ unset (HDF5_USE_STATIC_LIBRARIES)
 if (FORMAT_MLI2)
 	find_package (HDF5 COMPONENTS CXX REQUIRED)
 endif (FORMAT_MLI2)
+if (SUMESH)
+	find_package (Sumesh REQUIRED)
+endif (SUMESH)
 find_package (Threads)
-
-# EXPURGE_BEGINNING_TAG FIND_LOCAL_DEPENDENCIES
-# EXPURGE_COMPLETION_TAG
 
 file (GLOB HEADERS public/Lima/*.h public/LimaP/*.h)
 file (GLOB PUBLIC_HEADERS public/Lima/*.h)
@@ -56,8 +56,6 @@ if (HDF5_FOUND AND HDF5_INCLUDE_DIRS AND HDF5_CXX_LIBRARIES AND (HDF5_VERSION VE
 else (HDF5_FOUND AND HDF5_INCLUDE_DIRS AND HDF5_CXX_LIBRARIES AND (HDF5_VERSION VERSION_GREATER_EQUAL 1.10.0))
 	message (WARNING "======================>  API HDF5 NON TROUVEE (ou version < 1.10.0 ou absence d'API c++) : pas de support du format mli2 <======================")
 endif (HDF5_FOUND AND HDF5_INCLUDE_DIRS AND HDF5_CXX_LIBRARIES AND (HDF5_VERSION VERSION_GREATER_EQUAL 1.10.0))
-# EXPURGE_BEGINNING_TAG USE_LOCAL_DEPENDENCY_1
-# EXPURGE_COMPLETION_TAG
 
 if (INT_8)
 	list (APPEND LIMA_CFLAGS -DINTEGER_64)
@@ -73,7 +71,7 @@ endif (REAL_8)
 set (MachineTypes_ENABLED OFF)
 if (${MachineTypes_FOUND})
 	message (STATUS "======================> Utilisation de l'API MachineTypes")
-	set (MachineTypes_ENABLED ON)
+	set (MachineTypes_ENABLED ON)	# Pour find_depency
 	target_link_libraries (Lima PUBLIC MachineTypes::include)
 	if (MachineTypes_INCLUDE_DIR)
 		target_include_directories (Lima PUBLIC ${MachineTypes_INCLUDE_DIR})
@@ -85,6 +83,15 @@ if (${MachineTypes_FOUND})
 		message (FATAL_ERROR "Variables MachineTypes_INCLUDE_DIRS et MachineTypes_INCLUDE_DIRS nulles.")
 	endif ( )
 endif (${MachineTypes_FOUND})
+
+set (Sumesh_ENABLED OFF)
+if (${Sumesh_FOUND})
+	message (STATUS "======================> Ajout du support de la bibliotheque sumesh")
+	set (Sumesh_ENABLED ON)		# Pour find_depency
+	list (APPEND EXTERNAL_LIBS_FLAGS "-D__INTERNE_LMSUMESH")
+	target_link_libraries (Lima PRIVATE Sumesh::sumesh)
+endif (${Sumesh_FOUND})
+
 
 set (LIMA_KERNEL_PUBLIC_FLAGS "${LIMA_CFLAGS}" LIMA_MT LIMA_USES_ATOMIC_API)
 #set (LIMA_KERNEL_PRIVATE_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -141,9 +148,7 @@ set (LIB_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR})		# Lima_LIB_DIR avec LimaConfig.cm
 #set (RUNTIME_INSTALL_DIR ${CMAKE_INSTALL_BINDIR})	# Lima_RUNTIME_DIR avec LimaConfig.cmake.in
 # Création du fichier LimaConfig.cmake qui définira Lima_INCLUDE_DIR, Lima_LIB_DIR et Lima_BIN_DIR :
 configure_package_config_file (cmake/${CMAKE_PACKAGE_CONFIG_NAME}.cmake.in ${CMAKE_PACKAGE_CONFIG_FILE}
-	INSTALL_DESTINATION ${CMAKE_CMAKE_DIR} PATH_VARS INCLUDE_INSTALL_DIR LIB_INSTALL_DIR ICEM_SUPPORTED MLI_SUPPORTED MLI2_SUPPORTED
-# EXPURGE_BEGINNING_TAG USE_LOCAL_DEPENDENCY_3	
-# EXPURGE_COMPLETION_TAG
+	INSTALL_DESTINATION ${CMAKE_CMAKE_DIR} PATH_VARS INCLUDE_INSTALL_DIR LIB_INSTALL_DIR ICEM_SUPPORTED MLI_SUPPORTED MLI2_SUPPORTED MachineTypes_ENABLED Sumesh_ENABLED
 	)
 
 # Copie du fichier LimaTargets.cmake dans prefix/lib/Lima/cmake :
