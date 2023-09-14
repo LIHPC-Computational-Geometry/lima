@@ -3,8 +3,9 @@
 
 /// Developpements novembre 20001
 ///
-// EXPURGE_BEGINNING_TAG LOCAL_DEPENDENCIES
-// EXPURGE_COMPLETION_TAG
+#ifdef __INTERNE_MACHINE_TYPES
+#include <machine_types.h>
+#endif
 
 #include <Lima/lima.h>
 #include "LimaP/config_it.h"

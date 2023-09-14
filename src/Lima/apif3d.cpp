@@ -1,7 +1,5 @@
 #include <string.h>
 #include <stdio.h>
-// EXPURGE_BEGINNING_TAG LOCAL_DEPENDENCIES
-// EXPURGE_COMPLETION_TAG
 
 #include <Lima/lima.h>
 

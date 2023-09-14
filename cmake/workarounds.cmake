@@ -1,15 +1,18 @@
 #
 # workarounds.cmake
 #
-# Version 0.9.0 (15/11/2021)
+# Version 0.11.0 (16/09/2022)
 #
 # On définit ici les contournement aux problèmes de type build-system rencontrés dans le projet
 #
 include (CMakeDetermineCXXCompiler)
 
 message ("CMAKE_SYSTEM_NAME=" ${CMAKE_SYSTEM_NAME})
-# EXPURGE_BEGINNING_TAG UNAME
-# EXPURGE_COMPLETION_TAG
+find_program(CCC_OS_FOUND ccc_os)
+if (CCC_OS_FOUND)
+	execute_process (COMMAND ccc_os OUTPUT_VARIABLE PLATFORM OUTPUT_STRIP_TRAILING_WHITESPACE)
+endif (CCC_OS_FOUND)
+
 if (NOT PLATFORM)
 	execute_process (COMMAND lsb_release -d COMMAND awk "{print $2;}" OUTPUT_VARIABLE PLATFORM OUTPUT_STRIP_TRAILING_WHITESPACE)
 endif (NOT PLATFORM)
@@ -51,22 +54,22 @@ if (PLATFORM STREQUAL "Ubuntu")
 endif (PLATFORM STREQUAL "Ubuntu")
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-	if (FORCE_STDC_LIB)
-message (FATAL_ERROR "STDLIB FORCED")
-		if ((PLATFORM STREQUAL "CentOS") OR (PLATFORM STREQUAL "RedHat-7-x86_64") OR (PLATFORM STREQUAL "Atos_7__x86_64") OR (PLATFORM STREQUAL "Rhel_8__x86_64") OR (PLATFORM STREQUAL "RedHat-8-x86_64") OR (PLATFORM STREQUAL "Atos_7__aarch64"))
+	if ((PLATFORM STREQUAL "CentOS") OR (PLATFORM STREQUAL "RedHat-7-x86_64") OR (PLATFORM STREQUAL "Atos_7__x86_64") OR (PLATFORM STREQUAL "Rhel_8__x86_64"))
 # On force le lien à cette version de la libstdc++. C'est nécessaire pour les wrappers swig/python lorsqu'on utilise directement
 # le fichier python => chargement par python de _module.so qui, sans cette directive, chargement /lib64/libstdc++.so qui n'aura
 # pas une ABI assez récente ...
-			message ("==> Ajout de la bibliothèque " ${STDC_LIB} " à l'édition des liens.")
-			link_libraries (${STDC_LIB})
-			get_filename_component (STDC_LIB_DIR ${STDC_LIB} DIRECTORY)
-			message ("==> Ajout de du répertoire " ${STDC_LIB_DIR} " à l'édition des liens.")
-#			link_directories (BEFORE "${STDC_LIB_DIR}")
-			add_link_options ("-Wl,-rpath,${STDC_LIB_DIR}")		# It works
-		endif ( )
-	endif (FORCE_STDC_LIB)
+		message ("==> Ajout de la bibliothèque " ${STDC_LIB} " à l'édition des liens.")
+		link_libraries (${STDC_LIB})
+		get_filename_component (STDC_LIB_DIR ${STDC_LIB} DIRECTORY)
+		message ("==> Ajout de du répertoire " ${STDC_LIB_DIR} " à l'édition des liens.")
+#		link_directories (BEFORE "${STDC_LIB_DIR}")
+		add_link_options ("-Wl,-rpath,${STDC_LIB_DIR}")		# It works
+	endif ( )
 	if (PLATFORM STREQUAL "Atos_7__x86_64")	# Malgré include (FindThreads) et target_link_libraries (mylib PUBLIC Threads::Threads) le -lpthread ne suit pas toujours en cmake 3.14
 		link_libraries (pthread)
+	endif()
+	if (PLATFORM STREQUAL "Rhel_8__x86_64")
+		link_libraries (util dl)
 	endif()
 elseif (CXX_NAME STREQUAL "icpc")
 	# Alors là c'est très fort. Il n'y a que du c++ et pourtant icpc 17.0.4.196 link avec les libs imf et autres, sans -Wl,-rpath
@@ -79,6 +82,5 @@ elseif (CXX_NAME STREQUAL "icpc")
 		add_link_options ("-Wl,-rpath,${INTEL_LIB_DIR}")		# It works
 	endif (INTEL_LIB)
 endif (CMAKE_COMPILER_IS_GNUCXX)
-
 
 

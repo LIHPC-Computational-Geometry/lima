@@ -6,7 +6,8 @@
         "cacheVariables":
         {
           "MACHINE_TYPES": "OFF",
-          "FORMAT_MLI": "OFF"
+          "FORMAT_MLI": "OFF",
+          "SUMESH": "OFF"
         }
       }
     ]
