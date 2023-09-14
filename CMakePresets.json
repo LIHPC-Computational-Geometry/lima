@@ -2,7 +2,12 @@
     "version": 3,
     "configurePresets": [
       {
-        "name": "ci"
+        "name": "ci",
+        "cacheVariables":
+        {
+          "MACHINE_TYPES": "OFF",
+          "FORMAT_MLI2": "OFF"
+        }
       }
     ]
 }
