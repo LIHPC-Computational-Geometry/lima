@@ -75,6 +75,15 @@ if (${MachineTypes_FOUND})
 	message (STATUS "======================> Utilisation de l'API MachineTypes")
 	set (MachineTypes_ENABLED ON)
 	target_link_libraries (Lima PUBLIC MachineTypes::include)
+	if (MachineTypes_INCLUDE_DIR)
+		target_include_directories (Lima PUBLIC ${MachineTypes_INCLUDE_DIR})
+	elseif (MachineTypes_INCLUDE_DIRS)
+		target_include_directories (Lima PUBLIC ${MachineTypes_INCLUDE_DIRS})
+	else ( )
+		# Si il y a une demande d'utilisation de MachineTypes ce peut être très important, ça défini entre autres les types des variables transmis en arguments des fonctions
+		# => Pas le droit à l'erreur, on bloque donc en cas de doute.
+		message (FATAL_ERROR "Variables MachineTypes_INCLUDE_DIRS et MachineTypes_INCLUDE_DIRS nulles.")
+	endif ( )
 endif (${MachineTypes_FOUND})
 
 set (LIMA_KERNEL_PUBLIC_FLAGS "${LIMA_CFLAGS}" LIMA_MT LIMA_USES_ATOMIC_API)
