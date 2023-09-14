@@ -6,7 +6,7 @@
         "cacheVariables":
         {
           "MACHINE_TYPES": "OFF",
-          "FORMAT_MLI2": "OFF"
+          "FORMAT_MLI": "OFF"
         }
       }
     ]
