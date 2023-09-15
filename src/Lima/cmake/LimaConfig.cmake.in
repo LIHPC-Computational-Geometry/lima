@@ -23,6 +23,10 @@ set_and_check (Lima_LIB_DIR   "@PACKAGE_LIB_INSTALL_DIR@")
 # Ugly code :
 set (Lima_VERSION @LIMA_VERSION@)
 check_required_components (Lima)
+check_required_components (LimaScripting)
+check_required_components (Xlmlima)
+check_required_components (Comparaison)
+check_required_components (Symetrize)
 
 # Les formats optionnels supportés (ON) ou non (OFF) :
 set (MLI_SUPPORT @MLI_SUPPORTED@)
@@ -31,4 +35,7 @@ set (ICEM_SUPPORT @ICEM_SUPPORTED@)
 
 # Fournir l'accès aux services des cibles (fichier non inclus automatiquement) :
 include(${CMAKE_CURRENT_LIST_DIR}/LimaTargets.cmake)
-
+include(${CMAKE_CURRENT_LIST_DIR}/LimaScriptingTargets.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/XlmlimaTargets.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/ComparaisonTargets.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/SymetriseTargets.cmake)

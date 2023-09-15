@@ -7,6 +7,7 @@ include (cmake/version.cmake)
 include (cmake/common.cmake)
 
 set (Lima_VERSION ${LIMA_VERSION})
+set (PROJECT_NAMESPACE "${PROJECT_NAME}::")
 
 option (VERBOSE_MAKEFILE ON)
 option (BUILD_SHARED_LIBS "Creation de bibliotheques dynamiques (defaut : ON)" ON)
