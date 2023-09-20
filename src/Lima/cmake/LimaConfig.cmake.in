@@ -23,10 +23,23 @@ set_and_check (Lima_LIB_DIR   "@PACKAGE_LIB_INSTALL_DIR@")
 # Ugly code :
 set (Lima_VERSION @LIMA_VERSION@)
 check_required_components (Lima)
-check_required_components (LimaScripting)
-check_required_components (Xlmlima)
-check_required_components (Comparaison)
-check_required_components (Symetrise)
+
+set (HAS_LIMA_SCRIPTING @HAS_LIMA_SCRIPTING@)
+set (HAS_LIMA_TOOLS @HAS_LIMA_TOOLS@)
+set (HAS_LIMA_TESTS @HAS_LIMA_TESTS@)
+
+if (HAS_LIMA_SCRIPTING)
+	check_required_components (LimaScripting)
+endif (HAS_LIMA_SCRIPTING)
+
+if (HAS_LIMA_TOOLS)
+	check_required_components (Xlmlima)
+	check_required_components (Symetrise)
+endif (HAS_LIMA_TOOLS)
+
+if (HAS_LIMA_TESTS)
+	check_required_components (Comparaison)
+endif (HAS_LIMA_TESTS)
 
 # Les formats optionnels supportés (ON) ou non (OFF) :
 set (MLI_SUPPORT @MLI_SUPPORTED@)
@@ -35,7 +48,16 @@ set (ICEM_SUPPORT @ICEM_SUPPORTED@)
 
 # Fournir l'accès aux services des cibles (fichier non inclus automatiquement) :
 include(${CMAKE_CURRENT_LIST_DIR}/LimaTargets.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/LimaScriptingTargets.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/XlmlimaTargets.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/ComparaisonTargets.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/SymetriseTargets.cmake)
+
+if (HAS_LIMA_SCRIPTING)
+	include(${CMAKE_CURRENT_LIST_DIR}/LimaScriptingTargets.cmake)
+endif (HAS_LIMA_SCRIPTING)
+
+if (HAS_LIMA_TOOLS)
+	include(${CMAKE_CURRENT_LIST_DIR}/XlmlimaTargets.cmake)
+	include(${CMAKE_CURRENT_LIST_DIR}/SymetriseTargets.cmake)
+endif (HAS_LIMA_TOOLS)
+
+if (HAS_LIMA_TESTS)
+	include(${CMAKE_CURRENT_LIST_DIR}/ComparaisonTargets.cmake)
+endif (HAS_LIMA_TESTS)
