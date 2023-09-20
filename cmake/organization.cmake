@@ -7,13 +7,15 @@
 # ================
 
 # Le répertoire d'installation où sont mis les fichiers cmake à destination des utilisateurs (Module/cmake) :
-set (CMAKE_CMAKE_DIR ${CMAKE_INSTALL_LIBDIR}/${CURRENT_PACKAGE_NAME}/cmake)
+#set (CMAKE_CMAKE_DIR ${CMAKE_INSTALL_LIBDIR}/${CURRENT_PACKAGE_NAME}/cmake)
+set (CMAKE_CMAKE_DIR ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}/cmake)
 
 # Répertoire d'installation des bibliothèques (pour le RPATH) :
 set (CMAKE_PACKAGE_RPATH_DIR ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
 
 # Module::
-set (CMAKE_MODULE_NAMESPACE ${CURRENT_PACKAGE_NAME}::)
+#set (CMAKE_MODULE_NAMESPACE ${CURRENT_PACKAGE_NAME}::)
+set (CMAKE_MODULE_NAMESPACE ${PROJECT_NAME}::)
 
 # ModuleConfig
 set (CMAKE_PACKAGE_CONFIG_NAME ${CURRENT_PACKAGE_NAME}Config)
@@ -22,7 +24,8 @@ set (CMAKE_PACKAGE_CONFIG_NAME ${CURRENT_PACKAGE_NAME}Config)
 set (CMAKE_PACKAGE_TARGETS_NAME ${CURRENT_PACKAGE_NAME}Targets)
 
 # Le répertoire des fichiers de configuration (lib/Module/cmake) :
-set (CMAKE_PACKAGE_CONFIG_DIR ${CMAKE_CURRENT_BINARY_DIR}/${CURRENT_PACKAGE_NAME})
+#set (CMAKE_PACKAGE_CONFIG_DIR ${CMAKE_CURRENT_BINARY_DIR}/${CURRENT_PACKAGE_NAME})
+set (CMAKE_PACKAGE_CONFIG_DIR ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME})
 
 # Le Fichier lib/Module/cmake/ModuleConfigVersion.cmake :
 set (CMAKE_PACKAGE_CONFIG_FILE ${CMAKE_PACKAGE_CONFIG_DIR}/${CMAKE_PACKAGE_CONFIG_NAME}.cmake)

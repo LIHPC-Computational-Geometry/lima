@@ -8,6 +8,9 @@ if (MACHINE_TYPES)
 endif (MACHINE_TYPES)
 if (FORMAT_MLI)
 	include (${CMAKE_SOURCE_DIR}/cmake/FindHdf145.cmake)
+	if (NOT HDF145_FOUND)
+		message (FATAL_ERROR "Support du format mli demandé mais bibliothèque HDF145 non trouvée.")
+	endif (NOT HDF145_FOUND)
 endif (FORMAT_MLI)
 unset (HDF5_USE_STATIC_LIBRARIES)
 if (FORMAT_MLI2)
@@ -144,11 +147,16 @@ export (EXPORT ${CMAKE_PACKAGE_TARGETS_NAME} FILE ${CMAKE_PACKAGE_TARGETS_FILE} 
 
 # Utilisation par d'autres modules de Lima :
 set (INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})	# Lima_INCLUDE_DIR avec LimaConfig.cmake.in
-set (LIB_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR})		# Lima_LIB_DIR avec LimaConfig.cmake.in
-#set (RUNTIME_INSTALL_DIR ${CMAKE_INSTALL_BINDIR})	# Lima_RUNTIME_DIR avec LimaConfig.cmake.in
+set (LIB_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR})			# Lima_LIB_DIR avec LimaConfig.cmake.in
+set (HAS_LIMA_SCRIPTING ${BUILD_SCRIPTING})				# Python/Swig wrapper
+set (HAS_LIMA_TOOLS ${BUILD_XLMLIMA})					# XlmLima, Symetrise
+set (HAS_LIMA_TESTS ${BUILD_TESTS})						# Comparaison
+
+#set (RUNTIME_INSTALL_DIR ${CMAKE_INSTALL_BINDIR})		# Lima_RUNTIME_DIR avec LimaConfig.cmake.in
 # Création du fichier LimaConfig.cmake qui définira Lima_INCLUDE_DIR, Lima_LIB_DIR et Lima_BIN_DIR :
 configure_package_config_file (cmake/${CMAKE_PACKAGE_CONFIG_NAME}.cmake.in ${CMAKE_PACKAGE_CONFIG_FILE}
-	INSTALL_DESTINATION ${CMAKE_CMAKE_DIR} PATH_VARS INCLUDE_INSTALL_DIR LIB_INSTALL_DIR ICEM_SUPPORTED MLI_SUPPORTED MLI2_SUPPORTED MachineTypes_ENABLED Sumesh_ENABLED
+	INSTALL_DESTINATION ${CMAKE_CMAKE_DIR} PATH_VARS INCLUDE_INSTALL_DIR LIB_INSTALL_DIR ICEM_SUPPORTED MLI_SUPPORTED MLI2_SUPPORTED MachineTypes_ENABLED Sumesh_ENABLED 
+	HAS_LIMA_SCRIPTING HAS_LIMA_TOOLS HAS_LIMA_TESTS
 	)
 
 # Copie du fichier LimaTargets.cmake dans prefix/lib/Lima/cmake :
