@@ -24,6 +24,7 @@ option (FORMAT_MLI2 "Format remplaçant le format MLI recommandé partout. Requi
 option (BUILD_SCRIPTING "Génération du wrapper swig/python pour utilisation scriptée de Lima." ON)
 option (BUILD_XLMLIMA "Utilitaire xlmlima (conversions, préparations de maillages), symetrise (symétrisation / x, y ou z)." ON)
 option (BUILD_TESTS "Création de l'utilitaire comparaison." OFF)
+option (DISABLE_MLI_WARNING "Désactivation de l'affichage d'un avertissement signalant que le format mli est obsolète et recommandant en remplacement l'usage du format mli2." OFF)
 
 add_subdirectory (src)
 enable_testing ( )

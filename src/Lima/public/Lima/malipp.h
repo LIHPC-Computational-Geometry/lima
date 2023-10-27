@@ -84,8 +84,11 @@ struct HDFAttributeDescriptor
 
 
 /** Classe de lecture de fichiers au format mali++ (extensions mli, mliz).
- * L'usage des diverses fonctions membres de cette classe requiert que le
- * constructeur n'ait levé aucune exception.
+ * L'usage des diverses fonctions membres de cette classe requiert que le constructeur n'ait levé aucune exception.
+ * @deprecated
+ * @warning		Ce format de fichier est obsolète, la maintenance du lecteur/écrivain n'est pas garantie. Ce format
+ * 				est remplacé par le format mli2, de structure analogue et reposant sur une version de HDF5 supérieure
+ * 				ou égale à 1.10.0.
  */
 class MaliPPReader
 {

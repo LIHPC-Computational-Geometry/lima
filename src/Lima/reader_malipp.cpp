@@ -1987,6 +1987,10 @@ void _WriterMalipp::ecrire ( )
 //! Creation (si nécessaire) du header d'un fichier HDF5
 void _WriterMalipp::createMainHeader ( )
 {
+#ifndef DISABLE_MLI_WARNING
+	// Avertissement écrit en bleu puis restauration couleur par défaut.
+	cerr << "\033[34m" << "ATTENTION : le format mli est obsolète. Nous recommandons d'utiliser à la place le format mli2 qui reprend les mêmes caractéristiques." << "\033[39m" << endl;
+#endif	// DISABLE_MLI_WARNING
 	hsize_t strDims [1];
 	hsize_t strMaxDims [1];
 

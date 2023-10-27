@@ -9,6 +9,9 @@ add_executable (xlmlima ${CPP_SOURCES})
 
 target_compile_definitions (xlmlima PRIVATE XLMLIMA_VERSION="${LIMA_VERSION}")
 target_compile_definitions (xlmlima PRIVATE ${LIMA_CFLAGS})
+if (DISABLE_MLI_WARNING)
+	target_compile_definitions (xlmlima PRIVATE "DISABLE_MLI_WARNING")
+endif (DISABLE_MLI_WARNING)
 target_include_directories (xlmlima PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/protected)
 target_link_libraries (xlmlima PRIVATE Lima)
 
