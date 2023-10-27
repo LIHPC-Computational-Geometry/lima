@@ -1804,6 +1804,10 @@ Group MaliPPReader::groupe_attribut (ENTITE entite)
 
 void MaliPPReader::lire_entete_maillage ( )
 {
+#ifndef DISABLE_MLI_WARNING
+	// Avertissement écrit en bleu puis restauration couleur par défaut.
+	cerr << "\033[34m" << "ATTENTION : le format mli est obsolète. Nous recommandons d'utiliser à la place le format mli2 qui reprend les mêmes caractéristiques." << "\033[39m" << endl;
+#endif	// DISABLE_MLI_WARNING
 	// Inactivation de l'affichage des messages d'erreur HDF sur le terminal :
 	HDFErrorHandlerManager		errorHandlerManager;
 
@@ -2190,6 +2194,11 @@ void MaliPPWriter::writeVersionsInfos (H5Object& root)
 //! Ecriture du header d'un maillage. Création si nécessaire.
 void MaliPPWriter::writeMeshHeader ( )
 {
+#ifndef DISABLE_MLI_WARNING
+	// Avertissement écrit en bleu puis restauration couleur par défaut.
+	cerr << "\033[34m" << "ATTENTION : le format mli est obsolète. Nous recommandons d'utiliser à la place le format mli2 qui reprend les mêmes caractéristiques." << "\033[39m" << endl;
+#endif	// DISABLE_MLI_WARNING
+
 	BEGIN_TRY_CATCH_BLOCK("MaliPPWriter::writeMeshHeader ")
 
 	// Inactivation de l'affichage des messages d'erreur HDF sur le terminal :

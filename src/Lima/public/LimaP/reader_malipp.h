@@ -14,6 +14,10 @@
 /*!
   \file reader_malipp.h
   \brief Interface de lecture / ecriture pour les fichiers MALI++ (.mli/.mliz)
+  \deprecated
+  \warning		Ce format de fichier est obsolète, la maintenance du lecteur/écrivain n'est pas garantie. Ce format
+  				est remplacé par le format mli2, de structure analogue et reposant sur une version de HDF5 supérieure
+  				ou égale à 1.10.0.
 */
 
 #ifndef _READER_MALIPP_H

@@ -303,6 +303,13 @@ void XlmLimaFactory::syntax ( )
 	message	+= string ("\n");
 	message += string ("auto : format déterminé par l'extension du fichier.");
 	message	+= string ("\n");
+#ifdef __INTERNE_MALIPP
+#	ifndef DISABLE_MLI_WARNING
+	// Avertissement écrit souligné puis restauration du style par défaut.
+	message += string ("\033[4m") + string ("ATTENTION :") + string ("\033[24m") + string (" le format mli est obsolète. Nous recommandons d'utiliser à la place le format mli2 qui reprend les mêmes caractéristiques.");
+	message	+= string ("\n");
+#	endif	// DISABLE_MLI_WARNING
+#endif	// __INTERNE_MALIPP
 	message	+= string ("Préparations        :");
 	message	+= string (" minimale maximale codeb codea mailleur2d codet");
 	message	+= string (" partitionnement3d lissage3d codea-d3d noeuds");

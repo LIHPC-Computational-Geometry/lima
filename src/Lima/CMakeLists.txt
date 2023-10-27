@@ -109,6 +109,9 @@ target_compile_definitions (Lima PUBLIC ${LIMA_KERNEL_PUBLIC_FLAGS})
 target_compile_options (Lima PRIVATE ${LIMA_KERNEL_PRIVATE_FLAGS})
 target_compile_definitions (Lima PUBLIC ${ICEMCFD_FLAGS})
 target_compile_definitions (Lima PUBLIC ${EXTERNAL_LIBS_FLAGS})
+if (DISABLE_MLI_WARNING)
+	target_compile_definitions (Lima PRIVATE "DISABLE_MLI_WARNING")
+endif (DISABLE_MLI_WARNING)
 # Threads::Threads : A ne pas mettre en PRIVATE car "référence au symbole non défini «sem_getvalue@@GLIBC_2.2.5»"
 target_link_libraries (Lima PUBLIC Threads::Threads)	 
 
