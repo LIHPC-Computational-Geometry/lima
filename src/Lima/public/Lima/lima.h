@@ -119,6 +119,9 @@ extern "C" {
 
 #ifdef __INTERNE_MACHINE_TYPES
 #include <machine_types.h>
+  typedef u_int_8 LM_TYPEMASQUE ;
+  typedef u_int_8 LM_V_TYPEMASQUE ;
+  typedef u_int_8 LM_VC_TYPEMASQUE ;
 #else
   typedef unsigned long long int LM_TYPEMASQUE ;
   typedef unsigned long long int LM_V_TYPEMASQUE ;
