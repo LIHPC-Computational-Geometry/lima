@@ -76,6 +76,7 @@ if (${MachineTypes_FOUND})
 	message (STATUS "======================> Utilisation de l'API MachineTypes")
 	set (MachineTypes_ENABLED ON)	# Pour find_depency
 	target_link_libraries (Lima PUBLIC MachineTypes::include)
+	target_compile_definitions (Lima PUBLIC __INTERNE_MACHINE_TYPES)
 	if (MachineTypes_INCLUDE_DIR)
 		target_include_directories (Lima PUBLIC ${MachineTypes_INCLUDE_DIR})
 	elseif (MachineTypes_INCLUDE_DIRS)
