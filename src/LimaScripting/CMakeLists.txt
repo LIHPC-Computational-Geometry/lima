@@ -26,7 +26,6 @@ set (ALL_TARGETS LimaScripting)
 set_property (SOURCE LimaScripting.i PROPERTY CPLUSPLUS ON)
 swig_add_library (LimaScripting TYPE SHARED LANGUAGE PYTHON SOURCES ${CPP_SOURCES})
 cmake_policy (SET CMP0086 NEW)
-set_source_files_properties (LimaScripting.i PROPERTIES CPLUSPLUS ON)
 set_source_files_properties (LimaScripting.i PROPERTIES SWIG_MODULE_NAME LimaScripting)
 
 # Objectif avoir les flags de compilation SWIG suivants :
