@@ -2,7 +2,10 @@ set (CURRENT_PACKAGE_NAME "Lima")
 set (CURRENT_PACKAGE_MACRO_NAME "LIMA_KERNEL")
 include (${CMAKE_SOURCE_DIR}/cmake/version.cmake)
 include (${CMAKE_SOURCE_DIR}/cmake/common.cmake)
+include (${CMAKE_SOURCE_DIR}/cmake/compilation_options.cmake)
 include (${CMAKE_SOURCE_DIR}/cmake/workarounds.cmake)
+
+
 if (MACHINE_TYPES)
 	find_package (MachineTypes REQUIRED)
 endif (MACHINE_TYPES)
@@ -35,6 +38,7 @@ if ((PLATFORM STREQUAL "CentOS") OR (PLATFORM STREQUAL "Atos_7__x86_64") OR (PLA
 endif ()
 
 add_library (Lima ${CPP_SOURCES} ${HEADERS} ${ICEMCFD_OBJS})
+add_library (lima_fortran_compile_flags INTERFACE)
 
 set (MLI_SUPPORTED OFF)
 set (EXTERNAL_LIBS_FLAGS)
@@ -60,16 +64,9 @@ else (HDF5_FOUND AND HDF5_INCLUDE_DIRS AND HDF5_CXX_LIBRARIES AND (HDF5_VERSION 
 	message (WARNING "======================>  API HDF5 NON TROUVEE (ou version < 1.10.0 ou absence d'API c++) : pas de support du format mli2 <======================")
 endif (HDF5_FOUND AND HDF5_INCLUDE_DIRS AND HDF5_CXX_LIBRARIES AND (HDF5_VERSION VERSION_GREATER_EQUAL 1.10.0))
 
-if (INT_8)
-	list (APPEND LIMA_CFLAGS -DINTEGER_64)
-else (INT_8)
-	list (APPEND LIMA_CFLAGS -DINTEGER_32)
-endif (INT_8)
-if (REAL_8)
-	list (APPEND LIMA_CFLAGS -DREAL_64)
-else (REAL_8)
-	list (APPEND LIMA_CFLAGS -DREAL_32)
-endif (REAL_8)
+list (APPEND LIMA_CFLAGS "-D${LIMA_INT_SIZE}")
+list (APPEND LIMA_CFLAGS "-D${LIMA_REAL_SIZE}")
+target_compile_options (lima_fortran_compile_flags INTERFACE "${FORTRAN_FLAGS_LIST}")
 
 set (MachineTypes_ENABLED OFF)
 if (${MachineTypes_FOUND})
@@ -99,7 +96,7 @@ endif (${Sumesh_FOUND})
 
 set (LIMA_KERNEL_PUBLIC_FLAGS "${LIMA_CFLAGS}" LIMA_MT LIMA_USES_ATOMIC_API)
 #set (LIMA_KERNEL_PRIVATE_FLAGS "${CMAKE_CXX_FLAGS}")
-set (ALL_TARGETS Lima)
+set (ALL_TARGETS Lima lima_fortran_compile_flags)
 set_property (TARGET Lima PROPERTY VERSION ${LIMA_VERSION})
 set_property (TARGET Lima PROPERTY SOVERSION ${LIMA_MAJOR_VERSION})
 target_include_directories (Lima PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/public>$<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
@@ -113,8 +110,9 @@ target_compile_definitions (Lima PUBLIC ${EXTERNAL_LIBS_FLAGS})
 if (DISABLE_MLI_WARNING)
 	target_compile_definitions (Lima PRIVATE "DISABLE_MLI_WARNING")
 endif (DISABLE_MLI_WARNING)
-# Threads::Threads : A ne pas mettre en PRIVATE car "référence au symbole non défini «sem_getvalue@@GLIBC_2.2.5»"
-target_link_libraries (Lima PUBLIC Threads::Threads)	 
+# v 7.10.0 : Lima a au moins 1 appel direct à la lm (pow), et HDF145 en a aussi (ceil), mais HDF145 ne déclare pas de dépendance à la lm. Dans de rares cas ça manque au linker ...
+# Donc la dépendance ci-dessous est à laisser.
+target_link_libraries (Lima PUBLIC Threads::Threads m)	 
 
 
 # Etre capable une fois installée de retrouver Lima*, ... :
