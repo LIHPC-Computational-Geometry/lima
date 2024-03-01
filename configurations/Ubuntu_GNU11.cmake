@@ -4,15 +4,6 @@ set(CMAKE_CXX_COMPILER g++-11)
 set(CMAKE_CXX_FLAGS -std=c++11)
 set(CMAKE_Fortran_COMPILER "${GNU_ROOT}/bin/gfortran")
 
-#set (CMAKE_Fortran_FLAGS "-fdefault-real-8")	# I4/R8 insuffisant si des double precision sont déclarés car alors promus en R16
-set (CMAKE_Fortran_FLAGS)
-if (INT_8)
-	string(APPEND CMAKE_Fortran_FLAGS " -fdefault-integer-8")
-endif (INT_8)
-if (REAL_8)
-	string (APPEND CMAKE_Fortran_FLAGS " -fdefault-real-8 -fdefault-double-8")
-endif (REAL_8)
-
 # SWIG_EXECUTABLE : requiert d'être en cache pour fonctionner tout au long de la chaine ...
 set (SWIG_EXECUTABLE "/opt/swig/3.0.12/bin/swig" CACHE FILEPATH "Swig exe" FORCE)
 

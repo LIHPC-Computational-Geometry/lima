@@ -17,3 +17,4 @@ if (BUILD_XLMLIMA)	# and other tools
 	add_subdirectory (Symetrise)
 endif ( )
 
+enable_testing ( )
