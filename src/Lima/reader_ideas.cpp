@@ -354,6 +354,7 @@ _ReaderIdeas::lire_dataset_elements(FILE* fp, // pointeur de fichier
       
     // Lecture des noeuds
     switch(type_element){
+	case 11:	// v 7.10.1
     case 21:
       {
 	/* bras, saut d'une ligne */
