@@ -2385,6 +2385,8 @@ void MaliPPWriter2::close ( )
 	}
 
 	m_meshGroup	= Group ( );
+    m_hdfFile->flush(H5F_SCOPE_LOCAL);
+    m_hdfFile->close();
 	m_hdfFile.reset (0);
 
 	COMPLETE_TRY_CATCH_BLOCK
