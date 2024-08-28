@@ -2041,7 +2041,7 @@ static size_t computeChunkSize (size_t count, size_t elementSize)
 
 
 MaliPPWriter2::MaliPPWriter2 (const IN_STD string& nom_fichier, size_type num)
-: m_fileName(nom_fichier), m_meshNum(num),
+: m_fileName(nom_fichier), m_meshNum(num), m_meshGroup ( ), m_hdfFile ( ),
 	m_dim(D3),
 	m_unilo(1.),
 	m_unia(1.),
@@ -2049,19 +2049,33 @@ MaliPPWriter2::MaliPPWriter2 (const IN_STD string& nom_fichier, size_type num)
 	m_tycoo(CARTESIEN),
 	m_titre(""),
 	m_date(""),
+	m_nbMeshAttributes (0),
+	m_meshAttributesGroup ( ),
 	m_nodesIsContiguous(false),
 	m_nodeIndexCurrent(0),
 	m_nbNodes(0),
+	m_nbNodeSet (0),
+	m_nbNodeAttributes (0),
+	m_nbNodeSetsAttributes (0),
 	m_edgesIsContiguous(false),
 	m_edgeIndexCurrent(0),
 	m_nbEdges(0),
+	m_nbEdgeSet (0),
+	m_nbEdgeAttributes (0),
+	m_nbEdgeSetsAttributes (0),
 	m_facesIsContiguous(false),
 	m_faceIndexCurrent(0),
 	m_nbFaces(0),
+	m_nbFaceSet (0),
+	m_nbFaceAttributes (0),
+	m_nbFaceSetsAttributes (0),
 	m_nbNodesPerFaceIndexCurrent(0),
 	m_regionsIsContiguous(false),
 	m_regionIndexCurrent(0),
 	m_nbRegions(0),
+	m_nbRegionSet (0),
+	m_nbRegionAttributes (0),
+	m_nbRegionSetsAttributes (0),
 	m_nbNodesPerRegionIndexCurrent(0)
 {
 
@@ -2384,10 +2398,46 @@ void MaliPPWriter2::close ( )
 		writeComposition (m_regionSetCompo[igrp], CELL3D_COMPOSITION_DATASET_NAME, m_regionSetGroups[igrp]);
 	}
 
-	m_meshGroup	= Group ( );
-    m_hdfFile->flush(H5F_SCOPE_LOCAL);
-    m_hdfFile->close();
-	m_hdfFile.reset (0);
+	m_meshGroup				= Group ( );
+	m_meshAttributesGroup	= Group ( );
+	m_nodeGroup				= Group ( );
+	m_nodeZCoordDataSet	= DataSet ( );
+	m_nodeYCoordDataSet	= DataSet ( );
+	m_nodeXCoordDataSet	= DataSet ( );
+	m_nodeIdsDataSet	= DataSet ( );
+	m_nodeSetGroup	= Group ( );
+	m_nodeSetGroups.clear ( );
+	m_nodeSetIdsDataSet.clear ( );
+	m_nodeAttributesGroup	= Group ( );
+	m_nodeSetsAttributesGroup	= Group ( );
+	m_edgeGroup	= Group ( );
+	m_edge2nodeIdsDataSet	= DataSet ( );
+	m_edgeIdsDataSet	= DataSet ( );
+	m_edgeSetGroup	= Group ( );
+	m_edgeSetGroups.clear ( );
+	m_edgeSetIdsDataSet.clear ( );
+	m_edgeAttributesGroup	= Group ( );
+	m_edgeSetsAttributesGroup	= Group ( );
+	m_faceGroup	= Group ( );
+	m_face2nodeIdsDataSet	= DataSet ( );
+	m_nbNodesPerFaceDataSet	= DataSet ( );
+	m_faceIdsDataSet	= DataSet ( );
+	m_faceSetGroup	= Group ( );
+	m_faceSetGroups.clear ( );
+	m_faceSetIdsDataSet.clear ( );
+	m_faceAttributesGroup	= Group ( );
+	m_faceSetsAttributesGroup	= Group ( );
+	m_regionGroup	= Group ( );
+	m_region2nodeIdsDataSet	= DataSet ( );
+	m_nbNodesPerRegionDataSet	= DataSet ( );
+	m_regionIdsDataSet	= DataSet ( );
+	m_regionSetGroup	= Group ( );
+	m_regionSetGroups.clear ( );
+	m_regionSetIdsDataSet.clear ( );
+	m_regionAttributesGroup	= Group ( );
+	m_regionSetsAttributesGroup	= Group ( );
+
+	m_hdfFile.reset (0);	// CP : invoque close ( )
 
 	COMPLETE_TRY_CATCH_BLOCK
 	if (throwExc) {
