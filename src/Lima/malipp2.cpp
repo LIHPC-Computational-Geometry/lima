@@ -3679,7 +3679,6 @@ MaliPPWriter2& MaliPPWriter2::operator = (const MaliPPWriter2&)
 
 MaliPPWriter2::~MaliPPWriter2 ( )
 {
-	assert (0 && "MaliPPWriter2::~MaliPPWriter2 is not allowed.");
 }	// MaliPPWriter2::~MaliPPWriter2
 
 
@@ -3694,22 +3693,18 @@ HDFAttributeDescriptor2Type::HDFAttributeDescriptor2Type ( )
 	StrType		type (PredType::C_S1);
 	type.setSize (MLI2_ATTRIBUT_SIZE);
 	insertMember (m_name, HOFFSET (HDFAttributeDescriptor2, m_name), type);
-	insertMember (m_type, HOFFSET (HDFAttributeDescriptor2, m_type), 
-	               PredType::NATIVE_INT16);
-	insertMember (m_size, HOFFSET (HDFAttributeDescriptor2, m_size), 
-	               PredType::NATIVE_UINT32);
+	insertMember (m_type, HOFFSET (HDFAttributeDescriptor2, m_type), PredType::NATIVE_INT16);
+	insertMember (m_size, HOFFSET (HDFAttributeDescriptor2, m_size), PredType::NATIVE_UINT32);
 }	// HDFAttributeDescriptor2Type::HDFAttributeDescriptor2Type
 
 
-HDFAttributeDescriptor2Type::HDFAttributeDescriptor2Type (
-									const HDFAttributeDescriptor2Type& at)
+HDFAttributeDescriptor2Type::HDFAttributeDescriptor2Type (const HDFAttributeDescriptor2Type& at)
 	: CompType (at)
 {
 }	// HDFAttributeDescriptor2Type copy constructor
 
 
-HDFAttributeDescriptor2Type& HDFAttributeDescriptor2Type::operator = (
-									const HDFAttributeDescriptor2Type&)
+HDFAttributeDescriptor2Type& HDFAttributeDescriptor2Type::operator = (const HDFAttributeDescriptor2Type&)
 {
 	return *this;
 }	// HDFAttributeDescriptor2Type::operator =
