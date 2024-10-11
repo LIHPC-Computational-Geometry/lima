@@ -29,7 +29,7 @@
 #include "LimaP/fonction.h"
 #include "LimaP/algorithme.h"
 
-#ifdef __INTERNE_MALIPP
+#if defined(__INTERNE_MALIPP) && defined (__INTERNE_MALIPP_WRITER)
 #include <Lima/malipp.h>
 #endif	// __INTERNE_MALIPP
 
@@ -2899,7 +2899,7 @@ void Init_attribut(_MaillageInterne* mai, att_loc pt_attach, string nom_groupe)
 }
 
 
-#ifdef __INTERNE_MALIPP
+#if defined(__INTERNE_MALIPP) && defined (__INTERNE_MALIPP_WRITER)
 void lmczmli_ (int_type* comprimer, int_type* niveau, int_type* ier)
 {
 	try

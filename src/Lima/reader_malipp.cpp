@@ -1760,6 +1760,8 @@ void _ReaderMalipp::readGroupAttr (
 }	// _ReaderMalipp::readGroupAttr
 
 
+#ifdef __INTERNE_MALIPP_WRITER
+
 //////////////////////////////////////////////////////////////////////////////
 //! Ecriture de l'indice des elements dans le champ udata
 void  _WriterMalipp::setDataToIndice ( )
@@ -3183,6 +3185,8 @@ void _WriterMalipp::writeComposition (const Composition& composition,
 	compositionAttr.write (compositionAttr.getDataType ( ), detail);
 }	// _WriterMalipp::writeComposition
 
+#endif	// __INTERNE_MALIPP_WRITER
+
 
 static size_t computeChunkSize (size_t count, size_t elementSize)
 {
@@ -3202,6 +3206,7 @@ static size_t computeChunkSize (size_t count, size_t elementSize)
 
 	return count / (chunkDivider * elementSize);
 }	// computeChunkSize
+
 
 END_NAMESPACE_LIMA
 

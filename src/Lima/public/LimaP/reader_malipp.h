@@ -92,6 +92,8 @@ private:
 };
 
 //////////////////////////////////////////////////////////////////////////////
+#ifdef __INTERNE_MALIPP_WRITER
+
 class _WriterMalipp : public _Writer {
 public :
   _WriterMalipp(_MaillageInterne* mesh, 
@@ -165,6 +167,7 @@ private:
 	bool								m_forceZlib;
 };
 
+#endif	// __INTERNE_MALIPP_WRITER
 
 END_NAMESPACE_LIMA
 

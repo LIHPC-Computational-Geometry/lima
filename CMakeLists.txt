@@ -18,6 +18,7 @@ option (SUMESH "Utilisation de la bibliothèque de sumesh." ON)
 
 # Les formats de fichiers optionnellement supportés :
 option (FORMAT_MLI "Format obsolète déconseillé en externe. Requiert HDF145." ON)
+option (WRITER_MLI "Ecrivain du format obsolète. Requiert FORMAT_MLI." FALSE)
 option (FORMAT_MLI2 "Format remplaçant le format MLI recommandé partout. Requiert HDF 5 v >= 1.10.0." ON)
 
 # Binaires optionnels :

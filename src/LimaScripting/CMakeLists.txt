@@ -24,6 +24,7 @@ file (GLOB CPP_SOURCES *.i *.cpp)
 # => dans cette version on ne génère que _LimaScripting qui sera utilisé directement depuis les scripts comme par les exécutables.
 set (ALL_TARGETS LimaScripting)
 set_property (SOURCE LimaScripting.i PROPERTY CPLUSPLUS ON)
+set_property (SOURCE LimaScripting.i PROPERTY USE_SWIG_DEPENDENCIES TRUE)
 swig_add_library (LimaScripting TYPE SHARED LANGUAGE PYTHON SOURCES ${CPP_SOURCES})
 cmake_policy (SET CMP0086 NEW)
 set_source_files_properties (LimaScripting.i PROPERTIES SWIG_MODULE_NAME LimaScripting)

@@ -90,8 +90,7 @@ HDFAttributeDescriptor::HDFAttributeDescriptor ( )
 }	// HDFAttributeDescriptor::HDFAttributeDescriptor
 
 
-HDFAttributeDescriptor::HDFAttributeDescriptor (
-										const HDFAttributeDescriptor& ad)
+HDFAttributeDescriptor::HDFAttributeDescriptor (const HDFAttributeDescriptor& ad)
 {
 	for (size_type i = 0; i < ATTRIBUT_SIZE; i++)
 		m_name [i]	= ad.m_name [i];
@@ -100,8 +99,7 @@ HDFAttributeDescriptor::HDFAttributeDescriptor (
 }	// HDFAttributeDescriptor::HDFAttributeDescriptor
 
 
-HDFAttributeDescriptor& HDFAttributeDescriptor::operator = (
-										const HDFAttributeDescriptor& ad)
+HDFAttributeDescriptor& HDFAttributeDescriptor::operator = (const HDFAttributeDescriptor& ad)
 {
 	if (&ad != this)
 	{
@@ -144,8 +142,7 @@ MaliPPReader::GroupeReader::GroupeReader (const GroupeReader& reader)
 }	// GroupeReader::GroupeReader
 
 
-MaliPPReader::GroupeReader& MaliPPReader::GroupeReader::operator = (
-													const GroupeReader& reader)
+MaliPPReader::GroupeReader& MaliPPReader::GroupeReader::operator = (const GroupeReader& reader)
 {
 	if (&reader != this)
 	{
@@ -1928,6 +1925,8 @@ void MaliPPReader::lire_composition_maillage ( )
 //                            LA CLASSE MaliPPWriter
 // ===========================================================================
 
+#ifdef __INTERNE_MALIPP_WRITER
+
 static size_t computeChunkSize (size_t count, size_t elementSize)
 {
 // Pour forcer la creation de blocs lors de tests :
@@ -1975,7 +1974,7 @@ MaliPPWriter::MaliPPWriter (const IN_STD string& nom_fichier, size_type num)
 
 }	// MaliPPWriter::MaliPPWriter
 
-void MaliPPWriter::beginWrite()
+void MaliPPWriter::beginWrite ( )
 {
 	bool			throwExc	= false;
 	MutableString	errorMsg;
@@ -2496,12 +2495,7 @@ void MaliPPWriter::writeNodesInfo (bool isContiguous, id_type nbNodes, id_type f
 }	// MaliPPWriter::writeNodesInfo
 
 
-void MaliPPWriter::writeNodes (
-		id_type nodesChunkSize,
-		double* coordsX,
-		double* coordsY,
-		double* coordsZ,
-		id_type* ids)
+void MaliPPWriter::writeNodes (id_type nodesChunkSize, double* coordsX, double* coordsY, double* coordsZ, id_type* ids)
 {
 	BEGIN_TRY_CATCH_BLOCK("MaliPPWriter::writeNodes ")
 
@@ -2602,10 +2596,7 @@ void MaliPPWriter::writeNodeSetInfo (id_type nbSet, std::vector<std::string> set
 }  // MaliPPWriter::writeNodeSetInfo
 
 
-void MaliPPWriter::writeNodeSetData (
-		std::string name,
-		id_type chunkSize,
-		id_type* ids)
+void MaliPPWriter::writeNodeSetData (std::string name, id_type chunkSize, id_type* ids)
 {
 	BEGIN_TRY_CATCH_BLOCK("MaliPPWriter::writeNodeSetData ")
 
@@ -2819,10 +2810,7 @@ void MaliPPWriter::writeEdgeSetInfo (id_type nbSet, std::vector<std::string> set
 }  // MaliPPWriter::writeEdgeSetInfo
 
 
-void MaliPPWriter::writeEdgeSetData (
-		std::string name,
-		id_type chunkSize,
-		id_type* ids)
+void MaliPPWriter::writeEdgeSetData (std::string name, id_type chunkSize, id_type* ids)
 {
 	BEGIN_TRY_CATCH_BLOCK("MaliPPWriter::writeEdgeSetData ")
 
@@ -3067,10 +3055,7 @@ void MaliPPWriter::writeFaceSetInfo (id_type nbSet, std::vector<std::string> set
 }  // MaliPPWriter::writeFaceSetInfo
 
 
-void MaliPPWriter::writeFaceSetData (
-		std::string name,
-		id_type chunkSize,
-		id_type* ids)
+void MaliPPWriter::writeFaceSetData (std::string name, id_type chunkSize, id_type* ids)
 {
 	BEGIN_TRY_CATCH_BLOCK("MaliPPWriter::writeFaceSetData ")
 
@@ -3100,11 +3085,7 @@ void MaliPPWriter::writeFaceSetData (
 }  // MaliPPWriter::writeFaceSetData
 
 
-void MaliPPWriter::writeFaceSetData (
-		std::string name,
-		id_type chunkSize,
-		id_type* ids,
-		id_type* nbNodesPerFace)
+void MaliPPWriter::writeFaceSetData (std::string name, id_type chunkSize, id_type* ids, id_type* nbNodesPerFace)
 {
 	BEGIN_TRY_CATCH_BLOCK("MaliPPWriter::writeFaceSetData ")
 
@@ -3368,10 +3349,7 @@ void MaliPPWriter::writeRegionSetInfo (id_type nbSet, std::vector<std::string> s
 }  // MaliPPWriter::writeRegionSetInfo
 
 
-void MaliPPWriter::writeRegionSetData (
-		std::string name,
-		id_type chunkSize,
-		id_type* ids)
+void MaliPPWriter::writeRegionSetData (std::string name, id_type chunkSize, id_type* ids)
 {
 	BEGIN_TRY_CATCH_BLOCK("MaliPPWriter::writeRegionSetData ")
 
@@ -3401,11 +3379,7 @@ void MaliPPWriter::writeRegionSetData (
 }  // MaliPPWriter::writeRegionSetData
 
 
-void MaliPPWriter::writeRegionSetData (
-		std::string name,
-		id_type chunkSize,
-		id_type* ids,
-		Lima::Polyedre::PolyedreType* regionTypes)
+void MaliPPWriter::writeRegionSetData (std::string name, id_type chunkSize, id_type* ids, Lima::Polyedre::PolyedreType* regionTypes)
 {
 	BEGIN_TRY_CATCH_BLOCK("MaliPPWriter::writeRegionSetData ")
 
@@ -3511,8 +3485,7 @@ void MaliPPWriter::writeRegionSetsAttributes ( )
 }  // MaliPPWriter::writeRegionSetsAttributes
 
 
-void MaliPPWriter::writeComposition (const Composition& composition,
-									const std::string& name, CommonFG& root)
+void MaliPPWriter::writeComposition (const Composition& composition, const std::string& name, CommonFG& root)
 {
 	BEGIN_TRY_CATCH_BLOCK("MaliPPWriter::writeComposition ")
 
@@ -3594,6 +3567,7 @@ void MaliPPWriter::activer_compression_zlib (int niveau)
 	HDFHelper::activateZlibCompression (niveau);
 }	// MaliPPWriter::activer_compression_zlib
 
+#endif	// __INTERNE_MALIPP_WRITER
 
 
 // ===========================================================================
@@ -3614,15 +3588,13 @@ HDFAttributeDescriptorType::HDFAttributeDescriptorType ( )
 }	// HDFAttributeDescriptorType::HDFAttributeDescriptorType
 
 
-HDFAttributeDescriptorType::HDFAttributeDescriptorType (
-									const HDFAttributeDescriptorType& at)
+HDFAttributeDescriptorType::HDFAttributeDescriptorType (const HDFAttributeDescriptorType& at)
 	: CompType (at)
 {
 }	// HDFAttributeDescriptorType copy constructor
 
 
-HDFAttributeDescriptorType& HDFAttributeDescriptorType::operator = (
-									const HDFAttributeDescriptorType&)
+HDFAttributeDescriptorType& HDFAttributeDescriptorType::operator = (const HDFAttributeDescriptorType&)
 {
 	return *this;
 }	// HDFAttributeDescriptorType::operator =
