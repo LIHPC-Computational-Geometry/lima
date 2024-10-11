@@ -1124,8 +1124,7 @@ class MaliPPReader
 
 
 /**
- * Classe décrivant la structure HDFAttributeDescriptor pour le stockage
- * sous HDF.
+ * Classe décrivant la structure HDFAttributeDescriptor pour le stockage sous HDF.
  */
 class HDFAttributeDescriptorType : public IN_H5 CompType
 {
@@ -1145,9 +1144,10 @@ class HDFAttributeDescriptorType : public IN_H5 CompType
 };	// class HDFAttributeDescriptorType
 
 
+#ifdef __INTERNE_MALIPP_WRITER
+
 /**
- * Classe ne permettant dans la version courrante que d'influer sur la
- * compression des données écrites par HDF5.
+ * Classe ne permettant dans la version courrante que d'influer sur la compression des données écrites par HDF5.
  *
  * NE PAS UTILISER L'API D'ECRITURE
  *
@@ -1157,8 +1157,7 @@ class MaliPPWriter
 	public :
 
 	/**
-	 * Constructeur. Ouvre le fichier en écriture et écrit les données
-	 * générales du maillage.
+	 * Constructeur. Ouvre le fichier en écriture et écrit les données générales du maillage.
 	 * @param		Nom du fichier
 	 * @param		numéro du maillage dans le fichier
 	 * @exception	Une exception est levée en cas d'erreur
@@ -1259,8 +1258,7 @@ class MaliPPWriter
 
 	void		 writeMeshAttributes ( );
 
-	void writeComposition (const Composition& composition, const std::string& name,
-	                                      HDF145::CommonFG& compositionGroup);
+	void writeComposition (const Composition& composition, const std::string& name, HDF145::CommonFG& compositionGroup);
 
 	/**
 	 * Constructeurs et destructeur : interdits.
@@ -1385,6 +1383,7 @@ class MaliPPWriter
 
 };	// class MaliPPWriter
 
+#endif	// __INTERNE_MALIPP_WRITER
 
 #ifndef SWIG
 END_NAMESPACE_LIMA

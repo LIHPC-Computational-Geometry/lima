@@ -47,7 +47,7 @@ const char* _liste_format_ecriture[]={
 #ifdef __INTERNE_MALI
   (char*) "unf, format de fichier MALI",
 #endif
-#ifdef __INTERNE_MALIPP
+#if defined(__INTERNE_MALIPP) && defined(__INTERNE_MALIPP_WRITER)
   (char*) "mli, format (désuet) de fichier MALI++",
   (char*) "mliz, format (désuet) de fichier MALI++",
 #endif
@@ -115,7 +115,7 @@ _Writer* _Writer::create(_MaillageInterne* mesh,
     writer = new _WriterMali(mesh, nom_fichier, format);
     break;
 #endif
-#ifdef __INTERNE_MALIPP
+#if defined(__INTERNE_MALIPP) && defined(__INTERNE_MALIPP_WRITER)
   case MALIPP:
     writer = new _WriterMalipp(mesh, nom_fichier, format, num, false);
     break;

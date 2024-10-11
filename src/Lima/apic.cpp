@@ -15,7 +15,7 @@
 #include "LimaP/maillage_it.h"
 #include <Lima/maillage.h>
 
-#ifdef __INTERNE_MALIPP
+#if defined(__INTERNE_MALIPP) && defined (__INTERNE_MALIPP_WRITER)
 #include <Lima/malipp.h>
 #endif	/* __INTERNE_MALIPP */
 
@@ -1020,8 +1020,7 @@ int LM_ecrire_maillage(LM_MAILLAGE *maillage, LM_FORMAT_FICHIER format,
   return 0;
 }
 
-
-#ifdef __INTERNE_MALIPP
+#if defined(__INTERNE_MALIPP) && defined (__INTERNE_MALIPP_WRITER)
 int LM_compression_zlib_malipp (int comprimer, int niveau)
 {
 	try

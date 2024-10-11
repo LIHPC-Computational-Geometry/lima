@@ -294,12 +294,9 @@ void XlmLimaFactory::syntax ( )
 	message	+= string ("\n");
 	message	+= string ("Formats en lecture     : ");
 	message += string ("auto ") + readableFormats ( );
-//	message	+= string ("auto mali mli mliz mli2 ideas gibi castem modulef icemcfd");
-//	message	+= string (" dyna2d dyna3d abaqus");
 	message	+= string ("\n");
 	message	+= string ("Formats en écriture    : ");
 	message += string ("auto ") + writableFormats ( );
-//	message	+= string (" auto mali mli mliz mli2 ideas gibi gibi_i8 castem modulef");
 	message	+= string ("\n");
 	message += string ("auto : format déterminé par l'extension du fichier.");
 	message	+= string ("\n");
@@ -502,7 +499,7 @@ string XlmLimaFactory::writableFormats ( )
 	if (0 != formats.length ( )) formats += " ";
 	formats	+= "mali (*.unf)";
 #endif	// __INTERNE_MALI
-#ifdef __INTERNE_MALIPP
+#if defined(__INTERNE_MALIPP) && defined(__INTERNE_MALIPP_WRITER)
 	if (0 != formats.length ( )) formats += " ";
 	formats	+= "mli (*.mli)";
 #endif	// __INTERNE_MALIPP
