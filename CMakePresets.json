@@ -5,7 +5,6 @@
         "name": "ci",
         "cacheVariables":
         {
-          "USE_PYTHON_3": "ON",
           "MACHINE_TYPES": "OFF",
           "FORMAT_MLI": "OFF",
           "SUMESH": "OFF"
