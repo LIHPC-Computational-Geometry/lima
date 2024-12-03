@@ -2,7 +2,7 @@
 # INSTALLATION DE LA BIBLIOTHEQUE Lima++
 #
 
-Elle requiert une version supérieure ou égale à la version 3.20.0 de cmake. La version 3.24.2 est recommandée si le choix du python utilisé est important.
+Elle requiert une version supérieure ou égale à la version 3.20.0 de cmake (version >= 3.24.2 recommandée).
 
 
 CONFIGURATION DE BASE : lecteurs mali mli mli2 ideas gibi castem modulef [icemcfd] dyna2d dyna3d abaqus
@@ -22,7 +22,7 @@ cmake -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_COMPILER=/usr/bin/g++ -DCMAKE_
       -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_VERBOSE_MAKEFILE=ON -DBUILD_XLMLIMA=ON -DBUILD_TESTS:BOOL=ON -DBUILD_SCRIPTING:BOOL=ON -DMACHINE_TYPES:BOOL=OFF -DSUMESH:BOOL=OFF -DFORMAT_MLI:BOOL=OFF -DFORMAT_MLI2:BOOL=ON -DFORMAT_MLI2:BOOL=ON \
       -DBUILD_SHARED_LIBS:BOOL=ON -DINT_8:BOOL=ON -DREAL_8:BOOL=ON \
       -DSWIG_EXECUTABLE=/opt/swig/4.1.1/bin/swig -DPython3_ROOT_DIR=/usr/lib/python3 -DHDF5_ROOT=/opt/HDF5/1.12.0  \
-      -B /tmp/lima_build_dir -DCMAKE_INSTALL_PREFIX=/opt/Lima/7.11.1
+      -B /tmp/lima_build_dir -DCMAKE_INSTALL_PREFIX=/opt/Lima/7.11.2
 cmake --build /tmp/lima_build_dir
 cmake --install /tmp/lima_build_dir
 
@@ -32,7 +32,7 @@ cmake -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_COMPILER=/usr/bin/g++ -DCMAKE_
       -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_VERBOSE_MAKEFILE=ON -DBUILD_XLMLIMA=ON -DBUILD_TESTS:BOOL=ON -DBUILD_SCRIPTING:BOOL=ON -DMACHINE_TYPES:BOOL=ON -DSUMESH:BOOL=ON -DFORMAT_MLI:BOOL=ON -DFORMAT_MLI2:BOOL=ON \
       -DBUILD_SHARED_LIBS:BOOL=ON -DINT_8:BOOL=ON -DREAL_8:BOOL=ON \
       -DSWIG_EXECUTABLE=/opt/swig/4.1.1/bin/swig -DPython3_ROOT_DIR=/usr/lib/python3 -DHDF5_ROOT=/opt/HDF5/1.12.0 -DHDF145_INCLUDE_DIR=/opt/hdf145/1.3.0/include -DHDF145CPP_LIBRARY=/opt/hdf145/1.3.0/lib/libhdf145_cpp.so -DHDF145_LIBRARY=/opt/hdf145/1.3.0/lib/libhdf145.so \
-      -B /tmp/lima_build_dir -DCMAKE_INSTALL_PREFIX=/opt/Lima/7.11.1
+      -B /tmp/lima_build_dir -DCMAKE_INSTALL_PREFIX=/opt/Lima/7.11.2
 cmake --build /tmp/lima_build_dir
 cmake --install /tmp/lima_build_dir
 
@@ -85,24 +85,14 @@ target_link_libraries (code_fortran PUBLIC Lima::Lima Lima::lima_fortran_compile
 Le script build.sh et les fichiers du répertoire configurations - à adapter - permettent d'installer lima à moindre coût.
 
 
-BINDINGS PYTHON 2/3 :
-=====================
+BINDINGS PYTHON 3 :
+===================
+
+A partir de la version 7.11.2 le binding python 2 n'est plus supporté.
 
 Pour avoir un binding python il faut en plus utiliser la directive cmake -DBUILD_SCRIPTING=ON et affecter la variable SWIG_EXECUTABLE.
 
-A noter que si cmake croise sur son chemin une version 3 de python celle-ci sera retenue, même si python 2 est demandé et renseigné. C'est
-pour cette raison que la directive find_package (Python VERSION) n'est pas utilisée dans les fichiers cmake.
-
-Une version récente de cmake (ex : 3.24) est recommandée afin de s'assurer que le Python utilisé correspond bien à celui demandé (Python2_ROOT_DIR ou Python3_ROOT_DIR).
-
-
-Binding python 2 :
------------------- 
-
-Affecter Python2_ROOT_DIR (testé avec swig v 3.0.12/Python 2.7.*)
-
-Binding python 3 :
--------------------
+Une version récente de cmake (ex : 3.24) est recommandée afin de s'assurer que le Python utilisé correspond bien à celui demandé (Python3_ROOT_DIR).
 
 Affecter Python3_ROOT_DIR (testé avec swig v 3.0.12/Python 3.7.3).
 
