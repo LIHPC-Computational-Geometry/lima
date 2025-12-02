@@ -1,5 +1,5 @@
 @PACKAGE_INIT@
 set (XLMLIMA_VERSION @LIMA_VERSION@)
-set_and_check (xlmlima_RUNTIME_DIR   "@PACKAGE_RUNTIME_INSTALL_DIR@")
+set_and_check (xlmlima_RUNTIME_DIR   "@PACKAGE_BIN_INSTALL_DIR@")
 
 
