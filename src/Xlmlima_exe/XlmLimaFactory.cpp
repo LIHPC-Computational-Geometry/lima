@@ -167,27 +167,47 @@ XlmLimaAction* XlmLimaFactory::createAction (int argc, char* argv [])
 
 	if (action == "-cmp")
 	{
+		double		precision	= DBL_EPSILON;
 		string		inputFile2 ("");
 		format_t	inputFormat2	= SUFFIXE;
 
 		switch (argc)
 		{
-			case	3	:
+			case	3	:	// => -cmp infile outfile
 				inputFile	= argv [1];
 				inputFile2	= argv [2];
 				break;
 			case	5	:
+				if (0 == strcmp (argv [3], "-precision"))
+				{	// => -cmp infile outfile -precision precision
+					inputFile	= argv [1];
+					inputFile2	= argv [2];
+					precision	= stringToDouble (argv [4]);
+				}	// if (0 == strcmp (argv [3], "-precision"))
+				else
+				{	// -cmp format infile format outfile
+					inputFormat	= stringToFormat (argv [1]);
+					inputFile	= argv [2];
+					inputFormat2= stringToFormat (argv [3]);
+					inputFile2	= argv [4];
+				}	// else if (0 == strcmp (argv [3], "-precision"))
+				break;
+			case	7	:	// -cmp format infile format outfile -precision precision
+				if (0 != strcmp (argv [6], "-precision"))
+					break;
 				inputFormat	= stringToFormat (argv [1]);
 				inputFile	= argv [2];
 				inputFormat2= stringToFormat (argv [3]);
 				inputFile2	= argv [4];
+				precision	= stringToDouble (argv [6]);
 				break;
 			default		:
 				syntax ( );
 		}	// switch (argc)
 
-		return new XlmLimaComparer (
-								inputFile, inputFormat, inputFile2, inputFormat2);
+		XlmLimaComparer*	comparer	= new XlmLimaComparer (inputFile, inputFormat, inputFile2, inputFormat2);
+		comparer->setPrecision (precision);	// v 7.12.2
+		return comparer;
 	}	// if (action == "-cmp")
 
 
@@ -281,7 +301,7 @@ void XlmLimaFactory::syntax ( )
 	message	+= string ("\n        \tpour préparer\n");
 	message	+= string ("        -cp [format] fichier_entrée [format] fichier_sortie");
 	message	+= string ("\n        \tpour copier\n");
-	message	+= string ("        -cmp [format] fichier1 [format] fichier2");
+	message	+= string ("        -cmp [format] fichier1 [format] fichier2 [-precision precision]");
 	message	+= string ("\n        \tpour comparer deux maillages\n");
 	message	+= string ("        -m [format] fichier_entrée [format] fichier_sortie");
 	message	+= string ("\n        \tpour exprimer les coordonnées en mètres\n");
