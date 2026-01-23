@@ -41,6 +41,8 @@ inline bool operator == (const Noeud& n1, const Noeud& n2)
 	double	dy	= n1.y ( ) - n2.y ( );
 	double	dz	= n1.z ( ) - n2.z ( );
 	double	distance2	= dx * dx + dy * dy + dz * dz;
+if (!le (distance2, epsilon2))
+	cout << setprecision (20) << "D2=" << distance2 << " D=" << sqrt (distance2) << " EPS2=" << epsilon2 << " (" << n1.x ( ) << ", " << n1.y ( ) << ", " << n1.z ( ) << ") != (" << n2.x ( ) << ", " << n2.y ( ) << ", " << n2.z ( ) << ")" << endl;
 
 	return le (distance2, epsilon2);
 }	// operator == (const Noeud& n1, const Noeud& n2)
@@ -298,6 +300,7 @@ void XlmLimaComparer::run ( )
 		compareAttributes (mesh1.att_polyedres ( ), mesh2.att_polyedres ( ));
 
 		// Comparaison des noeuds :
+		// CP v 7.12.2 : être capable de spécifier l'epsilon pour la comparaison des noeuds
 		epsilon2	= getPrecision ( ) * getPrecision ( );
 		size_t	i	= 0, j	= 0;
 		for (i = 0; i < mesh1.nb_noeuds ( ); i++)
@@ -310,8 +313,8 @@ void XlmLimaComparer::run ( )
 			}	// if (n1.id ( ) != n2.id ( ))
 			if (n1 != n2)
 			{
-				str << "Les noeuds " << n1.id ( ) << " n'ont pas les mêmes coordonnées (" << n1.x ( ) << ", " << n1.y ( ) << ", "
-				    << n1.z ( ) << ") / (" << n2.x ( ) << ", " << n2.y ( ) << ", " << n2.z ( ) << ").";
+				str << "Les noeuds " << n1.id ( ) << " n'ont pas les mêmes coordonnées (" << setprecision (20)
+				    << n1.x ( ) << ", " << n1.y ( ) << ", " << n1.z ( ) << ") / (" << n2.x ( ) << ", " << n2.y ( ) << ", " << n2.z ( ) << ").";
 				throw XlmLimaException (str.str ( ));
 			}	// if (n1 != n2)
 		}	// for (i = 0; i < mesh1.nb_noeuds ( ); i++)
