@@ -8,7 +8,7 @@
 /******************************************************************************
  Fichier : malipp2.cpp
  Cree le : 06/06/2019
- Derniere modification le :
+ Derniere modification le : 07/07/2026
  Auteur : C. Pignerol
 ******************************************************************************/
 
@@ -86,8 +86,7 @@ HDFAttributeDescriptor2::HDFAttributeDescriptor2 ( )
 }	// HDFAttributeDescriptor2::HDFAttributeDescriptor2
 
 
-HDFAttributeDescriptor2::HDFAttributeDescriptor2 (
-										const HDFAttributeDescriptor2& ad)
+HDFAttributeDescriptor2::HDFAttributeDescriptor2 (const HDFAttributeDescriptor2& ad)
 {
 	for (size_type i = 0; i < MLI2_ATTRIBUT_SIZE; i++)
 		m_name [i]	= ad.m_name [i];
@@ -96,8 +95,7 @@ HDFAttributeDescriptor2::HDFAttributeDescriptor2 (
 }	// HDFAttributeDescriptor2::HDFAttributeDescriptor2
 
 
-HDFAttributeDescriptor2& HDFAttributeDescriptor2::operator = (
-										const HDFAttributeDescriptor2& ad)
+HDFAttributeDescriptor2& HDFAttributeDescriptor2::operator = (const HDFAttributeDescriptor2& ad)
 {
 	if (&ad != this)
 	{
@@ -116,17 +114,13 @@ HDFAttributeDescriptor2& HDFAttributeDescriptor2::operator = (
 // ===========================================================================
 
 
-MaliPPReader2::GroupeReader::GroupeReader (
-		MaliPPReader2* reader, const string& nom, const Group& group, 
-		const string& composition)
+MaliPPReader2::GroupeReader::GroupeReader (MaliPPReader2* reader, const string& nom, const Group& group, const string& composition)
 	: m_reader (reader), m_nom (nom), m_groupe_hdf (group), m_composition ( )
 {
 	try
 	{
 		// Lecture de la composition :
-		MaliPPReader2::lire_composition (
-			m_groupe_hdf, composition, m_reader->version_malipp_maillage ( ), 
-			m_composition);
+		MaliPPReader2::lire_composition (m_groupe_hdf, composition, m_reader->version_malipp_maillage ( ), m_composition);
 	}
 	catch (...)
 	{
@@ -135,15 +129,12 @@ MaliPPReader2::GroupeReader::GroupeReader (
 
 
 MaliPPReader2::GroupeReader::GroupeReader (const GroupeReader& reader)
-	: m_reader (reader.reader ( )), m_nom (reader.nom ( )), 
-	  m_groupe_hdf (reader.groupe_hdf ( )), 
-	  m_composition (reader.composition ( ))
+	: m_reader (reader.reader ( )), m_nom (reader.nom ( )), m_groupe_hdf (reader.groupe_hdf ( )), m_composition (reader.composition ( ))
 {
 }	// GroupeReader::GroupeReader
 
 
-MaliPPReader2::GroupeReader& MaliPPReader2::GroupeReader::operator = (
-													const GroupeReader& reader)
+MaliPPReader2::GroupeReader& MaliPPReader2::GroupeReader::operator = (const GroupeReader& reader)
 {
 	if (&reader != this)
 	{
@@ -174,17 +165,13 @@ const Composition& MaliPPReader2::GroupeReader::composition ( ) const
 }	// GroupeReader::composition
 
 
-void MaliPPReader2::GroupeReader::lire_liste_attributs (
-		MaliPPReader2::ENTITE entite, vector<HDFAttributeDescriptor2>& liste)
+void MaliPPReader2::GroupeReader::lire_liste_attributs (MaliPPReader2::ENTITE entite, vector<HDFAttributeDescriptor2>& liste)
 {
 	{
 		HDFErrorHandlerManager2		errorHandlerManager;
 		H5G_info_t	infos;
 		hid_t		lapl_id	= 0;
-		herr_t		ret	= H5Gget_info_by_name (
-			groupe_hdf ( ).getId ( ),
-			MaliPPReader2::nom_groupe_attribut (entite).c_str ( ),
-			&infos, lapl_id);
+		herr_t		ret	= H5Gget_info_by_name (groupe_hdf ( ).getId ( ), MaliPPReader2::nom_groupe_attribut (entite).c_str ( ), &infos, lapl_id);
 		if (ret < 0)
 			return;
 	}
@@ -200,53 +187,42 @@ void MaliPPReader2::GroupeReader::lire_liste_attributs (
 }	// GroupeReader::lire_liste_attributs
 
 
-void MaliPPReader2::GroupeReader::lire_attr_entier (
-		MaliPPReader2::ENTITE entite, const HDFAttributeDescriptor2& desc,
-		size_type premier, size_type nombre, int_4*& tableau)
+void MaliPPReader2::GroupeReader::lire_attr_entier (MaliPPReader2::ENTITE entite, const HDFAttributeDescriptor2& desc, size_type premier, size_type nombre, int_4*& tableau)
 {
 	Group	group	= groupe_attribut (entite);
 	MaliPPReader2::lire_attr_entier (group, desc, premier, nombre, tableau);
 }	// GroupeReader::lire_attr_entier
 
 
-void MaliPPReader2::GroupeReader::lire_attr_reel (
-		MaliPPReader2::ENTITE entite, const HDFAttributeDescriptor2& desc,
-		size_type premier, size_type nombre, double*& tableau)
+void MaliPPReader2::GroupeReader::lire_attr_reel (MaliPPReader2::ENTITE entite, const HDFAttributeDescriptor2& desc, size_type premier, size_type nombre, double*& tableau)
 {
 	Group	group	= groupe_attribut (entite);
 	MaliPPReader2::lire_attr_reel (group, desc, premier, nombre, tableau);
 }	// GroupeReader::lire_attr_reel
 
 
-void MaliPPReader2::GroupeReader::lire_attr_vect_2d (
-		MaliPPReader2::ENTITE entite, const HDFAttributeDescriptor2& desc,
-		size_type premier, size_type nombre, double*& tableau)
+void MaliPPReader2::GroupeReader::lire_attr_vect_2d (MaliPPReader2::ENTITE entite, const HDFAttributeDescriptor2& desc, size_type premier, size_type nombre, double*& tableau)
 {
 	Group	group	= groupe_attribut (entite);
 	MaliPPReader2::lire_attr_vect_2d (group, desc, premier, nombre, tableau);
 }	// GroupeReader::lire_attr_vect_2d
 
 
-void MaliPPReader2::GroupeReader::lire_attr_vect_3d (
-		MaliPPReader2::ENTITE entite, const HDFAttributeDescriptor2& desc,
-		size_type premier, size_type nombre, double*& tableau)
+void MaliPPReader2::GroupeReader::lire_attr_vect_3d (MaliPPReader2::ENTITE entite, const HDFAttributeDescriptor2& desc, size_type premier, size_type nombre, double*& tableau)
 {
 	Group	group	= groupe_attribut (entite);
 	MaliPPReader2::lire_attr_vect_3d (group, desc, premier, nombre, tableau);
 }	// GroupeReader::lire_attr_vect_3d
 
 
-size_type MaliPPReader2::GroupeReader::longueur_chaines (
-						ENTITE entite, const HDFAttributeDescriptor2& desc)
+size_type MaliPPReader2::GroupeReader::longueur_chaines (ENTITE entite, const HDFAttributeDescriptor2& desc)
 {
 	Group	group	= groupe_attribut (entite);
 	return MaliPPReader2::longueur_chaines (group, desc);
 }	// MaliPPReader2::longueur_chaines
 
 
-void MaliPPReader2::GroupeReader::lire_attr_chaine (
-		MaliPPReader2::ENTITE entite, const HDFAttributeDescriptor2& desc,
-		size_type premier, size_type nombre, vector<IN_STD string>& chaines)
+void MaliPPReader2::GroupeReader::lire_attr_chaine (MaliPPReader2::ENTITE entite, const HDFAttributeDescriptor2& desc, size_type premier, size_type nombre, vector<IN_STD string>& chaines)
 {
 	Group	group	= groupe_attribut (entite);
 	MaliPPReader2::lire_attr_chaine (group, desc, premier, nombre, chaines);
@@ -290,8 +266,7 @@ Group MaliPPReader2::GroupeReader::groupe_attribut (ENTITE entite)
 // ===========================================================================
 
 
-MaliPPReader2::NuageReader::NuageReader (
-			MaliPPReader2* reader, const string& nom, const Group& group)
+MaliPPReader2::NuageReader::NuageReader (MaliPPReader2* reader, const string& nom, const Group& group)
 	: GroupeReader (reader, nom, group, NODE_COMPOSITION_DATASET_NAME)
 {
 }	// NuageReader::NuageReader
@@ -303,8 +278,7 @@ MaliPPReader2::NuageReader::NuageReader (const MaliPPReader2::NuageReader& reade
 }	// NuageReader::NuageReader
 
 
-MaliPPReader2::NuageReader& MaliPPReader2::NuageReader::operator = (
-										const MaliPPReader2::NuageReader& reader)
+MaliPPReader2::NuageReader& MaliPPReader2::NuageReader::operator = (const MaliPPReader2::NuageReader& reader)
 {
 	if (& reader != this)
 		MaliPPReader2::GroupeReader::operator = (reader);
@@ -324,20 +298,17 @@ size_type* MaliPPReader2::NuageReader::allouer_tampon_ids (size_type nb_elements
 }	// NuageReader::allouer_tampon_ids
 
 
-size_type MaliPPReader2::NuageReader::lire_noeuds_ids (
-				size_type premier, size_type nombre, size_type*& tableau)
+size_type MaliPPReader2::NuageReader::lire_noeuds_ids (size_type premier, size_type nombre, size_type*& tableau)
 {
 	DataSet	xCoordDataSet, yCoordDataSet, zCoordDataSet;
 	
 	const Composition&	comp	= composition ( );
-	size_t				count		= premier + nombre < comp.nb_elements ?
-									  nombre : comp.nb_elements - premier;
+	size_t				count		= premier + nombre < comp.nb_elements ? nombre : comp.nb_elements - premier;
 	if (0 == count)
 		return 0;
 
 	id_type*	nodeIds			= new id_type [count];
-	DataSet		nodeIdsDataSet	= 
-						groupe_hdf ( ).openDataSet(DATASET_IDS_LIST_NAME);
+	DataSet		nodeIdsDataSet	= groupe_hdf ( ).openDataSet(DATASET_IDS_LIST_NAME);
 	HDFHelper2::readUIntDataSet1D (nodeIdsDataSet, nodeIds, count, premier);
 	for (size_t i = 0; i < count; i++)
 		tableau [i]	= nodeIds [i] + 1;
@@ -359,8 +330,7 @@ void MaliPPReader2::NuageReader::evaluer_entite (MaliPPReader2::ENTITE entite)
 // ===========================================================================
 
 
-MaliPPReader2::LigneReader::LigneReader (
-		MaliPPReader2* reader, const string& nom, const Group& group)
+MaliPPReader2::LigneReader::LigneReader (MaliPPReader2* reader, const string& nom, const Group& group)
 	: GroupeReader (reader, nom, group, EDGE_COMPOSITION_DATASET_NAME)
 {
 }	// LigneReader::LigneReader
@@ -372,8 +342,7 @@ MaliPPReader2::LigneReader::LigneReader (const MaliPPReader2::LigneReader& reade
 }	// LigneReader::LigneReader
 
 
-MaliPPReader2::LigneReader& MaliPPReader2::LigneReader::operator = (
-									const MaliPPReader2::LigneReader& reader)
+MaliPPReader2::LigneReader& MaliPPReader2::LigneReader::operator = (const MaliPPReader2::LigneReader& reader)
 {
 	if (& reader != this)
 		MaliPPReader2::GroupeReader::operator = (reader);
@@ -393,18 +362,15 @@ size_type* MaliPPReader2::LigneReader::allouer_tampon_ids (size_type nb_elements
 }	// LigneReader::allouer_tampon_ids
 
 
-size_type MaliPPReader2::LigneReader::lire_bras_ids (
-					size_type premier, size_type nombre, size_type*& tableau)
+size_type MaliPPReader2::LigneReader::lire_bras_ids (size_type premier, size_type nombre, size_type*& tableau)
 {
 	const Composition&	comp	= composition ( );
-	size_t				count	= premier + nombre < comp.nb_elements ?
-								  nombre : comp.nb_elements - premier;
+	size_t				count	= premier + nombre < comp.nb_elements ? nombre : comp.nb_elements - premier;
 	if (0 == count)
 		return 0;
 
 	id_type*	edgeIds			= new id_type [count];
-	DataSet		edgeIdsDataSet	= 
-					groupe_hdf ( ).openDataSet(DATASET_IDS_LIST_NAME);
+	DataSet		edgeIdsDataSet	= groupe_hdf ( ).openDataSet(DATASET_IDS_LIST_NAME);
 	HDFHelper2::readUIntDataSet1D (edgeIdsDataSet, edgeIds, count, premier);
 	for (size_t i = 0; i < count; i++)
 		tableau [i]	= edgeIds [i] + 1;
@@ -426,22 +392,19 @@ void MaliPPReader2::LigneReader::evaluer_entite (MaliPPReader2::ENTITE entite)
 // ===========================================================================
 
 
-MaliPPReader2::SurfaceReader::SurfaceReader (
-			MaliPPReader2* reader, const string& nom, const Group& group)
+MaliPPReader2::SurfaceReader::SurfaceReader (MaliPPReader2* reader, const string& nom, const Group& group)
 	: GroupeReader (reader, nom, group, CELL2D_COMPOSITION_DATASET_NAME)
 {
 }	// SurfaceReader::SurfaceReader
 
 
-MaliPPReader2::SurfaceReader::SurfaceReader (
-									const MaliPPReader2::SurfaceReader& reader)
+MaliPPReader2::SurfaceReader::SurfaceReader (const MaliPPReader2::SurfaceReader& reader)
 	: GroupeReader (reader)
 {
 }	// SurfaceReader::SurfaceReader
 
 
-MaliPPReader2::SurfaceReader& MaliPPReader2::SurfaceReader::operator = (
-									const MaliPPReader2::SurfaceReader& reader)
+MaliPPReader2::SurfaceReader& MaliPPReader2::SurfaceReader::operator = (const MaliPPReader2::SurfaceReader& reader)
 {
 	if (& reader != this)
 		MaliPPReader2::GroupeReader::operator = (reader);
@@ -461,12 +424,10 @@ size_type* MaliPPReader2::SurfaceReader::allouer_tampon_ids (size_type nb_elemen
 }	// SurfaceReader::allouer_tampon_ids
 
 
-size_type MaliPPReader2::SurfaceReader::lire_mailles_ids (
-					size_type premier, size_type nombre, size_type*& tableau)
+size_type MaliPPReader2::SurfaceReader::lire_mailles_ids (size_type premier, size_type nombre, size_type*& tableau)
 {
 	const Composition&	comp	= composition ( );
-	size_t				count	= premier + nombre < comp.nb_elements ?
-								  nombre : comp.nb_elements - premier;
+	size_t				count	= premier + nombre < comp.nb_elements ? nombre : comp.nb_elements - premier;
 	if (0 == count)
 		return 0;
 
@@ -483,8 +444,7 @@ size_type MaliPPReader2::SurfaceReader::lire_mailles_ids (
 
 void MaliPPReader2::SurfaceReader::evaluer_entite (MaliPPReader2::ENTITE entite)
 {
-	if ((MaliPPReader2::NOEUDS != entite) && (MaliPPReader2::BRAS != entite) &&
-	    (MaliPPReader2::POLYGONES != entite))
+	if ((MaliPPReader2::NOEUDS != entite) && (MaliPPReader2::BRAS != entite) && (MaliPPReader2::POLYGONES != entite))
 		throw read_erreur ("Entite invalide pour une surface");
 }	// SurfaceReader::evaluer_entite
 
@@ -493,22 +453,19 @@ void MaliPPReader2::SurfaceReader::evaluer_entite (MaliPPReader2::ENTITE entite)
 // ===========================================================================
 
 
-MaliPPReader2::VolumeReader::VolumeReader (
-				MaliPPReader2* reader, const string& nom, const Group& group)
+MaliPPReader2::VolumeReader::VolumeReader (MaliPPReader2* reader, const string& nom, const Group& group)
 	: GroupeReader (reader, nom, group, CELL3D_COMPOSITION_DATASET_NAME)
 {
 }	// VolumeReader::VolumeReader
 
 
-MaliPPReader2::VolumeReader::VolumeReader (
-								const MaliPPReader2::VolumeReader& reader)
+MaliPPReader2::VolumeReader::VolumeReader (const MaliPPReader2::VolumeReader& reader)
 	: GroupeReader (reader)
 {
 }	// VolumeReader::VolumeReader
 
 
-MaliPPReader2::VolumeReader& MaliPPReader2::VolumeReader::operator = (
-									const MaliPPReader2::VolumeReader& reader)
+MaliPPReader2::VolumeReader& MaliPPReader2::VolumeReader::operator = (const MaliPPReader2::VolumeReader& reader)
 {
 	if (& reader != this)
 		MaliPPReader2::GroupeReader::operator = (reader);
@@ -528,12 +485,10 @@ size_type* MaliPPReader2::VolumeReader::allouer_tampon_ids (size_type nb_element
 }	// VolumeReader::allouer_tampon_ids
 
 
-size_type MaliPPReader2::VolumeReader::lire_mailles_ids (
-					size_type premier, size_type nombre, size_type*& tableau)
+size_type MaliPPReader2::VolumeReader::lire_mailles_ids (size_type premier, size_type nombre, size_type*& tableau)
 {
 	const Composition&	comp	= composition ( );
-	size_t				count		= premier + nombre < comp.nb_elements ?
-									  nombre : comp.nb_elements - premier;
+	size_t				count		= premier + nombre < comp.nb_elements ? nombre : comp.nb_elements - premier;
 	if (0 == count)
 		return 0;
 
@@ -550,9 +505,7 @@ size_type MaliPPReader2::VolumeReader::lire_mailles_ids (
 
 void MaliPPReader2::VolumeReader::evaluer_entite (MaliPPReader2::ENTITE entite)
 {
-	if ((MaliPPReader2::NOEUDS != entite) && (MaliPPReader2::BRAS != entite) &&
-	    (MaliPPReader2::POLYGONES != entite) && 
-	    (MaliPPReader2::POLYEDRES != entite))
+	if ((MaliPPReader2::NOEUDS != entite) && (MaliPPReader2::BRAS != entite) && (MaliPPReader2::POLYGONES != entite) && (MaliPPReader2::POLYEDRES != entite))
 		throw read_erreur ("Entite invalide pour un volume");
 }	// VolumeReader::evaluer_entite
 
@@ -586,14 +539,12 @@ MaliPPReader2::MaliPPReader2 (const string& nom_fichier, size_type num)
 
 	// Lecture de l'entete du fichier :
 	Group	header	= m_fichier_hdf->openGroup (FILE_HEADER_GROUP_NAME);
-	string	version_lima	= HDFHelper2::readStringAttribute (
-											header, LIMA_VERSION_FIELD_NAME);
+	string	version_lima	= HDFHelper2::readStringAttribute (header, LIMA_VERSION_FIELD_NAME);
 	if (0 == version_lima.compare (0, 5, "Lima."))
 		m_lima_version_fichier	= Version (version_lima.substr (5));
 	else
 		m_lima_version_fichier	= Version (version_lima);
-	m_mli_version_fichier	= Version (HDFHelper2::readStringAttribute (
-										header, FILE_VERSION_FIELD_NAME));
+	m_mli_version_fichier	= Version (HDFHelper2::readStringAttribute (header, FILE_VERSION_FIELD_NAME));
 
 	COMPLETE_TRY_CATCH_BLOCK
 
@@ -646,23 +597,19 @@ Version MaliPPReader2::lireVersionHDF ( )
 }	// MaliPPReader2::lireVersionHDF
 
 
-void MaliPPReader2::lire_composition (
-	Group& root, const string& nom, const Version& version, 
-	Composition& composition)
+void MaliPPReader2::lire_composition (Group& root, const string& nom, const Version& version, Composition& composition)
 {
 	composition.renseigne	= false;
 
 	// Le nombre d'elements du groupe :
 	Group		compositionGroup	= root.openGroup (nom);
-	Attribute	sizeAttribute		= 
-						compositionGroup.openAttribute (SIZE_ATTR_NAME);
+	Attribute	sizeAttribute		=  compositionGroup.openAttribute (SIZE_ATTR_NAME);
 	id_type		number				= 0;
 	sizeAttribute.read (PredType::NATIVE_UINT32, &number);
 	composition.nb_elements = number;
 
 	// Le detail de la composition du groupe :
-	Attribute	detailedAttribute	=
-					compositionGroup.openAttribute (DETAILED_ATTR_NAME);
+	Attribute	detailedAttribute	= compositionGroup.openAttribute (DETAILED_ATTR_NAME);
 	hbool_t		detailed (0);
 	detailedAttribute.read (PredType::NATIVE_HBOOL, &detailed);
 	composition.renseigne	= 0 == detailed ? false : true;
@@ -677,16 +624,14 @@ void MaliPPReader2::lire_composition (
 
 	ArrayType	dataType (PredType::NATIVE_UINT32, 1, dims);
 
-	Attribute	compositionAttr	=
-					compositionGroup.openAttribute (COMPOSITION_ATTR_NAME);
+	Attribute	compositionAttr	= compositionGroup.openAttribute (COMPOSITION_ATTR_NAME);
 	compositionAttr.read (dataType, detail);
 	for (i = 0; i < MAX_NOEUDS; i++)
 		composition.detail [i]	= detail [i];
 }	// MaliPPReader2::lire_composition
 
 
-void MaliPPReader2::lire_liste_attributs (
-					Group& group, vector<HDFAttributeDescriptor2>& liste)
+void MaliPPReader2::lire_liste_attributs (Group& group, vector<HDFAttributeDescriptor2>& liste)
 {
 	liste.clear ( );
 	Attribute	sizeAttribute	= group.openAttribute (SIZE_ATTR_NAME);
@@ -698,8 +643,7 @@ void MaliPPReader2::lire_liste_attributs (
 	// On recupere la liste des attributs (noms/types) :
 	DataSet	attrDescDataSet	= group.openDataSet(DATASET_ATTR_LIST_NAME);
 	HDFAttributeDescriptor2Type	attrDescrType;
-	HDFAttributeDescriptor2*		attrDescriptors	=
-									new HDFAttributeDescriptor2 [attrCount];
+	HDFAttributeDescriptor2*		attrDescriptors	= new HDFAttributeDescriptor2 [attrCount];
 
 	try
 	{
@@ -717,44 +661,35 @@ void MaliPPReader2::lire_liste_attributs (
 }	// MaliPPReader2::lire_liste_attributs
 
 
-void MaliPPReader2::lire_attr_entier (
-					Group& group, const HDFAttributeDescriptor2& desc, 
-					size_type premier, size_type nombre, int_4*& tableau)
+void MaliPPReader2::lire_attr_entier (Group& group, const HDFAttributeDescriptor2& desc, size_type premier, size_type nombre, int_4*& tableau)
 {
 	DataSet	dataSet	= group.openDataSet (desc.m_name);
 	HDFHelper2::readIntDataSet1D (dataSet, tableau, nombre, premier);
 }	// MaliPPReader2::lire_attr_entier
 
 
-void MaliPPReader2::lire_attr_reel (
-					Group& group, const HDFAttributeDescriptor2& desc, 
-					size_type premier, size_type nombre, double*& tableau)
+void MaliPPReader2::lire_attr_reel (Group& group, const HDFAttributeDescriptor2& desc, size_type premier, size_type nombre, double*& tableau)
 {
 	DataSet	dataSet	= group.openDataSet (desc.m_name);
 	HDFHelper2::readDoubleDataSet1D (dataSet, tableau, nombre, premier);
 }	// MaliPPReader2::lire_attr_reel
 
 
-void MaliPPReader2::lire_attr_vect_2d (
-					Group& group, const HDFAttributeDescriptor2& desc, 
-					size_type premier, size_type nombre, double*& tableau)
+void MaliPPReader2::lire_attr_vect_2d (Group& group, const HDFAttributeDescriptor2& desc, size_type premier, size_type nombre, double*& tableau)
 {
 	DataSet	dataSet	= group.openDataSet (desc.m_name);
 	HDFHelper2::readDoubleDataSet2D (dataSet, tableau, nombre, premier);
 }	// MaliPPReader2::lire_attr_vect_2d
 
 
-void MaliPPReader2::lire_attr_vect_3d (
-					Group& group, const HDFAttributeDescriptor2& desc, 
-					size_type premier, size_type nombre, double*& tableau)
+void MaliPPReader2::lire_attr_vect_3d (Group& group, const HDFAttributeDescriptor2& desc, size_type premier, size_type nombre, double*& tableau)
 {
 	DataSet	dataSet	= group.openDataSet (desc.m_name);
 	HDFHelper2::readDoubleDataSet3D (dataSet, tableau, nombre, premier);
 }	// MaliPPReader2::lire_attr_vect_3d
 
 
-size_type MaliPPReader2::longueur_chaines (
-				Group& group, const HDFAttributeDescriptor2& desc)
+size_type MaliPPReader2::longueur_chaines (Group& group, const HDFAttributeDescriptor2& desc)
 {
 	DataSet		dataSet	= group.openDataSet (desc.m_name);
 	DataType	strType	= dataSet.getDataType ( );
@@ -763,9 +698,7 @@ size_type MaliPPReader2::longueur_chaines (
 }	// MaliPPReader2::longueur_chaines
 
 
-void MaliPPReader2::lire_attr_chaine (
-				Group& group, const HDFAttributeDescriptor2& desc, 
-				size_type premier, size_type nombre, vector<string>& chaines)
+void MaliPPReader2::lire_attr_chaine (Group& group, const HDFAttributeDescriptor2& desc, size_type premier, size_type nombre, vector<string>& chaines)
 {
 	DataSet	dataSet	= group.openDataSet (desc.m_name);
 	HDFHelper2::readStringDataSet (dataSet, chaines, nombre, premier);
@@ -793,8 +726,7 @@ size_type MaliPPReader2::lire_noeuds (
 		size_type premier, size_type nombre, size_type*& ids, double*& coords)
 {
 	const Composition&	comp	= composition_noeuds ( );
-	size_t				count	= premier + nombre < comp.nb_elements ?
-								  nombre : comp.nb_elements - premier;
+	size_t				count	= premier + nombre < comp.nb_elements ? nombre : comp.nb_elements - premier;
 	if (0 == count)
 		return 0;
 
@@ -815,27 +747,21 @@ size_type MaliPPReader2::lire_noeuds (
 	{
 		case	D3	:
 		{
-			DataSet	zCoordDataSet	= 
-							nodeGroup.openDataSet (DATASET_COORD_Z_NAME);
+			DataSet	zCoordDataSet	= nodeGroup.openDataSet (DATASET_COORD_Z_NAME);
 			zBuffer		= new double [count];
-			HDFHelper2::readDoubleDataSet1D (
-									zCoordDataSet, zBuffer, count, premier);
+			HDFHelper2::readDoubleDataSet1D (zCoordDataSet, zBuffer, count, premier);
 		}
 		case	D2	:
 		{
-			DataSet	yCoordDataSet	= 
-							nodeGroup.openDataSet (DATASET_COORD_Y_NAME);
+			DataSet	yCoordDataSet	= nodeGroup.openDataSet (DATASET_COORD_Y_NAME);
 			yBuffer		= new double [count];
-			HDFHelper2::readDoubleDataSet1D (
-									yCoordDataSet, yBuffer, count, premier);
+			HDFHelper2::readDoubleDataSet1D (yCoordDataSet, yBuffer, count, premier);
 		}
 		case	D1	:
 		{
-			DataSet	xCoordDataSet	= 
-							nodeGroup.openDataSet (DATASET_COORD_X_NAME);
+			DataSet	xCoordDataSet	= nodeGroup.openDataSet (DATASET_COORD_X_NAME);
 			xBuffer		= new double [count];
-			HDFHelper2::readDoubleDataSet1D (
-									xCoordDataSet, xBuffer, count, premier);
+			HDFHelper2::readDoubleDataSet1D (xCoordDataSet, xBuffer, count, premier);
 		}
 		break;
 		default		: 
@@ -873,8 +799,7 @@ size_type MaliPPReader2::lire_noeuds (
 
 	// Lecture ou non des identifiants :
 	// Les identifiants sont ils contigus ?
-	Attribute	contiguousAttribut	=
-					nodeGroup.openAttribute (CONTIGUOUS_IDS_ATTR_NAME);
+	Attribute	contiguousAttribut	= nodeGroup.openAttribute (CONTIGUOUS_IDS_ATTR_NAME);
 	int			contiguous	= 0;
 	DataSet		idsDataSet	= nodeGroup.openDataSet (DATASET_IDS_NAME);
 	contiguousAttribut.read (PredType::NATIVE_INT, &contiguous);
@@ -915,12 +840,10 @@ size_type* MaliPPReader2::allouer_tampon_bras (size_type nb_elements)
 }	// MaliPPReader2::allouer_tampon_bras
 
 
-size_type MaliPPReader2::lire_bras (
-				size_type premier, size_type nombre, size_type*& tableau)
+size_type MaliPPReader2::lire_bras (size_type premier, size_type nombre, size_type*& tableau)
 {
 	const Composition&	comp	= composition_bras ( );
-	const size_type		count	= premier + nombre < comp.nb_elements ?
-								  nombre : comp.nb_elements - premier;
+	const size_type		count	= premier + nombre < comp.nb_elements ? nombre : comp.nb_elements - premier;
 	if (0 == count)
 		return 0;
 
@@ -938,12 +861,10 @@ size_type MaliPPReader2::lire_bras (
 
 	DataSet	nodeIdsDataSet	= edgeGroup.openDataSet (DATASET_IDS_LIST_NAME);
 	nodeIds	= new id_type [2 * count];
-	HDFHelper2::readUIntDataSet1D (nodeIdsDataSet, nodeIds, 2 * count,
-	                              2 * premier);
+	HDFHelper2::readUIntDataSet1D (nodeIdsDataSet, nodeIds, 2 * count, 2 * premier);
 
 	// Lecture des identifiants : eviter de tester sans arret si 1 == contiguous
-	Attribute	contiguousAttribut	= 
-					edgeGroup.openAttribute (CONTIGUOUS_IDS_ATTR_NAME);
+	Attribute	contiguousAttribut	= edgeGroup.openAttribute (CONTIGUOUS_IDS_ATTR_NAME);
 	int			contiguous			= 0;
 	contiguousAttribut.read (PredType::NATIVE_INT, &contiguous);
 	DataSet			idsDataSet		= edgeGroup.openDataSet (DATASET_IDS_NAME);
@@ -1027,8 +948,7 @@ size_type* MaliPPReader2::allouer_tampon_polygones (size_type nb_elements)
 }	// MaliPPReader2::allouer_tampon_polygones
 
 
-size_type MaliPPReader2::lire_polygones (
-				size_type premier, size_type nombre, size_type*& tableau)
+size_type MaliPPReader2::lire_polygones (size_type premier, size_type nombre, size_type*& tableau)
 {
 	const Composition&	comp	= composition_polygones ( );
 	const size_type		count	= premier + nombre < comp.nb_elements ?
@@ -1055,8 +975,7 @@ size_type MaliPPReader2::lire_polygones (
 	// lire et analyser avant d'atteindre la maille "premier".
 	// Combien de noeuds precedent la lecture ?
 	size_type	n = 0, ielm	= 0;
-	size_type	nodeIdsPos	= 
-					position_ids_noeuds_polygone (premier, cellTypes, count);
+	size_type	nodeIdsPos	= position_ids_noeuds_polygone (premier, cellTypes, count);
 
 	// Lecture des types de polygones :
 	HDFHelper2::readIntDataSet1D (cellTypesDataSet, cellTypes, count, premier);
@@ -1066,14 +985,12 @@ size_type MaliPPReader2::lire_polygones (
 
 	DataSet	nodeIdsDataSet	= cellGroup.openDataSet (DATASET_IDS_LIST_NAME);
 	nodeIds	= new id_type [nodeNumber];
-	HDFHelper2::readUIntDataSet1D (nodeIdsDataSet, nodeIds, nodeNumber,
-	                              nodeIdsPos);
+	HDFHelper2::readUIntDataSet1D (nodeIdsDataSet, nodeIds, nodeNumber, nodeIdsPos);
 	m_pos_ids_noeuds_polygone		+= nodeNumber;
 	m_indice_ids_noeuds_polygone	= premier + count;
 
 	// Lecture des identifiants : eviter de tester sans arret si 1 == contiguous
-	Attribute	contiguousAttribut	= 
-					cellGroup.openAttribute (CONTIGUOUS_IDS_ATTR_NAME);
+	Attribute	contiguousAttribut	= cellGroup.openAttribute (CONTIGUOUS_IDS_ATTR_NAME);
 	int			contiguous			= 0;
 	contiguousAttribut.read (PredType::NATIVE_INT, &contiguous);
 	DataSet			idsDataSet		= cellGroup.openDataSet (DATASET_IDS_NAME);
@@ -1161,12 +1078,10 @@ size_type* MaliPPReader2::allouer_tampon_polyedres (size_type nb_elements)
 }	// MaliPPReader2::allouer_tampon_polyedres
 
 
-size_type MaliPPReader2::lire_polyedres (
-				size_type premier, size_type nombre, size_type*& tableau)
+size_type MaliPPReader2::lire_polyedres (size_type premier, size_type nombre, size_type*& tableau)
 {
 	const Composition&	comp	= composition_polyedres ( );
-	const size_type		count	= premier + nombre < comp.nb_elements ?
-								  nombre : comp.nb_elements - premier;
+	const size_type		count	= premier + nombre < comp.nb_elements ? nombre : comp.nb_elements - premier;
 	if (0 == count)
 		return 0;
 
@@ -1185,12 +1100,10 @@ size_type MaliPPReader2::lire_polyedres (
 	// Pour la lecture des types de polyedres :
 	DataSet	cellTypesDataSet	= cellGroup.openDataSet(DATASET_TYPES_NAME);
 
-	// Lecture des ids des noeuds : point faible du format car il faut tout
-	// lire et analyser avant d'atteindre la maille "premier".
+	// Lecture des ids des noeuds : point faible du format car il faut tout lire et analyser avant d'atteindre la maille "premier".
 	// Combien de noeuds precedent la lecture ?
 	size_type	n = 0, ielm	= 0;
-	size_type	nodeIdsPos	= 
-					position_ids_noeuds_polyedre (premier, cellTypes, count);
+	size_type	nodeIdsPos	= position_ids_noeuds_polyedre (premier, cellTypes, count);
 
 	// Lecture des types de polyedres :
 	HDFHelper2::readIntDataSet1D (cellTypesDataSet, cellTypes, count, premier);
@@ -1200,14 +1113,12 @@ size_type MaliPPReader2::lire_polyedres (
 
 	DataSet	nodeIdsDataSet	= cellGroup.openDataSet (DATASET_IDS_LIST_NAME);
 	nodeIds	= new id_type [nodeNumber];
-	HDFHelper2::readUIntDataSet1D (nodeIdsDataSet, nodeIds, nodeNumber,
-	                              nodeIdsPos);
+	HDFHelper2::readUIntDataSet1D (nodeIdsDataSet, nodeIds, nodeNumber, nodeIdsPos);
 	m_pos_ids_noeuds_polyedre		+= nodeNumber;
 	m_indice_ids_noeuds_polyedre	= premier + count;
 
 	// Lecture des identifiants : eviter de tester sans arret si 1 == contiguous
-	Attribute	contiguousAttribut	= 
-					cellGroup.openAttribute (CONTIGUOUS_IDS_ATTR_NAME);
+	Attribute	contiguousAttribut	= cellGroup.openAttribute (CONTIGUOUS_IDS_ATTR_NAME);
 	int			contiguous			= 0;
 	contiguousAttribut.read (PredType::NATIVE_INT, &contiguous);
 	DataSet			idsDataSet		= cellGroup.openDataSet (DATASET_IDS_NAME);
@@ -1220,8 +1131,7 @@ size_type MaliPPReader2::lire_polyedres (
 		for (size_t i = 0; i < count; i++)
 		{
 			tableau [pos++]	= id++;
-			const size_t	nbNodes	= tableau [pos++]	= 
-								Polyedre::PolyedreNbNode [cellTypes [i]];
+			const size_t	nbNodes	= tableau [pos++]	= Polyedre::PolyedreNbNode [cellTypes [i]];
 			for (size_t n = 0; n < nbNodes; n++)
 				tableau [pos++]	= nodeIds [nodePos++] + 1;
 		}	// for (size_t i = 0; i < count; i++)
@@ -1289,8 +1199,7 @@ void MaliPPReader2::liste_nuages (vector<string>& liste)
 		Group	nodeSetNGroup	= nodeSetGroup.openGroup (nodeSetName);
 
 		// Lecture du nom :
-		string	name			= 
-				HDFHelper2::readStringAttribute (nodeSetNGroup, NAME_ATTR_NAME);
+		string	name			= HDFHelper2::readStringAttribute (nodeSetNGroup, NAME_ATTR_NAME);
 		liste.push_back (name);
 	}	// for (size_type grp = 0; grp < nodeSetNumber; grp++)
 
@@ -1336,8 +1245,7 @@ void MaliPPReader2::liste_lignes (vector<string>& liste)
 		Group	lineNGroup	= lines.openGroup (lineName);
 
 		// Lecture du nom :
-		string	name			= 
-				HDFHelper2::readStringAttribute (lineNGroup, NAME_ATTR_NAME);
+		string	name			= HDFHelper2::readStringAttribute (lineNGroup, NAME_ATTR_NAME);
 		liste.push_back (name);
 	}	// for (size_type grp = 0; grp < lineNumber; grp++)
 	COMPLETE_TRY_CATCH_BLOCK
@@ -1366,11 +1274,9 @@ void MaliPPReader2::liste_surfaces (vector<string>& liste)
 
 	BEGIN_TRY_CATCH_BLOCK("Lecture des surfaces impossible : ")
 
-	// On lit le nombre de surfaces qui peut etre inferieur au nombre de 
-	// surfaces stockes :
+	// On lit le nombre de surfaces qui peut etre inferieur au nombre de surfaces stockes :
 	id_type		surfaceNumber	= 0;
-	Attribute	sizeAttribute	= 
-							surfaceGroup.openAttribute (SIZE_ATTR_NAME);
+	Attribute	sizeAttribute	= surfaceGroup.openAttribute (SIZE_ATTR_NAME);
 	sizeAttribute.read (PredType::NATIVE_UINT32, &surfaceNumber);
 	if (0 == surfaceNumber)
 		return;
@@ -1383,8 +1289,7 @@ void MaliPPReader2::liste_surfaces (vector<string>& liste)
 		Group	surfaceNGroup	= surfaceGroup.openGroup (surfaceName);
 
 		// Lecture du nom :
-		string	name			= 
-				HDFHelper2::readStringAttribute (surfaceNGroup, NAME_ATTR_NAME);
+		string	name			= HDFHelper2::readStringAttribute (surfaceNGroup, NAME_ATTR_NAME);
 		liste.push_back (name);
 	}	// for (size_type grp = 0; grp < surfaceNumber; grp++)
 
@@ -1429,8 +1334,7 @@ void MaliPPReader2::liste_volumes (vector<string>& liste)
 		Group	volumeNGroup	= volumeGroup.openGroup (volumeName);
 
 		// Lecture du nom :
-		string	name			= 
-				HDFHelper2::readStringAttribute (volumeNGroup, NAME_ATTR_NAME);
+		string	name			= HDFHelper2::readStringAttribute (volumeNGroup, NAME_ATTR_NAME);
 		liste.push_back (name);
 	}	// for (size_type grp = 0; grp < volumeNumber; grp++)
 
@@ -1441,16 +1345,13 @@ void MaliPPReader2::liste_volumes (vector<string>& liste)
 }	// MaliPPReader2::liste_volumes
 
 
-void MaliPPReader2::lire_liste_attributs (
-					ENTITE entite, vector<HDFAttributeDescriptor2>& liste)
+void MaliPPReader2::lire_liste_attributs (ENTITE entite, vector<HDFAttributeDescriptor2>& liste)
 {
 	{
 		HDFErrorHandlerManager2		errorHandlerManager;
 		H5G_info_t	infos;
 		hid_t		lapl_id	= 0;
-		herr_t		ret	= H5Gget_info_by_name (
-			m_maillage_hdf.getId ( ), nom_groupe_attribut (entite).c_str ( ),
-			&infos, lapl_id);
+		herr_t		ret	= H5Gget_info_by_name (m_maillage_hdf.getId ( ), nom_groupe_attribut (entite).c_str ( ), &infos, lapl_id);
 		if (ret < 0)
 			return;
 	}
@@ -1466,54 +1367,42 @@ void MaliPPReader2::lire_liste_attributs (
 }	// MaliPPReader2::lire_liste_attributs
 
 
-void MaliPPReader2::lire_attr_entier (
-					ENTITE entite, const HDFAttributeDescriptor2& desc, 
-					size_type premier, size_type nombre, int_4*& tableau)
+void MaliPPReader2::lire_attr_entier (ENTITE entite, const HDFAttributeDescriptor2& desc, size_type premier, size_type nombre, int_4*& tableau)
 {
 	Group	group	= groupe_attribut (entite);
 	lire_attr_entier (group, desc, premier, nombre, tableau);
 }	// MaliPPReader2::lire_attr_entier
 
 
-void MaliPPReader2::lire_attr_reel (
-					ENTITE entite, const HDFAttributeDescriptor2& desc, 
-					size_type premier, size_type nombre, double*& tableau)
+void MaliPPReader2::lire_attr_reel (ENTITE entite, const HDFAttributeDescriptor2& desc, size_type premier, size_type nombre, double*& tableau)
 {
 	Group	group	= groupe_attribut (entite);
 	lire_attr_reel (group, desc, premier, nombre, tableau);
 }	// MaliPPReader2::lire_attr_reel
 
 
-void MaliPPReader2::lire_attr_vect_2d (
-					ENTITE entite, const HDFAttributeDescriptor2& desc, 
-					size_type premier, size_type nombre, double*& tableau)
+void MaliPPReader2::lire_attr_vect_2d (ENTITE entite, const HDFAttributeDescriptor2& desc, size_type premier, size_type nombre, double*& tableau)
 {
 	Group	group	= groupe_attribut (entite);
 	lire_attr_vect_2d (group, desc, premier, nombre, tableau);
 }	// MaliPPReader2::lire_attr_vect_2d
 
 
-void MaliPPReader2::lire_attr_vect_3d (
-					ENTITE entite, const HDFAttributeDescriptor2& desc, 
-					size_type premier, size_type nombre, double*& tableau)
+void MaliPPReader2::lire_attr_vect_3d (ENTITE entite, const HDFAttributeDescriptor2& desc, size_type premier, size_type nombre, double*& tableau)
 {
 	Group	group	= groupe_attribut (entite);
 	lire_attr_vect_3d (group, desc, premier, nombre, tableau);
 }	// MaliPPReader2::lire_attr_vect_3d
 
 
-size_type MaliPPReader2::longueur_chaines (
-						ENTITE entite, const HDFAttributeDescriptor2& desc)
+size_type MaliPPReader2::longueur_chaines (ENTITE entite, const HDFAttributeDescriptor2& desc)
 {
 	Group	group	= groupe_attribut (entite);
 	return longueur_chaines (group, desc);
 }	// MaliPPReader2::longueur_chaines
 
 
-void MaliPPReader2::lire_attr_chaine (
-					ENTITE entite, const HDFAttributeDescriptor2& desc, 
-					size_type premier, size_type nombre, 
-					vector<string>& chaines)
+void MaliPPReader2::lire_attr_chaine (ENTITE entite, const HDFAttributeDescriptor2& desc, size_type premier, size_type nombre, vector<string>& chaines)
 {
 	chaines.clear ( );
 	Group	group	= groupe_attribut (entite);
@@ -1536,8 +1425,7 @@ MaliPPReader2::NuageReader MaliPPReader2::nuage (const string& nom)
 
 		// Recherche du nuage :
 		id_type		cloudNumber	= 0;
-		Attribute	sizeAttribute	= 
-							nodeSetGroup.openAttribute(SIZE_ATTR_NAME);
+		Attribute	sizeAttribute	= nodeSetGroup.openAttribute(SIZE_ATTR_NAME);
 		sizeAttribute.read (PredType::NATIVE_UINT32, &cloudNumber);
 
 		for (size_type grp = 0; grp < (size_type)cloudNumber; grp++)
@@ -1547,8 +1435,7 @@ MaliPPReader2::NuageReader MaliPPReader2::nuage (const string& nom)
 			Group	group		= nodeSetGroup.openGroup (cloudName);
 
 			// Lecture du nom du nuage :
-			string	name	= 
-					HDFHelper2::readStringAttribute(group, NAME_ATTR_NAME);
+			string	name	= HDFHelper2::readStringAttribute(group, NAME_ATTR_NAME);
 
 			if (nom == name)
 				return MaliPPReader2::NuageReader (this, nom, group);
@@ -1602,8 +1489,7 @@ MaliPPReader2::LigneReader MaliPPReader2::ligne (const string& nom)
 			Group	group		= lineGroup.openGroup (lineName);
 
 			// Lecture du nom du ligne :
-			string	name	= 
-						HDFHelper2::readStringAttribute (group, NAME_ATTR_NAME);
+			string	name	= HDFHelper2::readStringAttribute (group, NAME_ATTR_NAME);
 
 			if (nom == name)
 				return MaliPPReader2::LigneReader (this, nom, group);
@@ -1657,8 +1543,7 @@ MaliPPReader2::SurfaceReader MaliPPReader2::surface (const string& nom)
 			Group	group		= surfaceGroup.openGroup (surfaceName);
 
 			// Lecture du nom du surface :
-			string	name	= 
-						HDFHelper2::readStringAttribute (group, NAME_ATTR_NAME);
+			string	name	= HDFHelper2::readStringAttribute (group, NAME_ATTR_NAME);
 
 			if (nom == name)
 				return MaliPPReader2::SurfaceReader (this, nom, group);
@@ -1712,8 +1597,7 @@ MaliPPReader2::VolumeReader MaliPPReader2::volume (const string& nom)
 			Group	group		= volumeGroup.openGroup (volumeName);
 
 			// Lecture du nom du volume :
-			string	name	= 
-						HDFHelper2::readStringAttribute (group, NAME_ATTR_NAME);
+			string	name	= HDFHelper2::readStringAttribute (group, NAME_ATTR_NAME);
 
 			if (nom == name)
 				return MaliPPReader2::VolumeReader (this, nom, group);
@@ -1742,8 +1626,7 @@ MaliPPReader2::VolumeReader MaliPPReader2::volume (const string& nom)
 }	// MaliPPReader2::volume
 
 
-size_type MaliPPReader2::position_ids_noeuds_polygone (
-					size_type indice, object_type* tampon, size_type taille)
+size_type MaliPPReader2::position_ids_noeuds_polygone (size_type indice, object_type* tampon, size_type taille)
 {
 	if (indice == m_indice_ids_noeuds_polygone)
 		return m_pos_ids_noeuds_polygone;
@@ -1763,16 +1646,14 @@ size_type MaliPPReader2::position_ids_noeuds_polygone (
 	}
 	for (n = 0; m_indice_ids_noeuds_polygone + (n + 1) * taille <= indice;  n++)
 	{
-		HDFHelper2::readIntDataSet1D (cellTypesDataSet, tampon, taille,
-		                             m_indice_ids_noeuds_polygone + n * taille);
+		HDFHelper2::readIntDataSet1D (cellTypesDataSet, tampon, taille, m_indice_ids_noeuds_polygone + n * taille);
 		for (ielm = 0; ielm < (size_type)taille; ielm++)
 			nodeIdsPos	+= tampon [ielm];
 	}
 	const size_type	last	= m_indice_ids_noeuds_polygone + n * taille;
 	if ((last != indice - 1) && ((size_type)-1 != last))
 	{
-		HDFHelper2::readIntDataSet1D (
-			cellTypesDataSet, tampon, indice - last, last + 1);
+		HDFHelper2::readIntDataSet1D (cellTypesDataSet, tampon, indice - last, last + 1);
 		for (ielm = 0; ielm < (size_type)(indice - last); ielm++)
 			nodeIdsPos	+= tampon [ielm];
 	}
@@ -1783,8 +1664,7 @@ size_type MaliPPReader2::position_ids_noeuds_polygone (
 }	// MaliPPReader2::position_ids_noeuds_polygone
 
 
-size_type MaliPPReader2::position_ids_noeuds_polyedre (
-					size_type indice, object_type* tampon, size_type taille)
+size_type MaliPPReader2::position_ids_noeuds_polyedre (size_type indice, object_type* tampon, size_type taille)
 {
 	if (indice == m_indice_ids_noeuds_polyedre)
 		return m_pos_ids_noeuds_polyedre;
@@ -1804,16 +1684,14 @@ size_type MaliPPReader2::position_ids_noeuds_polyedre (
 	}
 	for (n = 0; m_indice_ids_noeuds_polyedre + (n + 1) * taille <= indice;  n++)
 	{
-		HDFHelper2::readIntDataSet1D (cellTypesDataSet, tampon, taille,
-		                             m_indice_ids_noeuds_polyedre + n * taille);
+		HDFHelper2::readIntDataSet1D (cellTypesDataSet, tampon, taille, m_indice_ids_noeuds_polyedre + n * taille);
 		for (ielm = 0; ielm < (size_type)taille; ielm++)
 			nodeIdsPos	+= Polyedre::PolyedreNbNode [tampon [ielm]];
 	}
 	const size_type	last	= m_indice_ids_noeuds_polyedre + n * taille;
 	if ((last != indice - 1) && ((size_type)-1 != last))
 	{
-		HDFHelper2::readIntDataSet1D (
-			cellTypesDataSet, tampon, indice - last, last + 1);
+		HDFHelper2::readIntDataSet1D (cellTypesDataSet, tampon, indice - last, last + 1);
 		for (ielm = 0; ielm < (size_type)(indice - last); ielm++)
 			nodeIdsPos	+= Polyedre::PolyedreNbNode [tampon [ielm]];
 	}
@@ -1886,14 +1764,12 @@ void MaliPPReader2::lire_entete_maillage ( )
 
 	// Lecture de l'entete du maillage :
 	Group	header	= m_maillage_hdf.openGroup (MESH_HEADER_GROUP_NAME);
-	string	version_lima	= HDFHelper2::readStringAttribute (
-											header, LIMA_VERSION_FIELD_NAME);
+	string	version_lima	= HDFHelper2::readStringAttribute (header, LIMA_VERSION_FIELD_NAME);
 	if (0 == version_lima.compare (0, 5, "Lima."))
 		m_lima_version_maillage	= Version (version_lima.substr (5));
 	else
 		m_lima_version_maillage	= Version (version_lima);
-	m_mli_version_maillage	= Version (HDFHelper2::readStringAttribute (
-										header, FILE_VERSION_FIELD_NAME));
+	m_mli_version_maillage	= Version (HDFHelper2::readStringAttribute (header, FILE_VERSION_FIELD_NAME));
 
 	// Titre, date :
 	m_titre		= HDFHelper2::readStringAttribute(header, MESH_TITLE_FIELD_NAME);
@@ -1901,35 +1777,30 @@ void MaliPPReader2::lire_entete_maillage ( )
 
 	// Dimension :
 	int		dimension	= 0;
-	Attribute	meshDimAttribute	=
-						header.openAttribute (MESH_DIMENSION_FIELD_NAME);
+	Attribute	meshDimAttribute	= header.openAttribute (MESH_DIMENSION_FIELD_NAME);
 	meshDimAttribute.read (PredType::NATIVE_INT, &dimension);
 	m_dimension	= (dim_t)dimension;
 
 	// Type de geometrie :
 	int		geometry	= 0;
-	Attribute	meshGeomAttribute	=
-						header.openAttribute (MESH_GEOMETRY_FIELD_NAME);
+	Attribute	meshGeomAttribute	= header.openAttribute (MESH_GEOMETRY_FIELD_NAME);
 	meshGeomAttribute.read (PredType::NATIVE_INT, &geometry);
 	m_geometrie	= (geometrie_t)geometry;
 
 	// Systeme de coordonnees :
 	int		coordSys	= 0;
-	Attribute	meshCoordSysAttribute	=
-						header.openAttribute (MESH_COORD_SYSTEM_FIELD_NAME);
+	Attribute	meshCoordSysAttribute	= header.openAttribute (MESH_COORD_SYSTEM_FIELD_NAME);
 	meshCoordSysAttribute.read (PredType::NATIVE_INT, &coordSys);
 	m_systeme_coords	= (coordonnee_t)coordSys;
 
 	// Unite d'angle :
-	Attribute	meshAngleUnitAttribute	=
-						header.openAttribute (MESH_ANGLE_UNIT_FIELD_NAME);
+	Attribute	meshAngleUnitAttribute	= header.openAttribute (MESH_ANGLE_UNIT_FIELD_NAME);
 	meshAngleUnitAttribute.read (PredType::NATIVE_DOUBLE, &m_unite_angle);
 
 	// Unite de longueur :
 	Attribute	meshLengthUnitAttribute	=
 						header.openAttribute (MESH_LENGTH_UNIT_FIELD_NAME);
-	meshLengthUnitAttribute.read (
-							PredType::NATIVE_DOUBLE, &m_unite_longueur);
+	meshLengthUnitAttribute.read (PredType::NATIVE_DOUBLE, &m_unite_longueur);
 
 	COMPLETE_TRY_CATCH_BLOCK
 
@@ -1939,74 +1810,62 @@ void MaliPPReader2::lire_entete_maillage ( )
 
 
 void MaliPPReader2::lire_composition_maillage ( )
-{
+{	// Correctif Lima 7.12.3 : les groupes peuvent exister sans pour autant avoir une description de la composition.
+	// Ce peut être par exemple le cas du groupe "edge" si il est vide.
+
 	// Inactivation de l'affichage des messages d'erreur HDF sur le terminal :
 	HDFErrorHandlerManager2		errorHandlerManager;
 
 	BEGIN_TRY_CATCH_BLOCK("Lecture des noeuds impossible : ")
 
-	bool		exists	= false;
 	Attribute	sizeAttribute;
 
 	// Ouverture du groupe contenant les noeuds du maillage :
 	Group		nodeGroup;
 	try
 	{
-		exists	= false;
 		nodeGroup	= m_maillage_hdf.openGroup (NODE_GROUP_NAME);
-		exists	= true;
+		lire_composition (nodeGroup, NODE_COMPOSITION_DATASET_NAME, m_mli_version_maillage, m_composition_noeuds);
 	}
 	catch (...)
 	{
 	}
-	if (true == exists)
-		lire_composition (nodeGroup, NODE_COMPOSITION_DATASET_NAME, 
-		                  m_mli_version_maillage, m_composition_noeuds);
 
 	// Ouverture du groupe contenant les bras du maillage :
+	errorMsg	= string ("Lecture des bras impossible : ");
 	Group		edgeGroup;
 	try
 	{
-		exists		= false;
 		edgeGroup	= m_maillage_hdf.openGroup (EDGE_GROUP_NAME);
-		exists		= true;
+		lire_composition (edgeGroup, EDGE_COMPOSITION_DATASET_NAME, m_mli_version_maillage, m_composition_bras);
 	}
 	catch (...)
 	{
 	}
-	if (true == exists)
-		lire_composition (edgeGroup, EDGE_COMPOSITION_DATASET_NAME,
-		                  m_mli_version_maillage, m_composition_bras);
 
 	// Ouverture du groupe contenant les polygones du maillage :
+	errorMsg	= string ("Lecture des polygones impossible : ");
 	Group		cell2DGroup;
 	try
 	{
-		exists	= false;
 		cell2DGroup	= m_maillage_hdf.openGroup (CELL_2D_GROUP_NAME);
-		exists	= true;
+		lire_composition (cell2DGroup, CELL2D_COMPOSITION_DATASET_NAME, m_mli_version_maillage, m_composition_polygones);
 	}
 	catch (...)
 	{
 	}
-	if (true == exists)
-		lire_composition (cell2DGroup, CELL2D_COMPOSITION_DATASET_NAME,
-		                  m_mli_version_maillage, m_composition_polygones);
 
 	// Ouverture du groupe contenant les polyedres du maillage :
+	errorMsg	= string ("Lecture des polyèdres impossible : ");
 	Group		cell3DGroup;
 	try
 	{
-		exists	= false;
 		cell3DGroup	= m_maillage_hdf.openGroup (CELL_3D_GROUP_NAME);
-		exists	= true;
+		lire_composition (cell3DGroup, CELL3D_COMPOSITION_DATASET_NAME, m_mli_version_maillage, m_composition_polyedres);
 	}
 	catch (...)
 	{
 	}
-	if (true == exists)
-		lire_composition (cell3DGroup, CELL3D_COMPOSITION_DATASET_NAME,
-		                  m_mli_version_maillage, m_composition_polyedres);
 
 	COMPLETE_TRY_CATCH_BLOCK
 
@@ -2088,11 +1947,9 @@ void MaliPPWriter2::beginWrite()
 
 	try
 	{
-		// Cette fonction couvre la totalite des operations d'ecriture. On
-		// inactive donc ici, pour toutes les operations d'ecriture,
+		// Cette fonction couvre la totalite des operations d'ecriture. On inactive donc ici, pour toutes les operations d'ecriture,
 		// l'affichage des messages d'erreurs HDF dans le terminal.
-		// Ces affichages peuvent etre reactives en compilant avec
-		// l'option -DNDEBUG_HDF.
+		// Ces affichages peuvent etre reactives en compilant avec l'option -DNDEBUG_HDF.
 		HDFErrorHandlerManager2	errorHandlerManager;
 
 		// Ouverture en ecriture du fichier, creation si necessaire :
@@ -2106,8 +1963,7 @@ void MaliPPWriter2::beginWrite()
 		// On met a jour l'entete du fichier :
 		createMainHeader ();
 
-		// Le fichier est ouvert : ouvrir en ecriture le maillage demande,
-		// en le creant si necessaire :
+		// Le fichier est ouvert : ouvrir en ecriture le maillage demande, en le creant si necessaire :
 		createMesh ( );
 
 		// Ecriture de l'entete du maillage :
@@ -2117,20 +1973,17 @@ void MaliPPWriter2::beginWrite()
 	catch (const Exception& hdfExc)
 	{
 		throwExc	= true;
-		errorMsg << "Impossible d'ouvrir le fichier " << m_fileName
-				<< " en ecriture :\n" << hdfExc.getDetailMsg ( );
+		errorMsg << "Impossible d'ouvrir le fichier " << m_fileName << " en ecriture :\n" << hdfExc.getDetailMsg ( );
 	}
 	catch (const exception& exc)
 	{
 		throwExc	= true;
-		errorMsg << "Impossible d'ouvrir le fichier " << m_fileName
-				<< " en ecriture :\n" << exc.what ( );
+		errorMsg << "Impossible d'ouvrir le fichier " << m_fileName << " en ecriture :\n" << exc.what ( );
 	}
 	catch (...)
 	{
 		throwExc	= true;
-		errorMsg << "Impossible d'ouvrir le fichier " << m_fileName
-				<< " en ecriture : erreur non documentee.";
+		errorMsg << "Impossible d'ouvrir le fichier " << m_fileName << " en ecriture : erreur non documentee.";
 	}
 
 	if(throwExc) {
@@ -2184,8 +2037,7 @@ void MaliPPWriter2::createMainHeader ( )
 	hsize_t strDims [1];
 	hsize_t strMaxDims [1];
 
-	Group	header	=
-			HDFHelper2::openOrCreateGroup (*m_hdfFile, FILE_HEADER_GROUP_NAME);
+	Group	header	= HDFHelper2::openOrCreateGroup (*m_hdfFile, FILE_HEADER_GROUP_NAME);
 
 	// Titre : ne pas l'ecraser si pre-existant.
 	try
@@ -2195,9 +2047,7 @@ void MaliPPWriter2::createMainHeader ( )
 	catch (const Exception&)
 	{
 		const string	title ("Titre du fichier vide");
-		DataSet			titleDataSet	=
-			HDFHelper2::openOrCreateStringDataSet (header, TITLE_FIELD_NAME,
-		   	                                   title.length ( ));
+		DataSet			titleDataSet	= HDFHelper2::openOrCreateStringDataSet (header, TITLE_FIELD_NAME, title.length ( ));
 		titleDataSet.write (title.c_str ( ), titleDataSet.getDataType ( ));
 	}
 
@@ -2207,9 +2057,7 @@ void MaliPPWriter2::createMainHeader ( )
 	// Auteur : on l'ecrase pour y mettre ce qui devrait etre le nom de
 	// l'utilisateur actuel.
 	const string	author (getUserName ( ));
-	Attribute		authorAttribute	=
-		HDFHelper2::openOrCreateStringAttribute (header, AUTHOR_FIELD_NAME,
-		                                        MLI2_ATTRIBUT_SIZE);
+	Attribute		authorAttribute	= HDFHelper2::openOrCreateStringAttribute (header, AUTHOR_FIELD_NAME, MLI2_ATTRIBUT_SIZE);
 	HDFHelper2::writeStringAttribute (authorAttribute, author);
 
 	// Commentaire : ne pas l'ecraser si pre-existant.
@@ -2221,8 +2069,7 @@ void MaliPPWriter2::createMainHeader ( )
 	{
 		const string	comment ("Commentaire vide");
 		DataSet			commentDataSet	=
-			HDFHelper2::openOrCreateStringDataSet (header, COMMENT_FIELD_NAME,
-			                                      comment.length( ));
+			HDFHelper2::openOrCreateStringDataSet (header, COMMENT_FIELD_NAME, comment.length( ));
 		commentDataSet.write(comment.c_str ( ), commentDataSet.getDataType ( ));
 	}
 
@@ -2233,9 +2080,7 @@ void MaliPPWriter2::createMainHeader ( )
 	}
 	catch (const Exception&)
 	{
-		Attribute	nbMeshesAttribute	=
-			HDFHelper2::openOrCreateAttribute (header, NB_MESHES_FIELD_NAME,
-			                                  PredType::NATIVE_INT);
+		Attribute	nbMeshesAttribute	= HDFHelper2::openOrCreateAttribute (header, NB_MESHES_FIELD_NAME, PredType::NATIVE_INT);
 		const int		nbMeshes = 0;
 		nbMeshesAttribute.write (PredType::NATIVE_INT, &nbMeshes);
 	}
@@ -2257,14 +2102,12 @@ void MaliPPWriter2::writeVersionsInfos (H5Object& root)
 
 	// Version du format de fichier : mise a jour obligatoire.
 	Attribute		fileVersionAttribute	=
-		HDFHelper2::openOrCreateStringAttribute (root, FILE_VERSION_FIELD_NAME,
-		                                        FILE_VERSION_MAX_LENGTH);
+		HDFHelper2::openOrCreateStringAttribute (root, FILE_VERSION_FIELD_NAME, FILE_VERSION_MAX_LENGTH);
 	HDFHelper2::writeStringAttribute (fileVersionAttribute, MLI2_FILE_VERSION);
 
 	// Version de lima++ : mise a jour obligatoire.
 	Attribute		limaVersionAttribute	=
-		HDFHelper2::openOrCreateStringAttribute (root, LIMA_VERSION_FIELD_NAME,
-		                                        LIMA_VERSION_MAX_LENGTH);
+		HDFHelper2::openOrCreateStringAttribute (root, LIMA_VERSION_FIELD_NAME, LIMA_VERSION_MAX_LENGTH);
 	HDFHelper2::writeStringAttribute (limaVersionAttribute, LIMA_VERSION);
 
 	COMPLETE_TRY_CATCH_BLOCK
@@ -2282,63 +2125,48 @@ void MaliPPWriter2::writeMeshHeader ( )
 	// Inactivation de l'affichage des messages d'erreur HDF sur le terminal :
 	HDFErrorHandlerManager2		errorHandlerManager;
 
-	Group	header	=
-			HDFHelper2::openOrCreateGroup (m_meshGroup, MESH_HEADER_GROUP_NAME);
+	Group	header	= HDFHelper2::openOrCreateGroup (m_meshGroup, MESH_HEADER_GROUP_NAME);
 
 	// Version du format de fichier et de lima++ :
 	writeVersionsInfos (header);
 
 	// Titre du maillage :
-	Attribute	meshTitleAttribute	=
-		HDFHelper2::openOrCreateStringAttribute (header, MESH_TITLE_FIELD_NAME,
+	Attribute	meshTitleAttribute	= HDFHelper2::openOrCreateStringAttribute (header, MESH_TITLE_FIELD_NAME,
 		                                        MLI2_ATTRIBUT_SIZE);
 	HDFHelper2::writeStringAttribute (meshTitleAttribute, m_titre);
 
 	// Date du maillage :
-	Attribute	meshDateAttribute	=
-		HDFHelper2::openOrCreateStringAttribute (header, MESH_DATE_FIELD_NAME,
-		                                        MLI2_ATTRIBUT_SIZE);
+	Attribute	meshDateAttribute	= HDFHelper2::openOrCreateStringAttribute (header, MESH_DATE_FIELD_NAME, MLI2_ATTRIBUT_SIZE);
 	HDFHelper2::writeStringAttribute (meshDateAttribute, m_date);
 
 	// Dimension du maillage :
-	Attribute	meshDimAttribute	=
-			HDFHelper2::openOrCreateAttribute (header, MESH_DIMENSION_FIELD_NAME,
-			                                  PredType::NATIVE_INT);
+	Attribute	meshDimAttribute	= HDFHelper2::openOrCreateAttribute (header, MESH_DIMENSION_FIELD_NAME, PredType::NATIVE_INT);
 	int	dimension	= m_dim;
 	meshDimAttribute.write (PredType::NATIVE_INT, &dimension);
 
 	// Type de geometrie du maillage :
-	Attribute	meshGeomAttribute	=
-			HDFHelper2::openOrCreateAttribute (header, MESH_GEOMETRY_FIELD_NAME,
-			                                  PredType::NATIVE_INT);
+	Attribute	meshGeomAttribute	= HDFHelper2::openOrCreateAttribute (header, MESH_GEOMETRY_FIELD_NAME, PredType::NATIVE_INT);
 	int	geometry	= m_geom;
 	meshGeomAttribute.write (PredType::NATIVE_INT, &geometry);
 
 	// System de coordonnees du maillage :
-	Attribute	meshCoordSysAttribute	=
-		HDFHelper2::openOrCreateAttribute (header, MESH_COORD_SYSTEM_FIELD_NAME,
-		                                  PredType::NATIVE_INT);
+	Attribute	meshCoordSysAttribute	= HDFHelper2::openOrCreateAttribute (header, MESH_COORD_SYSTEM_FIELD_NAME, PredType::NATIVE_INT);
 	int	coordSys	= m_tycoo;
 	meshCoordSysAttribute.write (PredType::NATIVE_INT, &coordSys);
 
 	// Unite d'angle :
-	Attribute	meshAngleUnitAttribute	=
-			HDFHelper2::openOrCreateAttribute (
-				header, MESH_ANGLE_UNIT_FIELD_NAME, PredType::NATIVE_DOUBLE);
+	Attribute	meshAngleUnitAttribute	= HDFHelper2::openOrCreateAttribute ( header, MESH_ANGLE_UNIT_FIELD_NAME, PredType::NATIVE_DOUBLE);
 	double	angleUnit	= m_unia;
 	meshAngleUnitAttribute.write (PredType::NATIVE_DOUBLE, &angleUnit);
 
 	// Unite de longueur :
-	Attribute	meshLengthUnitAttribute	=
-		HDFHelper2::openOrCreateAttribute (header, MESH_LENGTH_UNIT_FIELD_NAME,
-		                                  PredType::NATIVE_DOUBLE);
+	Attribute	meshLengthUnitAttribute	= HDFHelper2::openOrCreateAttribute (header, MESH_LENGTH_UNIT_FIELD_NAME, PredType::NATIVE_DOUBLE);
 	double	lengthUnit	= m_unilo;
 	meshLengthUnitAttribute.write (PredType::NATIVE_DOUBLE, &lengthUnit);
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }	// MaliPPWriter2::writeMeshHeader
 
 
@@ -2349,8 +2177,7 @@ void MaliPPWriter2::createMesh ( )
 
 	string	path	= MESH_GROUP_PREFIX + to_str (m_meshNum);
 
-	// Il faudra incrementer le nombre de maillage du fichier si celui-ci
-	// n'exite pas encore. Cette operation sera effectuee a la fin de
+	// Il faudra incrementer le nombre de maillage du fichier si celui-ci n'exite pas encore. Cette operation sera effectuee a la fin de
 	// cette fonction si celle-ci aboutie.
 	bool	incrementMeshCount	= false;
 	try
@@ -2391,10 +2218,12 @@ void MaliPPWriter2::close ( )
 	writeComposition(m_compoFace,CELL2D_COMPOSITION_DATASET_NAME, m_faceGroup);
 	writeComposition(m_compoRegion,CELL3D_COMPOSITION_DATASET_NAME, m_regionGroup);
 
-	for(id_type igrp=0; igrp<m_nbFaceSet; igrp++) {
+	for(id_type igrp=0; igrp<m_nbFaceSet; igrp++) 
+	{
 		writeComposition (m_faceSetCompo[igrp], CELL2D_COMPOSITION_DATASET_NAME, m_faceSetGroups[igrp]);
 	}
-	for(id_type igrp=0; igrp<m_nbRegionSet; igrp++) {
+	for(id_type igrp=0; igrp<m_nbRegionSet; igrp++) 
+	{
 		writeComposition (m_regionSetCompo[igrp], CELL3D_COMPOSITION_DATASET_NAME, m_regionSetGroups[igrp]);
 	}
 
@@ -2487,9 +2316,9 @@ void MaliPPWriter2::createMeshDataGroup ( )
 	HDFHelper2::openOrCreateGroup (m_meshGroup, DATA_VOLUME_GROUP_NAME);
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }	// MaliPPWriter2::createMeshDataGroup
 
 
@@ -2503,8 +2332,7 @@ void MaliPPWriter2::writeMeshAttributes ( )
 	m_nbMeshAttributes = 0;
 
 	m_meshAttributesGroup 	= m_meshGroup.openGroup (DATA_MESH_GROUP_NAME);
-	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-			m_meshAttributesGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (m_meshAttributesGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 	sizeAttribute.write (PredType::NATIVE_UINT32, &m_nbMeshAttributes);
 
 	COMPLETE_TRY_CATCH_BLOCK
@@ -2514,9 +2342,7 @@ void MaliPPWriter2::writeMeshAttributes ( )
 }  // MaliPPWriter2::writeMeshAttributes
 
 
-/*! Incremente le nombre de maillage d'un fichier. L'attribut identifie par
-   NB_MESHES_FIELD_NAME doit préalablement exister et m_fileName être
-   ouvert. */
+/*! Incremente le nombre de maillage d'un fichier. L'attribut identifie par NB_MESHES_FIELD_NAME doit préalablement exister et m_fileName être ouvert. */
 void MaliPPWriter2::nbMeshInc ( )
 {
 	BEGIN_TRY_CATCH_BLOCK("MaliPPWriter2::nbMeshInc ")
@@ -2524,19 +2350,17 @@ void MaliPPWriter2::nbMeshInc ( )
 	// Inactivation de l'affichage des messages d'erreur HDF sur le terminal :
 	HDFErrorHandlerManager2		errorHandlerManager;
 
-	Group		header				=
-					m_hdfFile->openGroup (FILE_HEADER_GROUP_NAME);
+	Group		header				= m_hdfFile->openGroup (FILE_HEADER_GROUP_NAME);
 	int			nbMeshes 			= 0;
-	Attribute	nbMeshesAttribute	=
-					header.openAttribute (NB_MESHES_FIELD_NAME);
+	Attribute	nbMeshesAttribute	= header.openAttribute (NB_MESHES_FIELD_NAME);
 	nbMeshesAttribute.read (PredType::NATIVE_INT, &nbMeshes);
 	nbMeshes++;
 	nbMeshesAttribute.write (PredType::NATIVE_INT, &nbMeshes);
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }	// MaliPPWriter2::nbMeshInc
 
 
@@ -2551,25 +2375,22 @@ void MaliPPWriter2::writeNodesInfo (bool isContiguous, id_type nbNodes, id_type 
 
 	m_nodeGroup 		= m_meshGroup.openGroup (NODE_GROUP_NAME);
 	// Le nombre de noeuds :
-	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-			m_nodeGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (m_nodeGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 
 	sizeAttribute.write (PredType::NATIVE_UINT32, &m_nbNodes);
 
-	if(m_nbNodes>0) {
-		Attribute	contiguousAttribut	= HDFHelper2::openOrCreateAttribute (
-				m_nodeGroup, CONTIGUOUS_IDS_ATTR_NAME, PredType::NATIVE_INT);
+	if(m_nbNodes>0) 
+	{
+		Attribute	contiguousAttribut	= HDFHelper2::openOrCreateAttribute (m_nodeGroup, CONTIGUOUS_IDS_ATTR_NAME, PredType::NATIVE_INT);
 
 		m_nodesIsContiguous = isContiguous;
 		int contiguous =  (m_nodesIsContiguous ? 1 : 0);
 
 		contiguousAttribut.write (PredType::NATIVE_INT, &contiguous);
 
-		m_nodeIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (
-				m_nodeGroup, DATASET_IDS_NAME,
-				(hsize_t)(m_nodesIsContiguous ? 1 : m_nbNodes),
-				PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
-		if(m_nodesIsContiguous) {
+		m_nodeIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (m_nodeGroup, DATASET_IDS_NAME, (hsize_t)(m_nodesIsContiguous ? 1 : m_nbNodes), PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
+		if(m_nodesIsContiguous)
+		{
 			HDFHelper2::writeUIntDataSet1D (m_nodeIdsDataSet, &firstID, 1, 0);
 		}
 
@@ -2577,26 +2398,18 @@ void MaliPPWriter2::writeNodesInfo (bool isContiguous, id_type nbNodes, id_type 
 		{
 		case D3	:
 		{
-			m_nodeZCoordDataSet	= HDFHelper2::openOrCreateDataSet1D (
-					m_nodeGroup, DATASET_COORD_Z_NAME, m_nbNodes,
-					PredType::NATIVE_DOUBLE, true, NODE_CHUNK_SIZE);
+			m_nodeZCoordDataSet	= HDFHelper2::openOrCreateDataSet1D (m_nodeGroup, DATASET_COORD_Z_NAME, m_nbNodes, PredType::NATIVE_DOUBLE, true, NODE_CHUNK_SIZE);
 		}
 		case D2	:
 		{
-			m_nodeYCoordDataSet	= HDFHelper2::openOrCreateDataSet1D (
-					m_nodeGroup, DATASET_COORD_Y_NAME, m_nbNodes,
-					PredType::NATIVE_DOUBLE, true, NODE_CHUNK_SIZE);
+			m_nodeYCoordDataSet	= HDFHelper2::openOrCreateDataSet1D (m_nodeGroup, DATASET_COORD_Y_NAME, m_nbNodes, PredType::NATIVE_DOUBLE, true, NODE_CHUNK_SIZE);
 		}
 		case D1 :
 		{
-			m_nodeXCoordDataSet	= HDFHelper2::openOrCreateDataSet1D (
-					m_nodeGroup, DATASET_COORD_X_NAME, m_nbNodes,
-					PredType::NATIVE_DOUBLE, true, NODE_CHUNK_SIZE);
+			m_nodeXCoordDataSet	= HDFHelper2::openOrCreateDataSet1D (m_nodeGroup, DATASET_COORD_X_NAME, m_nbNodes, PredType::NATIVE_DOUBLE, true, NODE_CHUNK_SIZE);
 		}
 		break;
-		default	:
-			throw write_erreur (
-					"Ecriture des noeuds impossible : erreur interne.");
+		default	: throw write_erreur ("Ecriture des noeuds impossible : erreur interne.");
 		}	// switch (m_dim)
 
 	}
@@ -2606,18 +2419,13 @@ void MaliPPWriter2::writeNodesInfo (bool isContiguous, id_type nbNodes, id_type 
 	m_compoNode.detail[0] = m_nbNodes;
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }	// MaliPPWriter2::writeNodesInfo
 
 
-void MaliPPWriter2::writeNodes (
-		id_type nodesChunkSize,
-		double* coordsX,
-		double* coordsY,
-		double* coordsZ,
-		id_type* ids)
+void MaliPPWriter2::writeNodes (id_type nodesChunkSize, double* coordsX, double* coordsY, double* coordsZ, id_type* ids)
 {
 	BEGIN_TRY_CATCH_BLOCK("MaliPPWriter2::writeNodes ")
 
@@ -2628,35 +2436,31 @@ void MaliPPWriter2::writeNodes (
 	{
 	case D3	:
 	{
-		HDFHelper2::writeDoubleDataSet1D (m_nodeZCoordDataSet, coordsZ, nodesChunkSize,
-				m_nodeIndexCurrent);
+		HDFHelper2::writeDoubleDataSet1D (m_nodeZCoordDataSet, coordsZ, nodesChunkSize, m_nodeIndexCurrent);
 	}
 	case D2	:
 	{
-		HDFHelper2::writeDoubleDataSet1D (m_nodeYCoordDataSet, coordsY, nodesChunkSize,
-				m_nodeIndexCurrent);
+		HDFHelper2::writeDoubleDataSet1D (m_nodeYCoordDataSet, coordsY, nodesChunkSize, m_nodeIndexCurrent);
 	}
 	case D1 :
 	{
-		HDFHelper2::writeDoubleDataSet1D (m_nodeXCoordDataSet, coordsX, nodesChunkSize,
-				m_nodeIndexCurrent);
+		HDFHelper2::writeDoubleDataSet1D (m_nodeXCoordDataSet, coordsX, nodesChunkSize, m_nodeIndexCurrent);
 	}
 	break;
-	default	:
-		throw write_erreur (
-				"Ecriture des noeuds impossible : erreur interne.");
+	default	: throw write_erreur ("Ecriture des noeuds impossible : erreur interne.");
 	}	// switch (m_dim)
 
-	if(!m_nodesIsContiguous) {
+	if(!m_nodesIsContiguous)
+	{
 		HDFHelper2::writeUIntDataSet1D (m_nodeIdsDataSet, ids, nodesChunkSize, m_nodeIndexCurrent);
 	}
 
 	m_nodeIndexCurrent += nodesChunkSize;
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeNodes
 
 
@@ -2673,11 +2477,11 @@ void MaliPPWriter2::writeNodeSetInfo (id_type nbSet, std::vector<std::string> se
 	m_nodeSetIndexCurrent.resize(m_nbNodeSet,0);
 
 	m_nodeSetGroup 	= m_meshGroup.openGroup (NODESET_GROUP_NAME);
-	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-			m_nodeSetGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (m_nodeSetGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 	sizeAttribute.write (PredType::NATIVE_UINT32, &m_nbNodeSet);
 
-	for(id_type i=0; i<m_nbNodeSet; i++) {
+	for(id_type i=0; i<m_nbNodeSet; i++)
+	{
 		m_nodeSetNames[setNames[i]] = i;
 
 		// Creation de son groupe :
@@ -2685,9 +2489,7 @@ void MaliPPWriter2::writeNodeSetInfo (id_type nbSet, std::vector<std::string> se
 		H5::Group cloudGroup = HDFHelper2::openOrCreateGroup (m_nodeSetGroup, basicGroupName);
 
 		// Ecriture du nom du nuage :
-		Attribute	nameAttribute	=
-				HDFHelper2::openOrCreateStringAttribute (
-						cloudGroup, NAME_ATTR_NAME, MLI2_ATTRIBUT_SIZE);
+		Attribute	nameAttribute	= HDFHelper2::openOrCreateStringAttribute (cloudGroup, NAME_ATTR_NAME, MLI2_ATTRIBUT_SIZE);
 		HDFHelper2::writeStringAttribute (nameAttribute, setNames[i]);
 
 		Composition compoCloud;
@@ -2697,31 +2499,24 @@ void MaliPPWriter2::writeNodeSetInfo (id_type nbSet, std::vector<std::string> se
 		writeComposition (compoCloud, NODE_COMPOSITION_DATASET_NAME, cloudGroup);
 
 		// Ecriture du nombre de noeuds :
-		Attribute	sizeNAttribute	= HDFHelper2::openOrCreateAttribute (
-				cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+		Attribute	sizeNAttribute	= HDFHelper2::openOrCreateAttribute (cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 		sizeNAttribute.write (PredType::NATIVE_UINT32, &m_nodeSetSizes[i]);
 
 		// Ecriture des identifiants des noeuds :
-		DataSet		nodeSetIdsDataSet	=
-					HDFHelper2::openOrCreateDataSet1D (
-						cloudGroup, DATASET_IDS_LIST_NAME, m_nodeSetSizes[i],
-						PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
+		DataSet		nodeSetIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (cloudGroup, DATASET_IDS_LIST_NAME, m_nodeSetSizes[i],PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
 		m_nodeSetIdsDataSet.push_back(nodeSetIdsDataSet);
 
 		m_nodeSetGroups.push_back(cloudGroup);
 	}
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeNodeSetInfo
 
 
-void MaliPPWriter2::writeNodeSetData (
-		std::string name,
-		id_type chunkSize,
-		id_type* ids)
+void MaliPPWriter2::writeNodeSetData (std::string name, id_type chunkSize, id_type* ids)
 {
 	BEGIN_TRY_CATCH_BLOCK("MaliPPWriter2::writeNodeSetData ")
 
@@ -2732,20 +2527,20 @@ void MaliPPWriter2::writeNodeSetData (
 
 	// what is written in the mali file is nodesIds -1
 	id_type* ids_tmp = new id_type[chunkSize];
-	for(id_type i=0; i<chunkSize; i++) {
-		ids_tmp[i] = ids[i]-1;
+	for(id_type i=0; i<chunkSize; i++) 
+	{
+		ids_tmp [i] = ids[i] - 1;
 	}
 
-	HDFHelper2::writeUIntDataSet1D (m_nodeSetIdsDataSet[setId], ids_tmp, chunkSize,
-			m_nodeSetIndexCurrent[setId]);
+	HDFHelper2::writeUIntDataSet1D (m_nodeSetIdsDataSet[setId], ids_tmp, chunkSize, m_nodeSetIndexCurrent[setId]);
 	delete[] ids_tmp;
 
 	m_nodeSetIndexCurrent[setId] += chunkSize;
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeNodeSetData
 
 
@@ -2759,14 +2554,13 @@ void MaliPPWriter2::writeNodeAttributes ( )
 	m_nbNodeAttributes = 0;
 
 	m_nodeAttributesGroup 	= m_meshGroup.openGroup (DATA_NODE_GROUP_NAME);
-	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-			m_nodeAttributesGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (m_nodeAttributesGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 	sizeAttribute.write (PredType::NATIVE_UINT32, &m_nbNodeAttributes);
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeNodeAttributes
 
 
@@ -2780,22 +2574,21 @@ void MaliPPWriter2::writeNodeSetsAttributes ( )
 	m_nbNodeSetsAttributes = 0;
 
 	m_nodeSetsAttributesGroup 	= m_meshGroup.openGroup (DATA_NODESET_GROUP_NAME);
-	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-			m_nodeSetsAttributesGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (m_nodeSetsAttributesGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 	sizeAttribute.write (PredType::NATIVE_UINT32, &m_nbNodeSetsAttributes);
 
-	for(id_type igrp=0; igrp<m_nbNodeSet; igrp++) {
+	for(id_type igrp=0; igrp<m_nbNodeSet; igrp++)
+	{
 		H5::Group cloudGroup = HDFHelper2::openOrCreateGroup (m_nodeSetGroups[igrp], DATA_NODE_GROUP_NAME);
-		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-				cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 		id_type size = 0;
 		sizeAttribute.write (PredType::NATIVE_UINT32, &size);
 	}
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeNodeSetsAttributes
 
 
@@ -2809,33 +2602,29 @@ void MaliPPWriter2::writeEdgesInfo (bool isContiguous, id_type nbEdges, id_type 
 	m_nbEdges = nbEdges;
 
 	m_edgeGroup 		= m_meshGroup.openGroup (EDGE_GROUP_NAME);
+
 	// Le nombre d'arêtes :
-	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-			m_edgeGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (m_edgeGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 
 	sizeAttribute.write (PredType::NATIVE_UINT32, &m_nbEdges);
 
-	if(m_nbEdges>0) {
-		Attribute	contiguousAttribut	= HDFHelper2::openOrCreateAttribute (
-				m_edgeGroup, CONTIGUOUS_IDS_ATTR_NAME, PredType::NATIVE_INT);
+	if(m_nbEdges>0) 
+	{
+		Attribute	contiguousAttribut	= HDFHelper2::openOrCreateAttribute (m_edgeGroup, CONTIGUOUS_IDS_ATTR_NAME, PredType::NATIVE_INT);
 
 		m_edgesIsContiguous = isContiguous;
 		int contiguous =  (m_edgesIsContiguous ? 1 : 0);
 
 		contiguousAttribut.write (PredType::NATIVE_INT, &contiguous);
 
-		m_edgeIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (
-				m_edgeGroup, DATASET_IDS_NAME,
-				(hsize_t)(m_edgesIsContiguous ? 1 : m_nbEdges),
-				PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
-		if(m_edgesIsContiguous) {
+		m_edgeIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (m_edgeGroup, DATASET_IDS_NAME, (hsize_t)(m_edgesIsContiguous ? 1 : m_nbEdges), PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
+		if(m_edgesIsContiguous)
+		{
 			HDFHelper2::writeUIntDataSet1D (m_edgeIdsDataSet, &firstID, 1, 0);
 		}
 
 		// La liste des noeuds :
-		m_edge2nodeIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (
-				m_edgeGroup, DATASET_IDS_LIST_NAME, 2 * m_nbEdges,
-				PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
+		m_edge2nodeIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (m_edgeGroup, DATASET_IDS_LIST_NAME, 2 * m_nbEdges, PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
 	}
 
 	m_compoEdge.renseigne = 1;
@@ -2843,9 +2632,9 @@ void MaliPPWriter2::writeEdgesInfo (bool isContiguous, id_type nbEdges, id_type 
 	m_compoEdge.detail[2] = m_nbEdges;
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }	// MaliPPWriter2::writeEdgesInfo
 
 
@@ -2858,22 +2647,24 @@ void MaliPPWriter2::writeEdges (id_type edgesChunkSize, id_type* edge2nodeIDs, i
 
 	// what is written in the mali file is nodesIds -1
 	id_type* edge2nodeIDs_tmp = new id_type[2*edgesChunkSize];
-	for(id_type i=0; i<2*edgesChunkSize; i++) {
+	for(id_type i=0; i<2*edgesChunkSize; i++)
+	{
 		edge2nodeIDs_tmp[i] = edge2nodeIDs[i]-1;
 	}
 	HDFHelper2::writeUIntDataSet1D (m_edge2nodeIdsDataSet, edge2nodeIDs_tmp, 2*edgesChunkSize, 2 * m_edgeIndexCurrent);
 	delete[] edge2nodeIDs_tmp;
 
-	if(!m_edgesIsContiguous) {
-			HDFHelper2::writeUIntDataSet1D (m_edgeIdsDataSet, ids, edgesChunkSize, m_edgeIndexCurrent);
-		}
+	if(!m_edgesIsContiguous)
+	{
+		HDFHelper2::writeUIntDataSet1D (m_edgeIdsDataSet, ids, edgesChunkSize, m_edgeIndexCurrent);
+	}
 
 	m_edgeIndexCurrent += edgesChunkSize;
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeEdges
 
 
@@ -2890,11 +2681,11 @@ void MaliPPWriter2::writeEdgeSetInfo (id_type nbSet, std::vector<std::string> se
 	m_edgeSetIndexCurrent.resize(m_nbEdgeSet,0);
 
 	m_edgeSetGroup 	= m_meshGroup.openGroup (LINE_GROUP_NAME);
-	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-			m_edgeSetGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (m_edgeSetGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 	sizeAttribute.write (PredType::NATIVE_UINT32, &m_nbEdgeSet);
 
-	for(id_type i=0; i<m_nbEdgeSet; i++) {
+	for(id_type i=0; i<m_nbEdgeSet; i++)
+	{
 		m_edgeSetNames[setNames[i]] = i;
 
 		// Creation de son groupe :
@@ -2902,9 +2693,7 @@ void MaliPPWriter2::writeEdgeSetInfo (id_type nbSet, std::vector<std::string> se
 		H5::Group cloudGroup = HDFHelper2::openOrCreateGroup (m_edgeSetGroup, basicGroupName);
 
 		// Ecriture du nom du nuage :
-		Attribute	nameAttribute	=
-				HDFHelper2::openOrCreateStringAttribute (
-						cloudGroup, NAME_ATTR_NAME, MLI2_ATTRIBUT_SIZE);
+		Attribute	nameAttribute	= HDFHelper2::openOrCreateStringAttribute (cloudGroup, NAME_ATTR_NAME, MLI2_ATTRIBUT_SIZE);
 		HDFHelper2::writeStringAttribute (nameAttribute, setNames[i]);
 
 		Composition compoLine;
@@ -2914,31 +2703,25 @@ void MaliPPWriter2::writeEdgeSetInfo (id_type nbSet, std::vector<std::string> se
 		writeComposition (compoLine, EDGE_COMPOSITION_DATASET_NAME, cloudGroup);
 
 		// Ecriture du nombre de noeuds :
-		Attribute	sizeNAttribute	= HDFHelper2::openOrCreateAttribute (
-				cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+		Attribute	sizeNAttribute	= HDFHelper2::openOrCreateAttribute (cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 		sizeNAttribute.write (PredType::NATIVE_UINT32, &m_edgeSetSizes[i]);
 
 		// Ecriture des identifiants des noeuds :
-		DataSet		edgeSetIdsDataSet	=
-				HDFHelper2::openOrCreateDataSet1D (
-						cloudGroup, DATASET_IDS_LIST_NAME, m_edgeSetSizes[i],
-						PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
+		DataSet		edgeSetIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (cloudGroup, DATASET_IDS_LIST_NAME, m_edgeSetSizes[i], PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
 		m_edgeSetIdsDataSet.push_back(edgeSetIdsDataSet);
 
 		m_edgeSetGroups.push_back(cloudGroup);
 	}
 
 	COMPLETE_TRY_CATCH_BLOCK
+
 	if (throwExc) {
 		throw write_erreur (errorMsg.str ( ));
 	}
 }  // MaliPPWriter2::writeEdgeSetInfo
 
 
-void MaliPPWriter2::writeEdgeSetData (
-		std::string name,
-		id_type chunkSize,
-		id_type* ids)
+void MaliPPWriter2::writeEdgeSetData (std::string name, id_type chunkSize, id_type* ids)
 {
 	BEGIN_TRY_CATCH_BLOCK("MaliPPWriter2::writeEdgeSetData ")
 
@@ -2949,20 +2732,20 @@ void MaliPPWriter2::writeEdgeSetData (
 
 	// what is written in the mali file is nodesIds -1
 	id_type* ids_tmp = new id_type[chunkSize];
-	for(id_type i=0; i<chunkSize; i++) {
+	for(id_type i=0; i<chunkSize; i++)
+	{
 		ids_tmp[i] = ids[i]-1;
 	}
 
-	HDFHelper2::writeUIntDataSet1D (m_edgeSetIdsDataSet[setId], ids_tmp, chunkSize,
-			m_edgeSetIndexCurrent[setId]);
+	HDFHelper2::writeUIntDataSet1D (m_edgeSetIdsDataSet[setId], ids_tmp, chunkSize, m_edgeSetIndexCurrent[setId]);
 	delete[] ids_tmp;
 
 	m_edgeSetIndexCurrent[setId] += chunkSize;
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeEdgeSetData
 
 
@@ -2976,14 +2759,13 @@ void MaliPPWriter2::writeEdgeAttributes ( )
 	m_nbEdgeAttributes = 0;
 
 	m_edgeAttributesGroup 	= m_meshGroup.openGroup (DATA_EDGE_GROUP_NAME);
-	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-			m_edgeAttributesGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (m_edgeAttributesGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 	sizeAttribute.write (PredType::NATIVE_UINT32, &m_nbEdgeAttributes);
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeEdgeAttributes
 
 
@@ -2997,30 +2779,29 @@ void MaliPPWriter2::writeEdgeSetsAttributes ( )
 	m_nbEdgeSetsAttributes = 0;
 
 	m_edgeSetsAttributesGroup 	= m_meshGroup.openGroup (DATA_LINE_GROUP_NAME);
-	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-			m_edgeSetsAttributesGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (m_edgeSetsAttributesGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 	sizeAttribute.write (PredType::NATIVE_UINT32, &m_nbEdgeSetsAttributes);
 
-	for(id_type igrp=0; igrp<m_nbEdgeSet; igrp++) {
+	for(id_type igrp=0; igrp<m_nbEdgeSet; igrp++)
+	{
 		H5::Group cloudGroup = HDFHelper2::openOrCreateGroup (m_edgeSetGroups[igrp], DATA_EDGE_GROUP_NAME);
-		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-				cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 		id_type size = 0;
 		sizeAttribute.write (PredType::NATIVE_UINT32, &size);
 	}
 
-	for(id_type igrp=0; igrp<m_nbEdgeSet; igrp++) {
+	for(id_type igrp=0; igrp<m_nbEdgeSet; igrp++)
+	{
 		H5::Group cloudGroup = HDFHelper2::openOrCreateGroup (m_edgeSetGroups[igrp], DATA_NODE_GROUP_NAME);
-		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-				cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 		id_type size = 0;
 		sizeAttribute.write (PredType::NATIVE_UINT32, &size);
 	}
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeEdgeSetsAttributes
 
 
@@ -3035,48 +2816,39 @@ void MaliPPWriter2::writeFacesInfo (bool isContiguous, id_type nbFaces, id_type 
 
 	m_faceGroup 		= m_meshGroup.openGroup (CELL_2D_GROUP_NAME);
 	// Le nombre d'arêtes :
-	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-			m_faceGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (m_faceGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 
 	sizeAttribute.write (PredType::NATIVE_UINT32, &m_nbFaces);
 
-	if(m_nbFaces>0) {
-		Attribute	contiguousAttribut	= HDFHelper2::openOrCreateAttribute (
-				m_faceGroup, CONTIGUOUS_IDS_ATTR_NAME, PredType::NATIVE_INT);
+	if(m_nbFaces>0)
+	{
+		Attribute	contiguousAttribut	= HDFHelper2::openOrCreateAttribute (m_faceGroup, CONTIGUOUS_IDS_ATTR_NAME, PredType::NATIVE_INT);
 
 		m_facesIsContiguous = isContiguous;
 		int contiguous =  (m_facesIsContiguous ? 1 : 0);
 
 		contiguousAttribut.write (PredType::NATIVE_INT, &contiguous);
 
-		m_faceIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (
-				m_faceGroup, DATASET_IDS_NAME,
-				(hsize_t)(m_facesIsContiguous ? 1 : m_nbFaces),
-				PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
-		if(m_facesIsContiguous) {
+		m_faceIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (m_faceGroup, DATASET_IDS_NAME,(hsize_t)(m_facesIsContiguous ? 1 : m_nbFaces), PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
+		if(m_facesIsContiguous)
+		{
 			HDFHelper2::writeUIntDataSet1D (m_faceIdsDataSet, &firstID, 1, 0);
 		}
 
 		// La liste des noeuds :
-		// on prend 3*nombre de faces parce que l'on ne connait pas a priori
-		// la taille totale du tableau face2nodeIDs
-		m_face2nodeIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (
-				m_faceGroup, DATASET_IDS_LIST_NAME, 3 * m_nbFaces,
-				PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
+		// on prend 3*nombre de faces parce que l'on ne connait pas a priori la taille totale du tableau face2nodeIDs
+		m_face2nodeIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (m_faceGroup, DATASET_IDS_LIST_NAME, 3 * m_nbFaces, PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
 
-		m_nbNodesPerFaceDataSet	= HDFHelper2::openOrCreateDataSet1D (
-						m_faceGroup, DATASET_TYPES_NAME, m_nbFaces,
-						PredType::NATIVE_INT32, true, CELL2D_CHUNK_SIZE);
-
+		m_nbNodesPerFaceDataSet	= HDFHelper2::openOrCreateDataSet1D (m_faceGroup, DATASET_TYPES_NAME, m_nbFaces, PredType::NATIVE_INT32, true, CELL2D_CHUNK_SIZE);
 	}
 
 	m_compoFace.renseigne = 1;
 	m_compoFace.nb_elements = m_nbFaces;
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }	// MaliPPWriter2::writeFacesInfo
 
 
@@ -3089,26 +2861,28 @@ void MaliPPWriter2::writeFaces (id_type facesChunkSize, id_type* face2nodeIDs, i
 
 	HDFHelper2::writeUIntDataSet1D (m_nbNodesPerFaceDataSet, nbNodesPerFace, facesChunkSize, m_faceIndexCurrent);
 
-	if(!m_facesIsContiguous) {
+	if(!m_facesIsContiguous)
+	{
 		HDFHelper2::writeUIntDataSet1D (m_faceIdsDataSet, ids, facesChunkSize, m_faceIndexCurrent);
 	}
 
 	size_t nbNodesTot = 0;
-	for(id_type iFace=0; iFace<facesChunkSize; iFace++) {
+	for(id_type iFace=0; iFace<facesChunkSize; iFace++)
+	{
 		nbNodesTot += nbNodesPerFace[iFace];
 		m_compoFace.detail[nbNodesPerFace[iFace]]++;
 	}
 
 	// check that the allocated size is sufficient;
 	// 3*m_nbFaces is the initial allocated size
-	if(m_nbNodesPerFaceIndexCurrent + nbNodesTot > 3*m_nbFaces) {
-		m_face2nodeIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (
-				m_faceGroup, DATASET_IDS_LIST_NAME, m_nbNodesPerFaceIndexCurrent + nbNodesTot,
-				PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
+	if(m_nbNodesPerFaceIndexCurrent + nbNodesTot > 3*m_nbFaces)
+	{
+		m_face2nodeIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (m_faceGroup, DATASET_IDS_LIST_NAME, m_nbNodesPerFaceIndexCurrent + nbNodesTot, PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
 	}
 	// what is written in the mali file is nodesIds -1
 	id_type* face2nodeIDs_tmp = new id_type[nbNodesTot];
-	for(id_type i=0; i<nbNodesTot; i++) {
+	for(id_type i=0; i<nbNodesTot; i++)
+	{
 		face2nodeIDs_tmp[i] = face2nodeIDs[i]-1;
 	}
 	HDFHelper2::writeUIntDataSet1D (m_face2nodeIdsDataSet, face2nodeIDs_tmp, nbNodesTot, m_nbNodesPerFaceIndexCurrent);
@@ -3118,9 +2892,9 @@ void MaliPPWriter2::writeFaces (id_type facesChunkSize, id_type* face2nodeIDs, i
 	m_nbNodesPerFaceIndexCurrent += nbNodesTot;
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeFaces
 
 
@@ -3137,11 +2911,11 @@ void MaliPPWriter2::writeFaceSetInfo (id_type nbSet, std::vector<std::string> se
 	m_faceSetIndexCurrent.resize(m_nbFaceSet,0);
 
 	m_faceSetGroup 	= m_meshGroup.openGroup (SURFACE_GROUP_NAME);
-	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-			m_faceSetGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (m_faceSetGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 	sizeAttribute.write (PredType::NATIVE_UINT32, &m_nbFaceSet);
 
-	for(id_type i=0; i<m_nbFaceSet; i++) {
+	for(id_type i=0; i<m_nbFaceSet; i++) 
+	{
 		m_faceSetNames[setNames[i]] = i;
 
 		// Creation de son groupe :
@@ -3149,9 +2923,7 @@ void MaliPPWriter2::writeFaceSetInfo (id_type nbSet, std::vector<std::string> se
 		H5::Group cloudGroup = HDFHelper2::openOrCreateGroup (m_faceSetGroup, basicGroupName);
 
 		// Ecriture du nom du nuage :
-		Attribute	nameAttribute	=
-				HDFHelper2::openOrCreateStringAttribute (
-						cloudGroup, NAME_ATTR_NAME, MLI2_ATTRIBUT_SIZE);
+		Attribute	nameAttribute	= HDFHelper2::openOrCreateStringAttribute (cloudGroup, NAME_ATTR_NAME, MLI2_ATTRIBUT_SIZE);
 		HDFHelper2::writeStringAttribute (nameAttribute, setNames[i]);
 
 		Composition compoSurf;
@@ -3162,31 +2934,24 @@ void MaliPPWriter2::writeFaceSetInfo (id_type nbSet, std::vector<std::string> se
 //		writeComposition (compoSurf, CELL2D_COMPOSITION_DATASET_NAME, cloudGroup);
 
 		// Ecriture du nombre de noeuds :
-		Attribute	sizeNAttribute	= HDFHelper2::openOrCreateAttribute (
-				cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+		Attribute	sizeNAttribute	= HDFHelper2::openOrCreateAttribute (cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 		sizeNAttribute.write (PredType::NATIVE_UINT32, &m_faceSetSizes[i]);
 
 		// Ecriture des identifiants des noeuds :
-		DataSet		faceSetIdsDataSet	=
-				HDFHelper2::openOrCreateDataSet1D (
-						cloudGroup, DATASET_IDS_LIST_NAME, m_faceSetSizes[i],
-						PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
+		DataSet		faceSetIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (cloudGroup, DATASET_IDS_LIST_NAME, m_faceSetSizes[i], PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
 		m_faceSetIdsDataSet.push_back(faceSetIdsDataSet);
 
 		m_faceSetGroups.push_back(cloudGroup);
 	}
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeFaceSetInfo
 
 
-void MaliPPWriter2::writeFaceSetData (
-		std::string name,
-		id_type chunkSize,
-		id_type* ids)
+void MaliPPWriter2::writeFaceSetData (std::string name, id_type chunkSize, id_type* ids)
 {
 	BEGIN_TRY_CATCH_BLOCK("MaliPPWriter2::writeFaceSetData ")
 
@@ -3197,12 +2962,12 @@ void MaliPPWriter2::writeFaceSetData (
 
 	// what is written in the mali file is nodesIds -1
 	id_type* ids_tmp = new id_type[chunkSize];
-	for(id_type i=0; i<chunkSize; i++) {
+	for(id_type i=0; i<chunkSize; i++)
+	{
 		ids_tmp[i] = ids[i]-1;
 	}
 
-	HDFHelper2::writeUIntDataSet1D (m_faceSetIdsDataSet[setId], ids_tmp, chunkSize,
-			m_faceSetIndexCurrent[setId]);
+	HDFHelper2::writeUIntDataSet1D (m_faceSetIdsDataSet[setId], ids_tmp, chunkSize, m_faceSetIndexCurrent[setId]);
 	delete[] ids_tmp;
 
 	m_faceSetIndexCurrent[setId] += chunkSize;
@@ -3210,17 +2975,13 @@ void MaliPPWriter2::writeFaceSetData (
 	m_faceSetCompo[setId].renseigne = 0;
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeFaceSetData
 
 
-void MaliPPWriter2::writeFaceSetData (
-		std::string name,
-		id_type chunkSize,
-		id_type* ids,
-		id_type* nbNodesPerFace)
+void MaliPPWriter2::writeFaceSetData (std::string name, id_type chunkSize, id_type* ids, id_type* nbNodesPerFace)
 {
 	BEGIN_TRY_CATCH_BLOCK("MaliPPWriter2::writeFaceSetData ")
 
@@ -3231,24 +2992,25 @@ void MaliPPWriter2::writeFaceSetData (
 
 	// what is written in the mali file is nodesIds -1
 	id_type* ids_tmp = new id_type[chunkSize];
-	for(id_type i=0; i<chunkSize; i++) {
+	for(id_type i=0; i<chunkSize; i++) 
+	{
 		ids_tmp[i] = ids[i]-1;
 	}
 
-	HDFHelper2::writeUIntDataSet1D (m_faceSetIdsDataSet[setId], ids_tmp, chunkSize,
-			m_faceSetIndexCurrent[setId]);
+	HDFHelper2::writeUIntDataSet1D (m_faceSetIdsDataSet[setId], ids_tmp, chunkSize, m_faceSetIndexCurrent[setId]);
 	delete[] ids_tmp;
 
 	m_faceSetIndexCurrent[setId] += chunkSize;
 
-	for(id_type i=0; i<chunkSize; i++) {
+	for(id_type i=0; i<chunkSize; i++)
+	{
 		m_faceSetCompo[setId].detail[nbNodesPerFace[i]]++;
 	}
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeFaceSetData
 
 
@@ -3262,14 +3024,13 @@ void MaliPPWriter2::writeFaceAttributes ( )
 	m_nbFaceAttributes = 0;
 
 	m_faceAttributesGroup 	= m_meshGroup.openGroup (DATA_CELL_2D_GROUP_NAME);
-	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-			m_faceAttributesGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (m_faceAttributesGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 	sizeAttribute.write (PredType::NATIVE_UINT32, &m_nbFaceAttributes);
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeFaceAttributes
 
 
@@ -3283,38 +3044,37 @@ void MaliPPWriter2::writeFaceSetsAttributes ( )
 	m_nbFaceSetsAttributes = 0;
 
 	m_faceSetsAttributesGroup 	= m_meshGroup.openGroup (DATA_SURFACE_GROUP_NAME);
-	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-			m_faceSetsAttributesGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (m_faceSetsAttributesGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 	sizeAttribute.write (PredType::NATIVE_UINT32, &m_nbFaceSetsAttributes);
 
-	for(id_type igrp=0; igrp<m_nbFaceSet; igrp++) {
+	for(id_type igrp=0; igrp<m_nbFaceSet; igrp++)
+	{
 		H5::Group cloudGroup = HDFHelper2::openOrCreateGroup (m_faceSetGroups[igrp], DATA_CELL_2D_GROUP_NAME);
-		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-				cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 		id_type size = 0;
 		sizeAttribute.write (PredType::NATIVE_UINT32, &size);
 	}
 
-	for(id_type igrp=0; igrp<m_nbFaceSet; igrp++) {
+	for(id_type igrp=0; igrp<m_nbFaceSet; igrp++)
+	{
 		H5::Group cloudGroup = HDFHelper2::openOrCreateGroup (m_faceSetGroups[igrp], DATA_EDGE_GROUP_NAME);
-		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-				cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 		id_type size = 0;
 		sizeAttribute.write (PredType::NATIVE_UINT32, &size);
 	}
 
-	for(id_type igrp=0; igrp<m_nbFaceSet; igrp++) {
+	for(id_type igrp=0; igrp<m_nbFaceSet; igrp++)
+	{
 		H5::Group cloudGroup = HDFHelper2::openOrCreateGroup (m_faceSetGroups[igrp], DATA_NODE_GROUP_NAME);
-		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-				cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 		id_type size = 0;
 		sizeAttribute.write (PredType::NATIVE_UINT32, &size);
 	}
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeFaceSetsAttributes
 
 
@@ -3329,47 +3089,39 @@ void MaliPPWriter2::writeRegionsInfo (bool isContiguous, id_type nbRegions, id_t
 
 	m_regionGroup 		= m_meshGroup.openGroup (CELL_3D_GROUP_NAME);
 	// Le nombre d'arêtes :
-	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-			m_regionGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (m_regionGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 
 	sizeAttribute.write (PredType::NATIVE_UINT32, &m_nbRegions);
 
-	if(m_nbRegions>0) {
-		Attribute	contiguousAttribut	= HDFHelper2::openOrCreateAttribute (
-				m_regionGroup, CONTIGUOUS_IDS_ATTR_NAME, PredType::NATIVE_INT);
+	if(m_nbRegions>0)
+	{
+		Attribute	contiguousAttribut	= HDFHelper2::openOrCreateAttribute (m_regionGroup, CONTIGUOUS_IDS_ATTR_NAME, PredType::NATIVE_INT);
 
 		m_regionsIsContiguous = isContiguous;
 		int contiguous =  (m_regionsIsContiguous ? 1 : 0);
 
 		contiguousAttribut.write (PredType::NATIVE_INT, &contiguous);
 
-		m_regionIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (
-				m_regionGroup, DATASET_IDS_NAME,
-				(hsize_t)(m_regionsIsContiguous ? 1 : m_nbRegions),
-				PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
-		if(m_regionsIsContiguous) {
+		m_regionIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (m_regionGroup, DATASET_IDS_NAME, (hsize_t)(m_regionsIsContiguous ? 1 : m_nbRegions), PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
+		if(m_regionsIsContiguous)
+		{
 			HDFHelper2::writeUIntDataSet1D (m_regionIdsDataSet, &firstID, 1, 0);
 		}
 
 		// La liste des noeuds :
-		// on prend 4*nombre de regions parce que l'on ne connait pas a priori
-		// la taille totale du tableau region2nodeIDs
-		m_region2nodeIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (
-				m_regionGroup, DATASET_IDS_LIST_NAME, 4 * m_nbRegions,
-				PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
+		// on prend 4*nombre de regions parce que l'on ne connait pas a priori la taille totale du tableau region2nodeIDs
+		m_region2nodeIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (m_regionGroup, DATASET_IDS_LIST_NAME, 4 * m_nbRegions, PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
 
-		m_nbNodesPerRegionDataSet	= HDFHelper2::openOrCreateDataSet1D (
-								m_regionGroup, DATASET_TYPES_NAME, m_nbRegions,
-								PredType::NATIVE_INT32, true, CELL2D_CHUNK_SIZE);
+		m_nbNodesPerRegionDataSet	= HDFHelper2::openOrCreateDataSet1D (m_regionGroup, DATASET_TYPES_NAME, m_nbRegions, PredType::NATIVE_INT32, true, CELL2D_CHUNK_SIZE);
 	}
 
 	m_compoRegion.renseigne = 1;
 	m_compoRegion.nb_elements = m_nbRegions;
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+	
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }	// MaliPPWriter2::writeRegionsInfo
 
 
@@ -3382,26 +3134,28 @@ void MaliPPWriter2::writeRegions (id_type regionsChunkSize, id_type* region2node
 
 	HDFHelper2::writeUIntDataSet1D (m_nbNodesPerRegionDataSet, (id_type*)regionTypes, regionsChunkSize, m_regionIndexCurrent);
 
-	if(!m_regionsIsContiguous) {
+	if(!m_regionsIsContiguous)
+	{
 		HDFHelper2::writeUIntDataSet1D (m_regionIdsDataSet, ids, regionsChunkSize, m_regionIndexCurrent);
 	}
 
 	size_t nbNodesTot = 0;
-	for(id_type iRegion=0; iRegion<regionsChunkSize; iRegion++) {
+	for(id_type iRegion=0; iRegion<regionsChunkSize; iRegion++)
+	{
 			nbNodesTot += Lima::Polyedre::PolyedreNbNode[regionTypes[iRegion]];
 			m_compoRegion.detail[Lima::Polyedre::PolyedreNbNode[regionTypes[iRegion]]]++;
 	}
 
 	// check that the allocated size is sufficient;
 	// 3*m_nbRegions is the initial allocated size
-	if(m_nbNodesPerRegionIndexCurrent + nbNodesTot > 4*m_nbRegions) {
-		m_region2nodeIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (
-				m_regionGroup, DATASET_IDS_LIST_NAME, m_nbNodesPerRegionIndexCurrent + nbNodesTot,
-				PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
+	if(m_nbNodesPerRegionIndexCurrent + nbNodesTot > 4*m_nbRegions)
+	{
+		m_region2nodeIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (m_regionGroup, DATASET_IDS_LIST_NAME, m_nbNodesPerRegionIndexCurrent + nbNodesTot, PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
 	}
 	// what is written in the mali file is nodesIds -1
 	id_type* region2nodeIDs_tmp = new id_type[nbNodesTot];
-	for(id_type i=0; i<nbNodesTot; i++) {
+	for(id_type i=0; i<nbNodesTot; i++)
+	{
 		region2nodeIDs_tmp[i] = region2nodeIDs[i]-1;
 	}
 	HDFHelper2::writeUIntDataSet1D (m_region2nodeIdsDataSet, region2nodeIDs_tmp, nbNodesTot, m_nbNodesPerRegionIndexCurrent);
@@ -3411,9 +3165,9 @@ void MaliPPWriter2::writeRegions (id_type regionsChunkSize, id_type* region2node
 	m_nbNodesPerRegionIndexCurrent += nbNodesTot;
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeRegions
 
 
@@ -3430,11 +3184,11 @@ void MaliPPWriter2::writeRegionSetInfo (id_type nbSet, std::vector<std::string> 
 	m_regionSetIndexCurrent.resize(m_nbRegionSet,0);
 
 	m_regionSetGroup 	= m_meshGroup.openGroup (VOLUME_GROUP_NAME);
-	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-			m_regionSetGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (m_regionSetGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 	sizeAttribute.write (PredType::NATIVE_UINT32, &m_nbRegionSet);
 
-	for(id_type i=0; i<m_nbRegionSet; i++) {
+	for(id_type i=0; i<m_nbRegionSet; i++)
+	{
 		m_regionSetNames[setNames[i]] = i;
 
 		// Creation de son groupe :
@@ -3442,9 +3196,7 @@ void MaliPPWriter2::writeRegionSetInfo (id_type nbSet, std::vector<std::string> 
 		H5::Group cloudGroup = HDFHelper2::openOrCreateGroup (m_regionSetGroup, basicGroupName);
 
 		// Ecriture du nom du nuage :
-		Attribute	nameAttribute	=
-				HDFHelper2::openOrCreateStringAttribute (
-						cloudGroup, NAME_ATTR_NAME, MLI2_ATTRIBUT_SIZE);
+		Attribute	nameAttribute	= HDFHelper2::openOrCreateStringAttribute (cloudGroup, NAME_ATTR_NAME, MLI2_ATTRIBUT_SIZE);
 		HDFHelper2::writeStringAttribute (nameAttribute, setNames[i]);
 
 		Composition compoVol;
@@ -3454,31 +3206,24 @@ void MaliPPWriter2::writeRegionSetInfo (id_type nbSet, std::vector<std::string> 
 //		writeComposition (compoVol, CELL3D_COMPOSITION_DATASET_NAME, cloudGroup);
 
 		// Ecriture du nombre de noeuds :
-		Attribute	sizeNAttribute	= HDFHelper2::openOrCreateAttribute (
-				cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+		Attribute	sizeNAttribute	= HDFHelper2::openOrCreateAttribute (cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 		sizeNAttribute.write (PredType::NATIVE_UINT32, &m_regionSetSizes[i]);
 
 		// Ecriture des identifiants des noeuds :
-		DataSet		regionSetIdsDataSet	=
-				HDFHelper2::openOrCreateDataSet1D (
-						cloudGroup, DATASET_IDS_LIST_NAME, m_regionSetSizes[i],
-						PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
+		DataSet		regionSetIdsDataSet	= HDFHelper2::openOrCreateDataSet1D (cloudGroup, DATASET_IDS_LIST_NAME, m_regionSetSizes[i], PredType::NATIVE_UINT32, true, NODE_CHUNK_SIZE);
 		m_regionSetIdsDataSet.push_back(regionSetIdsDataSet);
 
 		m_regionSetGroups.push_back(cloudGroup);
 	}
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeRegionSetInfo
 
 
-void MaliPPWriter2::writeRegionSetData (
-		std::string name,
-		id_type chunkSize,
-		id_type* ids)
+void MaliPPWriter2::writeRegionSetData (std::string name, id_type chunkSize, id_type* ids)
 {
 	BEGIN_TRY_CATCH_BLOCK("MaliPPWriter2::writeRegionSetData ")
 
@@ -3489,12 +3234,12 @@ void MaliPPWriter2::writeRegionSetData (
 
 	// what is written in the mali file is nodesIds -1
 	id_type* ids_tmp = new id_type[chunkSize];
-	for(id_type i=0; i<chunkSize; i++) {
+	for(id_type i=0; i<chunkSize; i++) 
+	{
 		ids_tmp[i] = ids[i]-1;
 	}
 
-	HDFHelper2::writeUIntDataSet1D (m_regionSetIdsDataSet[setId], ids_tmp, chunkSize,
-			m_regionSetIndexCurrent[setId]);
+	HDFHelper2::writeUIntDataSet1D (m_regionSetIdsDataSet[setId], ids_tmp, chunkSize, m_regionSetIndexCurrent[setId]);
 	delete[] ids_tmp;
 
 	m_regionSetIndexCurrent[setId] += chunkSize;
@@ -3502,17 +3247,13 @@ void MaliPPWriter2::writeRegionSetData (
 	m_regionSetCompo[setId].renseigne = 0;
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeRegionSetData
 
 
-void MaliPPWriter2::writeRegionSetData (
-		std::string name,
-		id_type chunkSize,
-		id_type* ids,
-		Lima::Polyedre::PolyedreType* regionTypes)
+void MaliPPWriter2::writeRegionSetData (std::string name, id_type chunkSize, id_type* ids, Lima::Polyedre::PolyedreType* regionTypes)
 {
 	BEGIN_TRY_CATCH_BLOCK("MaliPPWriter2::writeRegionSetData ")
 
@@ -3523,24 +3264,25 @@ void MaliPPWriter2::writeRegionSetData (
 
 	// what is written in the mali file is nodesIds -1
 	id_type* ids_tmp = new id_type[chunkSize];
-	for(id_type i=0; i<chunkSize; i++) {
+	for(id_type i=0; i<chunkSize; i++)
+	{
 		ids_tmp[i] = ids[i]-1;
 	}
 
-	HDFHelper2::writeUIntDataSet1D (m_regionSetIdsDataSet[setId], ids_tmp, chunkSize,
-			m_regionSetIndexCurrent[setId]);
+	HDFHelper2::writeUIntDataSet1D (m_regionSetIdsDataSet[setId], ids_tmp, chunkSize, m_regionSetIndexCurrent[setId]);
 	delete[] ids_tmp;
 
 	m_regionSetIndexCurrent[setId] += chunkSize;
 
-	for(id_type i=0; i<chunkSize; i++) {
+	for(id_type i=0; i<chunkSize; i++)
+	{
 		m_regionSetCompo[setId].detail[Lima::Polyedre::PolyedreNbNode[regionTypes[i]]]++;
 	}
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeRegionSetData
 
 
@@ -3554,14 +3296,13 @@ void MaliPPWriter2::writeRegionAttributes ( )
 	m_nbRegionAttributes = 0;
 
 	m_regionAttributesGroup 	= m_meshGroup.openGroup (DATA_CELL_3D_GROUP_NAME);
-	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-			m_regionAttributesGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (m_regionAttributesGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 	sizeAttribute.write (PredType::NATIVE_UINT32, &m_nbRegionAttributes);
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+	
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeRegionAttributes
 
 
@@ -3575,51 +3316,49 @@ void MaliPPWriter2::writeRegionSetsAttributes ( )
 	m_nbRegionSetsAttributes = 0;
 
 	m_regionSetsAttributesGroup 	= m_meshGroup.openGroup (DATA_VOLUME_GROUP_NAME);
-	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-			m_regionSetsAttributesGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+	Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (m_regionSetsAttributesGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 	sizeAttribute.write (PredType::NATIVE_UINT32, &m_nbRegionSetsAttributes);
 
-	for(id_type igrp=0; igrp<m_nbRegionSet; igrp++) {
+	for(id_type igrp=0; igrp<m_nbRegionSet; igrp++)
+	{
 		H5::Group cloudGroup = HDFHelper2::openOrCreateGroup (m_regionSetGroups[igrp], DATA_CELL_3D_GROUP_NAME);
-		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-				cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 		id_type size = 0;
 		sizeAttribute.write (PredType::NATIVE_UINT32, &size);
 	}
 
-	for(id_type igrp=0; igrp<m_nbRegionSet; igrp++) {
+	for(id_type igrp=0; igrp<m_nbRegionSet; igrp++)
+	{
 		H5::Group cloudGroup = HDFHelper2::openOrCreateGroup (m_regionSetGroups[igrp], DATA_CELL_2D_GROUP_NAME);
-		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-				cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 		id_type size = 0;
 		sizeAttribute.write (PredType::NATIVE_UINT32, &size);
 	}
 
-	for(id_type igrp=0; igrp<m_nbRegionSet; igrp++) {
+	for(id_type igrp=0; igrp<m_nbRegionSet; igrp++)
+	{
 		H5::Group cloudGroup = HDFHelper2::openOrCreateGroup (m_regionSetGroups[igrp], DATA_EDGE_GROUP_NAME);
-		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-				cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 		id_type size = 0;
 		sizeAttribute.write (PredType::NATIVE_UINT32, &size);
 	}
 
-	for(id_type igrp=0; igrp<m_nbRegionSet; igrp++) {
+	for(id_type igrp=0; igrp<m_nbRegionSet; igrp++)
+	{
 		H5::Group cloudGroup = HDFHelper2::openOrCreateGroup (m_regionSetGroups[igrp], DATA_NODE_GROUP_NAME);
-		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (
-				cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
+		Attribute	sizeAttribute	= HDFHelper2::openOrCreateAttribute (cloudGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 		id_type size = 0;
 		sizeAttribute.write (PredType::NATIVE_UINT32, &size);
 	}
 
 	COMPLETE_TRY_CATCH_BLOCK
-	if (throwExc) {
+
+	if (throwExc)
 		throw write_erreur (errorMsg.str ( ));
-	}
 }  // MaliPPWriter2::writeRegionSetsAttributes
 
 
-void MaliPPWriter2::writeComposition (const Composition& composition,
-									const std::string& name, Group& root)
+void MaliPPWriter2::writeComposition (const Composition& composition, const std::string& name, Group& root)
 {
 	BEGIN_TRY_CATCH_BLOCK("MaliPPWriter2::writeComposition ")
 
@@ -3629,16 +3368,12 @@ void MaliPPWriter2::writeComposition (const Composition& composition,
 	Group		compositionGroup	= HDFHelper2::openOrCreateGroup (root, name);
 
 	// Le nombre d'elements du groupe :
-	Attribute	sizeAttribute		=
-		HDFHelper2::openOrCreateAttribute (compositionGroup, SIZE_ATTR_NAME,
-		                                  PredType::NATIVE_UINT32);
+	Attribute	sizeAttribute		= HDFHelper2::openOrCreateAttribute (compositionGroup, SIZE_ATTR_NAME, PredType::NATIVE_UINT32);
 	const id_type	number	= composition.nb_elements;
 	sizeAttribute.write (PredType::NATIVE_UINT32, &number);
 
 	// Le detail de la composition du groupe :
-	Attribute	detailedAttribute	=
-		HDFHelper2::openOrCreateAttribute (compositionGroup, DETAILED_ATTR_NAME,
-		                                  PredType::NATIVE_HBOOL);
+	Attribute	detailedAttribute	= HDFHelper2::openOrCreateAttribute (compositionGroup, DETAILED_ATTR_NAME, PredType::NATIVE_HBOOL);
 	hbool_t		detailed	= false == composition.renseigne ? 0 : 1;
 	detailedAttribute.write (PredType::NATIVE_HBOOL, &detailed);
 	hsize_t		dims [1];
@@ -3646,9 +3381,7 @@ void MaliPPWriter2::writeComposition (const Composition& composition,
 	id_type	detail [MAX_NOEUDS];
 	for (hsize_t i = 0; i < MAX_NOEUDS; i++)
 		detail [i]	= composition.detail [i];
-	Attribute	compositionAttr	=
-		HDFHelper2::openOrCreateArrayAttribute (compositionGroup,
-				COMPOSITION_ATTR_NAME, PredType::NATIVE_UINT32, 1, dims);
+	Attribute	compositionAttr	= HDFHelper2::openOrCreateArrayAttribute (compositionGroup, COMPOSITION_ATTR_NAME, PredType::NATIVE_UINT32, 1, dims);
 	compositionAttr.write (compositionAttr.getDataType ( ), detail);
 
 	COMPLETE_TRY_CATCH_BLOCK
