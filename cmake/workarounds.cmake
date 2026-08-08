@@ -16,7 +16,12 @@ endif (CCC_OS_FOUND)
 if (NOT PLATFORM)
 	execute_process (COMMAND lsb_release -d COMMAND awk "{print $2;}" OUTPUT_VARIABLE PLATFORM OUTPUT_STRIP_TRAILING_WHITESPACE)
 endif (NOT PLATFORM)
+
+# On récupère l'architecture du processeur.
+execute_process (COMMAND uname -p OUTPUT_VARIABLE PROC_TYPE OUTPUT_STRIP_TRAILING_WHITESPACE)
+
 message ("PLATFORM=" ${PLATFORM})
+message ("PROC_TYPE=" ${PROC_TYPE})
 message ("LANGUAGES=" ${LANGUAGES})
 message ("CXX=" ${CXX})
 message ("CMAKE_CXX_COMPILER=" ${CMAKE_CXX_COMPILER})
