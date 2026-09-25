@@ -12,9 +12,10 @@ if (BUILD_TESTS)
 endif ( )
 
 if (BUILD_XLMLIMA)	# and other tools
-	message (STATUS "===============> Compilation de l'utilitaire xlmlima")
+	message (STATUS "===============> Compilation des utilitairess xlmlima, symetrise et split-tetra")
 	add_subdirectory (Xlmlima_exe)
 	add_subdirectory (Symetrise)
+	add_subdirectory (SplitTetra)
 endif ( )
 
 enable_testing ( )
